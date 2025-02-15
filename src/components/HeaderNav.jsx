@@ -11,7 +11,7 @@ const HeaderNav = ({text}) => {
 
     return (
         <header className="bg-blue-600 text-white p-4 flex items-center justify-between">
-            <h1 className="text-4xl text-center text-white font-bold text-slate-800 uppercase bg-blue-600 p-4">
+            <h1 className="text-4xl text-center text-white font-bold uppercase bg-blue-600 p-4">
                 {text}
             </h1>
             <button
