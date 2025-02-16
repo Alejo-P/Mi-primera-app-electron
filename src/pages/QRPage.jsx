@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HiHome } from "react-icons/hi";
-import { MdDeleteForever, MdDeleteSweep, MdAdd } from "react-icons/md";
+import { MdDeleteSweep, MdAdd } from "react-icons/md";
 import { Link } from 'react-router-dom';
 
 // Importamos el contexto
@@ -10,13 +10,15 @@ import { useQR } from '../contexts/QRProvider';
 // Importamos los componentes
 import HeaderNav from '../components/HeaderNav';
 import Notification from '../components/Notification';
+import QRCard from '../components/QRCard';
 
 const QRPage = () => {
-    const { qrList, getQRs, deleteAllQRs, notificacion, loadingQRs } = useQR();
+    const { qrList, getQRs, getQR, deleteAllQRs, notificacion, loadingQRs } = useQR();
+    const [QRInfo, setQRInfo] = useState([]);
 
     useEffect(() => {
         getQRs();
-    }, []);
+    }, []); // Se ejecuta cada vez que qrList cambia
     return (
         <div>
             <HeaderNav text={"Lista de QRS"}/>
@@ -36,7 +38,11 @@ const QRPage = () => {
                         ) : (
                             qrList.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-                                    {/* <!-- Aquí se insertarán los QRs --> */}
+                                    {
+                                        qrList.map((qr, index) => (
+                                            <QRCard key={index} QRName={qr.name} QRImage={qr.source} />
+                                        ))
+                                    }
                                 </div>
                             ) : (
                                 <div className="flex items-center justify-center p-4">

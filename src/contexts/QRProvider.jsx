@@ -1,9 +1,6 @@
 import { createContext, useContext, useState, useMemo } from 'react';
 import axios from 'axios';
 
-// Importamos el contexto App
-import { useApp } from './AppProvider';
-
 const QRContext = createContext();
 
 export const QRProvider = ({ children }) => {
@@ -22,38 +19,48 @@ export const QRProvider = ({ children }) => {
         });
     };
 
+    // Obtener un QR por su nombre
+    const getQR = async (name) => {
+        try {
+            const response = await axios.get(`${URL_BACKEND}/qr/${name}`);
+            console.log(response);
+
+            // Convertir la respuesta en un objeto URL
+            const blob = new Blob([response.data], { type: 'image/png' });
+            const source = URL.createObjectURL(blob);
+            console.log("Source -> ",source, typeof source);
+            return source;
+        } catch (error) {
+            console.error(error);
+            handleNotificacion('error', 'Error al cargar el QR', 5000);
+            return null;
+        }
+    };
+
     // Obtener todos los QRs
     const getQRs = async () => {
         setLoadingQRs(true);
         try {
             const response = await axios.get(`${URL_BACKEND}/qrs`);
+            let data = [];
             console.log(response);
-            setQRList(response.files);
 
-            if (response.files.length === 0) {
+            if (response.data?.files.length === 0) {
                 handleNotificacion('info', 'No hay QRs generados', 5000);
             } else {
+                data = await Promise.all(
+                    response.data.files.map(async (qr) => {
+                        const source = await getQR(qr);
+                        return { name: qr, source };
+                    })
+                );
                 handleNotificacion('success', 'QRs cargados correctamente', 5000);
             }
+
+            setQRList(data);
         } catch (error) {
             console.error(error);
             handleNotificacion('error', 'Error al cargar los QRs', 5000);
-        } finally {
-            setLoadingQRs(false);
-        }
-    };
-
-    // Obtener un QR por su nombre
-    const getQR = async (name) => {
-        setLoadingQRs(true);
-        try {
-            const response = await axios.get(`${URL_BACKEND}/qr/${name}`);
-            console.log(response);
-            handleNotificacion('success', 'QR cargado correctamente', 5000);
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error', 'Error al cargar el QR', 5000);
         } finally {
             setLoadingQRs(false);
         }
