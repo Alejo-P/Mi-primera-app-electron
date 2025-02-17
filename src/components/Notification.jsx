@@ -15,31 +15,31 @@ const Notification = ({ type = "success", content, onClose, duration = 3000 }) =
         return () => clearTimeout(timer);
     }, [duration, onClose]);
 
-    const colorclassNamees = {
+    const colorClasses = {
         error: { bg: "bg-red-500", border: "border-red-700", iconBg: "bg-red-900" },
         success: { bg: "bg-blue-500", border: "border-blue-700", iconBg: "bg-blue-900" },
         warning: { bg: "bg-orange-500", border: "border-orange-700", iconBg: "bg-orange-900" },
     };
 
-    let { bg, border, iconBg } = colorclassNamees[type] || colorclassNamees.warning;
+    let { bg, border, iconBg } = colorClasses[type] || colorClasses.warning;
 
     return (
         <AnimatePresence>
             {visible && (
                 <motion.div
-                    initial={{ y: -50, opacity: 0 }} // Comienza más arriba con opacidad 0
-                    animate={{ y: 20, opacity: 1 }} // Baja hasta su posición final
-                    exit={{ y: -50, opacity: 0 }} // Sube nuevamente al desaparecer
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 20, opacity: 1 }}
+                    exit={{ y: -50, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 100 }}
-                    className={`fixed top-4 left-1/2 transform -translate-x-1/2 flex m-2 text-white rounded-lg shadow-lg ${bg} ${border}`}
+                    className={`fixed top-4 left-1/2 transform -translate-x-1/2 flex w-auto max-w-xs md:max-w-lg lg:max-w-2xl text-white rounded-lg shadow-lg ${bg} ${border}`}
                 >
-                    <div className={`h-full w-12 flex items-center justify-center rounded-l-lg p-6 ${iconBg}`}>
+                    <div className={`flex items-center justify-center px-4 ${iconBg} rounded-l-lg`}>
                         <span className="text-3xl">
                             {type === "error" ? <FaRegTimesCircle /> : type === "success" ? <FaRegCheckCircle /> : <AiOutlineExclamationCircle />}
                         </span>
                     </div>
-                    <div className="flex items-center justify-center p-6 font-bold w-fit-content">
-                        <p>{content}</p>
+                    <div className="flex-1 p-4">
+                        <p className="break-words">{content}</p>
                     </div>
                 </motion.div>
             )}

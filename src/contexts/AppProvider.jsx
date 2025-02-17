@@ -6,6 +6,11 @@ export const AppProvider = ({ children }) => {
     const [tema, setTema] = useState(localStorage.getItem("tema") || "oscuro");
     const [notificacion, setNotificacion] = useState(null);
     const [extensiones] = useState(["txt", "pdf", "png", "jpg", "jpeg", "gif"]);
+    const [fileTypes] = useState({
+        documents: ["txt", "pdf"],
+        images: ["png", "jpg", "jpeg", "gif"],
+    })
+    const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
 
     // Cambia el tema y lo guarda en localStorage
     const handleTheme = () => {
@@ -31,7 +36,7 @@ export const AppProvider = ({ children }) => {
     }, [tema]);
 
     // Memoriza el valor del contexto para evitar renders innecesarios
-    const contextValue = useMemo(() => ({ tema, handleTheme, notificacion, handleNotificacion, extensiones }), [tema, notificacion]);
+    const contextValue = useMemo(() => ({ tema, handleTheme, notificacion, handleNotificacion, extensiones, fileTypes }), [tema, notificacion]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

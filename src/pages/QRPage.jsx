@@ -17,10 +17,13 @@ const QRPage = () => {
     const [QRInfo, setQRInfo] = useState([]);
 
     useEffect(() => {
-        getQRs();
+        if (qrList.length === 0) {
+            getQRs();
+        }
+
     }, []); // Se ejecuta cada vez que qrList cambia
     return (
-        <div>
+        <>
             <HeaderNav text={"Lista de QRS"}/>
             <div className="flex flex-col items-center align-center h-full m-4 p-4 border border-gray-300 rounded-lg bg-gray-300">
                 {notificacion && <Notification {...notificacion} />}
@@ -35,24 +38,23 @@ const QRPage = () => {
                             <div className="flex items-center justify-center">
                                 <p className="text-center text-gray-500 font-bold">Cargando...</p>
                             </div>
+                        ) : qrList.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                                {
+                                    qrList.map((qr, index) => (
+                                        <QRCard key={index} QRName={qr.filename} QRImage={qr.url} />
+                                    ))
+                                }
+                            </div>
                         ) : (
-                            qrList.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-                                    {
-                                        qrList.map((qr, index) => (
-                                            <QRCard key={index} QRName={qr.name} QRImage={qr.source} />
-                                        ))
-                                    }
-                                </div>
-                            ) : (
-                                <div className="flex items-center justify-center p-4">
-                                    <p className="text-center text-gray-500 font-bold italic">
-                                        No hay QRs generados
-                                    </p>
-                                </div>
-                            )
+                            <div className="flex items-center justify-center p-4">
+                                <p className="text-center text-gray-500 font-bold italic">
+                                    No hay QRs generados
+                                </p>
+                            </div>
                         )
                     }
+                    
                 </div>
                 <div className="flex justify-center">
                     <button
@@ -91,7 +93,7 @@ const QRPage = () => {
                     <HiHome className="text-2xl"/>
                 </span>
             </Link>
-        </div>
+        </>
     )
 }
 

@@ -23,13 +23,7 @@ export const QRProvider = ({ children }) => {
     const getQR = async (name) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/qr/${name}`);
-            console.log(response);
-
-            // Convertir la respuesta en un objeto URL
-            const blob = new Blob([response.data], { type: 'image/png' });
-            const source = URL.createObjectURL(blob);
-            console.log("Source -> ",source, typeof source);
-            return source;
+            return response.data;
         } catch (error) {
             console.error(error);
             handleNotificacion('error', 'Error al cargar el QR', 5000);
@@ -43,7 +37,6 @@ export const QRProvider = ({ children }) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/qrs`);
             let data = [];
-            console.log(response);
 
             if (response.data?.files.length === 0) {
                 handleNotificacion('info', 'No hay QRs generados', 5000);
@@ -51,7 +44,7 @@ export const QRProvider = ({ children }) => {
                 data = await Promise.all(
                     response.data.files.map(async (qr) => {
                         const source = await getQR(qr);
-                        return { name: qr, source };
+                        return { ...source };
                     })
                 );
                 handleNotificacion('success', 'QRs cargados correctamente', 5000);
@@ -119,24 +112,36 @@ export const QRProvider = ({ children }) => {
         }
     };
 
-    // Descargar un QR por su nombre
     const downloadQR = async (name) => {
-        setLoadingQRs(true);
         try {
-            const response = await axios.get(`${URL_BACKEND}/qr/download/${name}`);
-            console.log(response);
+            const response = await axios.get(`${URL_BACKEND}/download/qr/${name}`, {
+                responseType: 'blob',
+            });
+    
+            // Crear un objeto URL para el archivo
             const url = window.URL.createObjectURL(new Blob([response.data]));
+            
+            // Crear un elemento <a> temporal
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${name}.png`);
+            link.setAttribute('download', `${name}`);
             document.body.appendChild(link);
+    
+            // Simular clic para descargar
             link.click();
+    
+            // Eliminar el <a> del DOM después de la descarga
+            document.body.removeChild(link);
+            
+            // Revocar el objeto URL para liberar memoria
+            window.URL.revokeObjectURL(url);
+    
+            handleNotificacion('success', 'QR descargado correctamente', 5000);
         } catch (error) {
             console.error(error);
-        } finally {
-            setLoadingQRs(false);
+            handleNotificacion('error', 'Error al descargar el QR', 5000);
         }
-    };
+    };    
 
     const contextValue = useMemo(() => ({
         qrList,
