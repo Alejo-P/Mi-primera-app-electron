@@ -11,6 +11,7 @@ import { useQR } from '../contexts/QRProvider';
 import HeaderNav from '../components/HeaderNav';
 import Notification from '../components/Notification';
 import QRCard from '../components/QRCard';
+import LoadingCard from '../components/LoadingCard';
 
 const QRPage = () => {
     const { qrList, getQRs, getQR, deleteAllQRs, notificacion, loadingQRs } = useQR();
@@ -35,9 +36,7 @@ const QRPage = () => {
 
                     {
                         loadingQRs ? (
-                            <div className="flex items-center justify-center">
-                                <p className="text-center text-gray-500 font-bold">Cargando...</p>
-                            </div>
+                            <LoadingCard />
                         ) : qrList.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
                                 {
@@ -56,43 +55,54 @@ const QRPage = () => {
                     }
                     
                 </div>
-                <div className="flex justify-center">
-                    <button
-                        className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-                        title="Eliminar todos"
-                    >
-                        <span className="text-white flex text-center items-center space-x-2">
-                            {/* <!-- Imagen con trazos blancos--> */}
-                            <MdDeleteSweep className='text-xl' />
-                            <p className="font-bold">Eliminar todos</p>
-                        </span>
-                    </button>
-                </div>
+                {
+                    qrList.length > 0 && (
+                        <div className="flex justify-center">
+                            <button
+                                className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+                                title="Eliminar todos"
+                            >
+                                <span className="text-white flex text-center items-center space-x-2">
+                                    {/* <!-- Imagen con trazos blancos--> */}
+                                    <MdDeleteSweep className='text-xl' />
+                                    <p className="font-bold">Eliminar todos</p>
+                                </span>
+                            </button>
+                        </div>
+                    )
+                }
             </div>
 
             {/* <!-- Modal para la creacion de un QR mediante texto--> */}
 
-            <div className="fixed bottom-6 right-6 flex flex-col items-center align-center">
-                <button
-                    href="javascript:openModal()"
-                    className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 flex items-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(59,130,246,0.7)] hover:shadow-[0_0_25px_6px_rgba(59,130,246,1)] hover:scale-110 transition-transform duration-300 animate-all"
-                    title="Crear un QR a partir de texto"
-                >
-                    <span className="text-3xl">
-                        <MdAdd className="text-2xl"/>
-                    </span>
-                </button>
-            </div>
+            {
+                !loadingQRs && (
+                    <>
+                        <div className="fixed bottom-6 right-6 flex flex-col items-center align-center">
+                            <button
+                                href="javascript:openModal()"
+                                className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 flex items-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(59,130,246,0.7)] hover:shadow-[0_0_25px_6px_rgba(59,130,246,1)] hover:scale-110 transition-transform duration-300 animate-all"
+                                title="Crear un QR a partir de texto"
+                            >
+                                <span className="text-3xl">
+                                    <MdAdd className="text-2xl"/>
+                                </span>
+                            </button>
+                        </div>
 
-            <Link
-                to="/"
-                className="fixed bottom-6 left-6 bg-blue-500 text-white w-14 h-14 flex items-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(59,130,246,0.7)] hover:shadow-[0_0_25px_6px_rgba(59,130,246,1)] hover:scale-110 transition-transform duration-300 animate-all"
-                title="Regresar al inicio"
-            >
-                <span className="text-3xl">
-                    <HiHome className="text-2xl"/>
-                </span>
-            </Link>
+                        <Link
+                            to="/"
+                            className="fixed bottom-6 left-6 bg-blue-500 text-white w-14 h-14 flex items-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(59,130,246,0.7)] hover:shadow-[0_0_25px_6px_rgba(59,130,246,1)] hover:scale-110 transition-transform duration-300 animate-all"
+                            title="Regresar al inicio"
+                        >
+                            <span className="text-3xl">
+                                <HiHome className="text-2xl"/>
+                            </span>
+                        </Link>
+                    </>
+                )
+            }
+
         </>
     )
 }

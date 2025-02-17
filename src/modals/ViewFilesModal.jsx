@@ -6,7 +6,7 @@ import { useApp } from '../contexts/AppProvider';
 const ViewFilesModal = ({ fileInfo }) => {
     const { fileTypes } = useApp()
     return (
-        <div id="pdfModal" className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
         <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 relative overflow-hidden flex flex-col items-center" id="modalContent">
             <h2 className="text-2xl text-center text-slate-800 font-bold">
                 {fileInfo.filename}

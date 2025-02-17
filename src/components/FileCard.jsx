@@ -3,6 +3,7 @@ import { FaDownload, FaEye } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaFileLines, FaFileImage } from "react-icons/fa6";
+import { QrCode } from 'lucide-react';
 
 // Importar el contexto
 import { useFiles } from '../contexts/FilesProvider';
@@ -37,7 +38,12 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
         showModal();
     };
 
-    const handleCreateQR = async () => {};
+    const handleCreateQR = async () => {
+        const confirm = window.confirm(`¿Crear QR para ${fileName}?`);
+        if (confirm) {
+            await createQR(fileName);
+        }
+    };
 
     return (
         <div className="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg bg-gray-100">
@@ -73,6 +79,18 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
 
                 <button
                     className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
+                    title={`Crear QR para ${fileName}`}
+                    data-tooltip-id='createQRLabel'
+                    data-tooltip-content={`Crear QR para ${fileName}`}
+                    onClick={handleCreateQR}
+                >
+                    <span className="text-white flex text-center items-center space-x-2">
+                        <QrCode className='text-xl' />
+                    </span>
+                </button>
+
+                <button
+                    className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
                     title={`Descargar ${fileName}`}
                     data-tooltip-id='downloadLabel'
                     data-tooltip-content={`Descargar ${fileName}`}
@@ -82,6 +100,7 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
                         <FaDownload className='text-xl' />
                     </span>
                 </button>
+
                 <button
                     className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition duration-300 cursor-pointer"
                     title={`Eliminar ${fileName}`}
@@ -95,6 +114,7 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
                 </button>
             </div>
             <ReactTooltip id='viewLabel' place='top' />
+            <ReactTooltip id='createQRLabel' place='top' />
             <ReactTooltip id='downloadLabel' place='top' />
             <ReactTooltip id='deleteLabel' place='top' />
         </div>
