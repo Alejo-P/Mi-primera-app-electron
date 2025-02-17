@@ -116,7 +116,7 @@ export const FilesProvider = ({ children }) => {
     };
 
     // Memoriza el valor del contexto para evitar renders innecesarios
-    const contextValue = useMemo(() => ({ fileList, uploadFile, getFiles, getFile, downloadFile, deleteFile, deleteAllFiles, notificacion, handleNotificacion, loadingFiles }), [fileList, notificacion]);
+    const contextValue = useMemo(() => ({ fileList, uploadFile, getFiles, getFile, downloadFile, deleteFile, deleteAllFiles, notificacion, handleNotificacion, loadingFiles }), [fileList, notificacion, loadingFiles]);
 
     return <FilesContext.Provider value={contextValue}>{children}</FilesContext.Provider>;
 }
