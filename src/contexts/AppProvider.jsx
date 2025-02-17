@@ -6,10 +6,12 @@ export const AppProvider = ({ children }) => {
     const [tema, setTema] = useState(localStorage.getItem("tema") || "oscuro");
     const [notificacion, setNotificacion] = useState(null);
     const [extensiones] = useState(["txt", "pdf", "png", "jpg", "jpeg", "gif"]);
+    const [maxSize] = useState(16777216); // 16MB
     const [fileTypes] = useState({
         documents: ["txt", "pdf"],
         images: ["png", "jpg", "jpeg", "gif"],
     })
+    const [ selectedFile, setSelectedFile ] = useState(null);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
 
     // Cambia el tema y lo guarda en localStorage
@@ -29,6 +31,12 @@ export const AppProvider = ({ children }) => {
         });
     };
 
+    // Convertir unidad de medida de bytes a cualquier otra
+    const convertUnit = (bytes, unit = "MB") => {
+        const units = { B: 1, KB: 1024, MB: 1048576, GB: 1073741824 };
+        return (bytes / units[unit]).toFixed(2);
+    };
+
     // Aplica la clase del tema al body cuando cambia
     useEffect(() => {
         document.body.classList.remove("bg-gray-800", "bg-white");
@@ -36,7 +44,7 @@ export const AppProvider = ({ children }) => {
     }, [tema]);
 
     // Memoriza el valor del contexto para evitar renders innecesarios
-    const contextValue = useMemo(() => ({ tema, handleTheme, notificacion, handleNotificacion, extensiones, fileTypes }), [tema, notificacion]);
+    const contextValue = useMemo(() => ({ tema, handleTheme, notificacion, selectedFile, setSelectedFile, handleNotificacion, convertUnit, extensiones, fileTypes, maxSize }), [tema, notificacion, selectedFile]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

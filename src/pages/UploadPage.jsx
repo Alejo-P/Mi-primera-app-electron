@@ -6,13 +6,15 @@ import { Link } from 'react-router-dom';
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider'
+import { useFiles } from '../contexts/FilesProvider'
 
 // Importamos los compomentes
 import HeaderNav from '../components/HeaderNav';
 import Notification from '../components/Notification';
 
 const UploadPage = () => {
-    const { extensiones, handleNotificacion, notificacion } = useApp()
+    const { extensiones, maxSize, convertUnit } = useApp()
+    const { uploadFile, handleNotificacion, notificacion } = useFiles()
     const fileInput = useRef(null)
     const [file, setFile] = useState(null)
 
@@ -33,7 +35,7 @@ const UploadPage = () => {
         }
 
         // Comprobamos que el archivo no sea muy grande
-        if (file.size > 16777216) {
+        if (file.size > maxSize) {
             handleNotificacion('error', 'El archivo es muy grande, máximo 16 MB', 5000)
             // Limpiar el input
             fileInput.current.value = ''
@@ -42,6 +44,19 @@ const UploadPage = () => {
 
         // Actualizamos el estado de File
         setFile(file);
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (!file) return
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        await uploadFile(formData)
+        // Limpiar el input
+        fileInput.current.value = ''
+        setFile(null)
     }
 
     return (
@@ -55,7 +70,7 @@ const UploadPage = () => {
                         Selecciona un archivo para subir
                     </h2>
 
-                    <form className="flex flex-col md:flex-row items-center justify-center p-4" encType="multipart/form-data">
+                    <form className="flex flex-col md:flex-row items-center justify-center p-4" encType="multipart/form-data" onSubmit={handleSubmit}>
                         <input
                             type="file"
                             name="file"
@@ -67,7 +82,6 @@ const UploadPage = () => {
                             required
                         />
                         <button
-                            id="uploadBtn"
                             type="submit"
                             className={`block text-center text-blue-500 font-bold p-2 rounded-lg w-full md:w-1/4 mt-4 md:mt-0 transition-all duration-300 ${file ? 'bg-blue-500 text-white hover:bg-blue-500 hover:text-white' : 'bg-gray-300 text-gray-500'}`}
                             data-tooltip-id="uploadLabel"
@@ -84,7 +98,7 @@ const UploadPage = () => {
                     <ReactTooltip id="uploadLabel" place="top" effect="solid" />
 
                     <p className="text-center text-gray-500 mt-4">
-                        <small>Máximo 16 MB</small> <br/>
+                        <small>Máximo tamaño permitido: <span>{convertUnit(maxSize)} MB</span></small> <br/>
                         <small> Las extensiones de archivos permitidas son <span>{extensiones.join(', ')}</span></small>
                     </p>
                 </div>

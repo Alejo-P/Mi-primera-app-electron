@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { HiHome } from "react-icons/hi";
 import { MdDeleteSweep, MdAdd } from "react-icons/md";
+import { HiOutlineRefresh } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
@@ -12,9 +13,16 @@ import { useFiles } from '../contexts/FilesProvider';
 import HeaderNav from '../components/HeaderNav';
 import Notification from '../components/Notification';
 import FileCard from '../components/FileCard';
+import ViewFilesModal from '../modals/ViewFilesModal';
 
 const FilesPage = () => {
+    const { selectedFile } = useApp();
     const { fileList, getFiles, deleteAllFiles, notificacion, loadingFiles } = useFiles();
+    const [showModal, setShowModal] = useState(false);
+
+    const handleModal = () => {
+        setShowModal(!showModal);
+    };
 
     useEffect(() => {
         if (fileList.length === 0) {
@@ -42,7 +50,7 @@ const FilesPage = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
                                 {
                                     fileList.map((file, index) => (
-                                        <FileCard key={index} fileName={file.filename} />
+                                        <FileCard key={index} fileName={file.filename} fileImage={file.url} showModal={handleModal}/>
                                     ))
                                 }
                             </div>
@@ -54,8 +62,10 @@ const FilesPage = () => {
                     }
 
                 </div>
-
             </div>
+            {
+                showModal && <ViewFilesModal fileInfo={selectedFile} />
+            }
             <Link
                 to="/"
                 className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 flex items-center text-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(130,129,129,0.7)] hover:shadow-[0_0_25px_6px_rgba(130,129,129,1)] hover:scale-110 transition-transform duration-300 animate-all mb-4"

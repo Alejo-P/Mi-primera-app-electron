@@ -49,7 +49,7 @@ export const FilesProvider = ({ children }) => {
                 );
                 handleNotificacion('success', 'Archivos cargados correctamente', 5000);
             }
-
+            console.log(data);
             setFileList(data);
         } catch (error) {
             console.error(error);
@@ -59,17 +59,64 @@ export const FilesProvider = ({ children }) => {
         }
     };
 
+    // Subir un archivo
+    const uploadFile = async (data) => {
+        try {
+            const response = await axios.post(`${URL_BACKEND}/upload`, data);
+            handleNotificacion('success', 'Archivo subido correctamente', 5000);
+            getFiles();
+        } catch (error) {
+            console.error(error);
+            handleNotificacion('error', 'Error al subir el archivo', 5000);
+        }
+    }
+
     // Descargar un archivo por su nombre
-    const downloadFile = async (name) => {};
+    const downloadFile = async (name) => {
+        try {
+            const response = await axios.get(`${URL_BACKEND}/download/file/${name}`, {
+                responseType: 'blob',
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', name);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error(error);
+            handleNotificacion('error', 'Error al descargar el archivo', 5000);
+        }
+    };
 
     // Eliminar un archivo por su nombre
-    const deleteFile = async (name) => {};
+    const deleteFile = async (name) => {
+        try {
+            await axios.delete(`${URL_BACKEND}/delete/file/${name}`);
+            handleNotificacion('success', 'Archivo eliminado correctamente', 5000);
+            getFiles();
+        } catch (error) {
+            console.error(error);
+            handleNotificacion('error', 'Error al eliminar el archivo', 5000);
+        }
+    };
 
     // Eliminar todos los archivos
-    const deleteAllFiles = async () => {};
+    const deleteAllFiles = async () => {
+        try {
+            await axios.delete(`${URL_BACKEND}/delete/all`);
+            handleNotificacion('success', 'Archivos eliminados correctamente', 5000);
+            getFiles();
+        } catch (error) {
+            console.error(error);
+            handleNotificacion('error', 'Error al eliminar los archivos', 5000);
+        }
+    };
 
     // Memoriza el valor del contexto para evitar renders innecesarios
-    const contextValue = useMemo(() => ({ fileList, getFiles, getFile, downloadFile, deleteFile, deleteAllFiles, notificacion, handleNotificacion, loadingFiles }), [fileList, notificacion]);
+    const contextValue = useMemo(() => ({ fileList, uploadFile, getFiles, getFile, downloadFile, deleteFile, deleteAllFiles, notificacion, handleNotificacion, loadingFiles }), [fileList, notificacion]);
 
     return <FilesContext.Provider value={contextValue}>{children}</FilesContext.Provider>;
 }
