@@ -57,7 +57,8 @@ export const QRProvider = ({ children }) => {
         try {
             const response = await axios.delete(`${URL_BACKEND}/qr/${name}`);
             console.log(response);
-            getQRs();
+            setQRList((prev) => prev.filter((qr) => qr.filename !== name));
+            handleNotificacion('success', response.data.message, 5000);
         } catch (error) {
             console.error(error);
         } finally {
@@ -71,7 +72,8 @@ export const QRProvider = ({ children }) => {
         try {
             const response = await axios.delete(`${URL_BACKEND}/qrs`);
             console.log(response);
-            getQRs();
+            setQRList([]);
+            handleNotificacion('success', response.data.message, 5000);
         } catch (error) {
             console.error(error);
         } finally {

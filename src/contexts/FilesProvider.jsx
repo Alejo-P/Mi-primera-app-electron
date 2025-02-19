@@ -3,11 +3,13 @@ import axios from 'axios';
 
 // Importamos el contexto
 import { useApp } from './AppProvider';
+import { useQR } from './QRProvider';
 
 const FilesContext = createContext();
 
 export const FilesProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
+    const { getQRs } = useQR();
     const [fileList, setFileList] = useState([]);
     const [loadingFiles, setLoadingFiles] = useState(false);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
@@ -87,8 +89,12 @@ export const FilesProvider = ({ children }) => {
     const deleteFile = async (name) => {
         try {
             await axios.delete(`${URL_BACKEND}/delete/file/${name}`);
+            setFileList((prev) => prev.filter((file) => file.filename !== name));
+            setQRList((prev) => prev.filter((qr) => qr.filename !== name));
             handleNotificacion('success', 'Archivo eliminado correctamente', 5000);
-            getFiles();
+            setTimeout(() => {
+                getQRs();
+            }, 2000);
         } catch (error) {
             console.error(error);
             handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
@@ -99,8 +105,11 @@ export const FilesProvider = ({ children }) => {
     const deleteAllFiles = async () => {
         try {
             await axios.delete(`${URL_BACKEND}/delete/all`);
+            setFileList([]);
             handleNotificacion('success', 'Archivos eliminados correctamente', 5000);
-            getFiles();
+            setTimeout(() => {
+                getQRs();
+            }, 2000);
         } catch (error) {
             console.error(error);
             handleNotificacion('error', error?.response.data?.message || error.message, 5000);
