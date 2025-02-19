@@ -76,22 +76,6 @@ const FilesPage = () => {
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} />
             }
-            {
-                !loadingFiles && (
-                    <>
-                        <Link
-                            to="/dashboard/"
-                            className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 flex items-center text-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(130,129,129,0.7)] hover:shadow-[0_0_25px_6px_rgba(130,129,129,1)] hover:scale-110 transition-transform duration-300 animate-all mb-4"
-                            title="Ir a inicio"
-                            data-tooltip-id="homeLabel"
-                            data-tooltip-content="Ir a inicio"
-                        >
-                            <HiHome className='text-2xl' />
-                        </Link>
-                        <ReactTooltip id='homeLabel' place='top' />
-                    </>
-                )
-            }
         </>
     )
 }
