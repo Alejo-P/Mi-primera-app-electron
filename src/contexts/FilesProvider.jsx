@@ -45,7 +45,7 @@ export const FilesProvider = ({ children }) => {
             setFileList(data);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al cargar los archivos', 5000);
+            handleNotificacion('error', error?.response.data?.message || error.message, 5000);
         } finally {
             setLoadingFiles(false);
         }
@@ -59,7 +59,7 @@ export const FilesProvider = ({ children }) => {
             getFiles();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al subir el archivo', 5000);
+            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
         }
     }
 
@@ -79,7 +79,7 @@ export const FilesProvider = ({ children }) => {
             link.remove();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al descargar el archivo', 5000);
+            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
         }
     };
 
@@ -91,7 +91,7 @@ export const FilesProvider = ({ children }) => {
             getFiles();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al eliminar el archivo', 5000);
+            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
         }
     };
 
@@ -103,7 +103,7 @@ export const FilesProvider = ({ children }) => {
             getFiles();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al eliminar los archivos', 5000);
+            handleNotificacion('error', error?.response.data?.message || error.message, 5000);
         }
     };
 

@@ -69,7 +69,7 @@ const CreateQRModal = ({ handleModal }) => {
                 <h2 className="text-2xl text-center font-bold">Crear un QR</h2>
 
                 <div className="mt-4 w-full">
-                    <label htmlFor="name" className="font-bold">
+                    <label htmlFor="QRname" className="font-bold">
                         Nombre del QR
                         <span className="text-gray-400 text-md">
                             <small> (opcional)</small>
@@ -77,7 +77,7 @@ const CreateQRModal = ({ handleModal }) => {
                     </label>
                     <input
                         type="text"
-                        id="Qname"
+                        id="QRname"
                         className="w-full p-2 border border-gray-300 rounded-lg"
                         placeholder="Ingresa un nombre para el QR"
                         value={QRForm.QRname}
@@ -89,7 +89,7 @@ const CreateQRModal = ({ handleModal }) => {
                 </div>  
 
                 <div className="mt-4 w-full">
-                    <label htmlFor="text" className="font-bold">
+                    <label htmlFor="QRtext" className="font-bold">
                         Texto <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -107,7 +107,7 @@ const CreateQRModal = ({ handleModal }) => {
                 </div>
 
                 <div className="mt-4 w-full">
-                    <label htmlFor="icon" className="font-bold">
+                    <label htmlFor="QRicon" className="font-bold">
                         Seleccione un icono para el QR
                         <span className="text-gray-400 text-md">
                             <small> (opcional)</small>
