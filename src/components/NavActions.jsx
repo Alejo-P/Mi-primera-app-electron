@@ -5,7 +5,6 @@ import { useApp } from '../contexts/AppProvider';
 const NavActions = ({ children }) => {
     const { tema, visibleNav } = useApp();
     const isDark = tema === 'oscuro';
-    console.log( `Estado de visible: ${visibleNav}`);
 
     return (
         <AnimatePresence>
