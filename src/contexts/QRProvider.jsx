@@ -1,23 +1,16 @@
 import { createContext, useContext, useState, useMemo } from 'react';
 import axios from 'axios';
 
+// Importamos el contexto
+import { useApp } from './AppProvider';
+
 const QRContext = createContext();
 
 export const QRProvider = ({ children }) => {
+    const { handleNotificacion } = useApp();
     const [qrList, setQRList] = useState([]);
     const [loadingQRs, setLoadingQRs] = useState(false);
-    const [notificacion, setNotificacion] = useState(null);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
-
-    // Muestra una notificación temporalmente
-    const handleNotificacion = (type, content, timeout = 3000) => {
-        setNotificacion({ 
-            type,
-            content,
-            onClose: () => setNotificacion(null),
-            duration: timeout
-        });
-    };
 
     // Obtener un QR por su nombre
     const getQR = async (name) => {
@@ -166,9 +159,8 @@ export const QRProvider = ({ children }) => {
         createQR,
         createQRFile,
         downloadQR,
-        loadingQRs,
-        notificacion
-    }), [qrList, loadingQRs, notificacion]);
+        loadingQRs
+    }), [qrList, loadingQRs]);
 
     return <QRContext.Provider value={contextValue}>{children}</QRContext.Provider>;
 };

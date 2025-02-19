@@ -1,23 +1,16 @@
 import { createContext, useContext, useState, useMemo } from 'react';
 import axios from 'axios';
 
+// Importamos el contexto
+import { useApp } from './AppProvider';
+
 const FilesContext = createContext();
 
 export const FilesProvider = ({ children }) => {
+    const { handleNotificacion } = useApp();
     const [fileList, setFileList] = useState([]);
     const [loadingFiles, setLoadingFiles] = useState(false);
-    const [notificacion, setNotificacion] = useState(null);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
-
-    // Muestra una notificación temporalmente
-    const handleNotificacion = (type, content, timeout = 3000) => {
-        setNotificacion({ 
-            type,
-            content,
-            onClose: () => setNotificacion(null),
-            duration: timeout
-        });
-    };
 
     // Obtener un archivo por su nombre
     const getFile = async (name) => {
@@ -116,7 +109,7 @@ export const FilesProvider = ({ children }) => {
     };
 
     // Memoriza el valor del contexto para evitar renders innecesarios
-    const contextValue = useMemo(() => ({ fileList, uploadFile, getFiles, getFile, downloadFile, deleteFile, deleteAllFiles, notificacion, handleNotificacion, loadingFiles }), [fileList, notificacion, loadingFiles]);
+    const contextValue = useMemo(() => ({ fileList, uploadFile, getFiles, getFile, downloadFile, deleteFile, deleteAllFiles, loadingFiles }), [fileList, loadingFiles]);
 
     return <FilesContext.Provider value={contextValue}>{children}</FilesContext.Provider>;
 }
