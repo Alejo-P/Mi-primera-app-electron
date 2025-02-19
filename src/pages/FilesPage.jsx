@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { HiHome } from "react-icons/hi";
 import { MdDeleteSweep, MdAdd } from "react-icons/md";
 import { HiOutlineRefresh } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
-import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
