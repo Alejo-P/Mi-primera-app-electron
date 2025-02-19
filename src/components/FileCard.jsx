@@ -12,7 +12,7 @@ import { useQR } from '../contexts/QRProvider';
 
 const FileCard = ({ fileName, fileImage, showModal }) => {
     const { downloadFile, deleteFile } = useFiles();
-    const { fileTypes, setSelectedFile } = useApp();
+    const { fileTypes, setSelectedFile, setVisibleNav } = useApp();
     const { getQR, createQRFile } = useQR();
 
     const handleDownload = async () => {
@@ -31,11 +31,14 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
     };
 
     const handleClick = async () => {
+        setVisibleNav(false);
         setSelectedFile({
             filename: fileName,
             url: fileImage
         });
-        showModal();
+        setTimeout(() => {
+            showModal();
+        }, 250);
     };
 
     const handleCreateQR = async () => {

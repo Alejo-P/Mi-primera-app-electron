@@ -1,10 +1,34 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { Tooltip as ReactTooltip } from 'react-tooltip';
+import { IoClose } from "react-icons/io5";
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 
-const ViewFilesModal = ({ fileInfo }) => {
-    const { fileTypes } = useApp()
+// Importamos los componentes
+import NavActions from '../components/NavActions';
+
+const ViewFilesModal = ({ fileInfo, handleModal }) => {
+    const { fileTypes, setVisibleNav, visibleNav } = useApp();
+
+    const ReloadNav = () => {
+        setVisibleNav(false);
+        setTimeout(() => {
+            setVisibleNav(true);
+        }, 250);
+    };
+
+    const handleClose = async () => {
+        ReloadNav();
+        setTimeout(() => {
+            handleModal();
+        }, 250);
+    };
+
+    useEffect(() => {
+        ReloadNav();
+    }, []);
+
     return (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
         <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 relative overflow-hidden flex flex-col items-center" id="modalContent">
@@ -29,6 +53,23 @@ const ViewFilesModal = ({ fileInfo }) => {
                 )
             }
         </div>
+        {
+            visibleNav && (
+                <NavActions>
+                    <button
+                        onClick={handleClose}
+                        className="flex items-center gap-2 px-3 py-2 bg-red-500 text-white rounded-lg shadow-md transition-all duration-300"
+                        data-tooltip-id='closeLabel'
+                        data-tooltip-content='Cerrar'
+                    >
+                        <span className="text-3xl">
+                            <IoClose className='text-2xl'/>
+                        </span>
+                    </button>
+                    <ReactTooltip id='closeLabel' place="top" effect="solid" className='text-white bg-white text-sm' />
+                </NavActions>
+            )
+        }
     </div>
     )
 }
