@@ -65,9 +65,9 @@ const Dashboard = () => {
                 />
 
                 {/* Tooltips */}
-                <ReactTooltip id="homeLabel" place="top" effect="solid" className="z-50" />
-                <ReactTooltip id="QRLabel" place="top" effect="solid" className="z-50" />
-                <ReactTooltip id="FilesLabel" place="top" effect="solid" className="z-50" />
+                <ReactTooltip id="homeLabel" place="top" effect="solid" />
+                <ReactTooltip id="QRLabel" place="top" effect="solid" />
+                <ReactTooltip id="FilesLabel" place="top" effect="solid" />
             </div>
 
             {/* 🔵 Contenedor de Contenido */}

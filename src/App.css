@@ -996,12 +996,32 @@
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .shadow-\[0_0_10_rgba\(0\,0\,0\,0\.2\)\] {
+    --tw-shadow: 0 0 10 var(--tw-shadow-color, rgba(0,0,0,0.2));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-\[0_0_10_rgba\(80\,80\,80\,0\.2\)\] {
+    --tw-shadow: 0 0 10 var(--tw-shadow-color, rgba(80,80,80,0.2));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
   .shadow-\[0_0_15px_4px_rgba\(59\,130\,246\,0\.7\)\] {
     --tw-shadow: 0 0 15px 4px var(--tw-shadow-color, rgba(59,130,246,0.7));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-\[0_0_15px_4px_rgba\(130\,129\,129\,0\.7\)\] {
     --tw-shadow: 0 0 15px 4px var(--tw-shadow-color, rgba(130,129,129,0.7));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-\[0_2px_8px_rgba\(0\,0\,0\,0\.3\)\] {
+    --tw-shadow: 0 2px 8px var(--tw-shadow-color, rgba(0,0,0,0.3));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-\[0_4px_10px_rgba\(0\,0\,0\,0\.5\)\] {
+    --tw-shadow: 0 4px 10px var(--tw-shadow-color, rgba(0,0,0,0.5));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-\[0_6px_15px_rgba\(0\,0\,0\,0\.7\)\] {
+    --tw-shadow: 0 6px 15px var(--tw-shadow-color, rgba(0,0,0,0.7));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-lg {
@@ -1072,6 +1092,16 @@
         --tw-scale-x: 95%;
         --tw-scale-y: 95%;
         --tw-scale-z: 95%;
+        scale: var(--tw-scale-x) var(--tw-scale-y);
+      }
+    }
+  }
+  .hover\:scale-98 {
+    &:hover {
+      @media (hover: hover) {
+        --tw-scale-x: 98%;
+        --tw-scale-y: 98%;
+        --tw-scale-z: 98%;
         scale: var(--tw-scale-x) var(--tw-scale-y);
       }
     }

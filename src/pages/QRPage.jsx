@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MdDeleteSweep, MdAdd } from "react-icons/md";
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
@@ -8,6 +9,7 @@ import { useQR } from '../contexts/QRProvider';
 // Importamos los componentes
 import QRCard from '../components/QRCard';
 import LoadingCard from '../components/LoadingCard';
+import NavActions from '../components/NavActions';
 
 const QRPage = () => {
     const { tema } = useApp();
@@ -71,19 +73,22 @@ const QRPage = () => {
 
             {
                 !loadingQRs && (
-                    <>
-                        <div className="fixed bottom-6 right-6 flex flex-col items-center align-center">
-                            <button
-                                href="javascript:openModal()"
-                                className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 flex items-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(59,130,246,0.7)] hover:shadow-[0_0_25px_6px_rgba(59,130,246,1)] hover:scale-110 transition-transform duration-300 animate-all"
-                                title="Crear un QR a partir de texto"
-                            >
-                                <span className="text-3xl">
-                                    <MdAdd className="text-2xl"/>
-                                </span>
-                            </button>
-                        </div>
-                    </>
+                    <NavActions>
+                        <button
+                            href="javascript:openModal()"
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Crear un QR a partir de texto"
+                            data-tooltip-id="QRLabel"
+                            data-tooltip-content="Crear un código QR a partir de un texto"
+                        >
+                            <span className="text-3xl">
+                                <MdAdd className="text-2xl"/>
+                            </span>
+                        </button>
+                        <ReactTooltip id="QRLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
+                    </NavActions>
                 )
             }
 
