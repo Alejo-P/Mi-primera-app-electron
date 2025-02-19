@@ -97,7 +97,7 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
                     className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
                     title={`Crear QR para ${fileName}`}
                     data-tooltip-id='createQRLabel'
-                    data-tooltip-content={`Crear QR para ${fileName}`}
+                    data-tooltip-content={`Crear QR de descarga para ${fileName}`}
                     onClick={handleCreateQR}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
