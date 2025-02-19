@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { MdDeleteSweep, MdAdd } from "react-icons/md";
+import { MdDeleteSweep } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
+import { HiOutlineRefresh } from 'react-icons/hi';
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
@@ -16,6 +18,10 @@ const QRPage = () => {
     const { qrList, getQRs, getQR, deleteAllQRs, loadingQRs } = useQR();
     const [QRInfo, setQRInfo] = useState([]);
     const isDark = tema === 'oscuro';
+
+    const handleRefresh = () => {
+        getQRs();
+    };
 
     useEffect(() => {
         if (qrList.length === 0) {
@@ -84,10 +90,24 @@ const QRPage = () => {
                             data-tooltip-content="Crear un código QR a partir de un texto"
                         >
                             <span className="text-3xl">
-                                <MdAdd className="text-2xl"/>
+                                <IoMdAdd className="text-2xl"/>
+                            </span>
+                        </button>
+                        <button
+                            onClick={handleRefresh}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Actualizar lista"
+                            data-tooltip-id="RefreshLabel"
+                            data-tooltip-content="Actualizar la lista de archivos"
+                        >
+                            <span className="text-3xl">
+                                <HiOutlineRefresh className='text-2xl' />
                             </span>
                         </button>
                         <ReactTooltip id="QRLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
+                        <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
                     </NavActions>
                 )
             }

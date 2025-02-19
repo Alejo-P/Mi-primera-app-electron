@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MdDeleteSweep, MdAdd } from "react-icons/md";
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiOutlineRefresh } from 'react-icons/hi';
 
 // Importamos el contexto
@@ -10,6 +11,7 @@ import { useFiles } from '../contexts/FilesProvider';
 import FileCard from '../components/FileCard';
 import ViewFilesModal from '../modals/ViewFilesModal';
 import LoadingCard from '../components/LoadingCard';
+import NavActions from '../components/NavActions';
 
 const FilesPage = () => {
     const { selectedFile, tema } = useApp();
@@ -73,6 +75,26 @@ const FilesPage = () => {
             </div>
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} />
+            }
+            {
+                !loadingFiles && (
+                    <NavActions>
+                        <button
+                            onClick={handleRefresh}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Actualizar lista"
+                            data-tooltip-id="RefreshLabel"
+                            data-tooltip-content="Actualizar la lista de archivos"
+                        >
+                            <span className="text-3xl">
+                                <HiOutlineRefresh className='text-2xl'/>
+                            </span>
+                        </button>
+                        <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
+                    </NavActions>
+                )
             }
         </>
     )
