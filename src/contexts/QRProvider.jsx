@@ -19,7 +19,7 @@ export const QRProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al cargar el QR', 5000);
+            handleNotificacion('error', 'Error al cargar el QR ' + name, 5000);
             return null;
         }
     };
@@ -27,6 +27,7 @@ export const QRProvider = ({ children }) => {
     // Obtener todos los QRs
     const getQRs = async () => {
         setLoadingQRs(true);
+        setQRList([]);
         try {
             const response = await axios.get(`${URL_BACKEND}/qrs`);
             let data = [];
@@ -79,25 +80,26 @@ export const QRProvider = ({ children }) => {
     };
 
     // Crear un QR a partir de un texto
-    const createQR = async (text, name, icon) => {
+    const createQR = async (data) => {
         setLoadingQRs(true);
         try {
             const formData = new FormData();
-            formData.append('text', text);
+            formData.append('text', data.QRtext);
 
-            if (name) {
-                formData.append('name', name);
+            if (data?.name) {
+                formData.append('name', data.QRname);
             }
 
-            if (icon) {
-                formData.append('icon', icon);
+            if (data?.icon) {
+                formData.append('icon', data.QRicon);
             }
 
             const response = await axios.post(`${URL_BACKEND}/qr`, formData);
-            console.log(response);
+            handleNotificacion('success', response.data.message, 5000);
             getQRs();
         } catch (error) {
             console.error(error);
+            handleNotificacion('error', error.data.message, 5000);
         } finally {
             setLoadingQRs(false);
         }
@@ -108,10 +110,11 @@ export const QRProvider = ({ children }) => {
         setLoadingQRs(true);
         try {
             const response = await axios.post(`${URL_BACKEND}/qr/file/${fileName}`);
-            console.log(response);
+            handleNotificacion('success', response.data.message, 5000);
             getQRs();
         } catch (error) {
             console.error(error);
+            handleNotificacion('error', error.data.message, 5000);
         } finally {
             setLoadingQRs(false);
         }

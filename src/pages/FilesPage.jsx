@@ -33,6 +33,14 @@ const FilesPage = () => {
         await handleFetchFiles();
     };
 
+    const handleDeleteAll = async () => {
+        const confirm = window.confirm(`¿Eliminar todos los archivos?`);
+        if (confirm) {
+            await deleteAllFiles();
+            await getFiles();
+        }
+    };
+
     useEffect(() => {
         
         if (fileList.length === 0) {
@@ -66,16 +74,19 @@ const FilesPage = () => {
                     )
                 }
                 {
-                    fileList.length > 0 && (
+                    (fileList.length > 0 && !loadingFiles) && (
                         <div className="flex justify-center">
                             <button
                                 className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
                                 title="Eliminar todos"
-                                onClick={deleteAllFiles}
+                                onClick={handleDeleteAll}
+                                data-tooltip-id="deleteAllLabel"
+                                data-tooltip-content="Eliminar todos los archivos"
                             >
                                 <MdDeleteSweep className="text-2xl" />
                                 <p className="font-bold">Eliminar todos</p>
                             </button>
+                            <ReactTooltip id="deleteAllLabel" place="top" effect="solid" />
                         </div>
                     )
                 }

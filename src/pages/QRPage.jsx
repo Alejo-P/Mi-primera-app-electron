@@ -11,13 +11,19 @@ import { useQR } from '../contexts/QRProvider';
 // Importamos los componentes
 import QRCard from '../components/QRCard';
 import LoadingCard from '../components/LoadingCard';
+import CreateQRModal from '../modals/CreateQRModal';
 import NavActions from '../components/NavActions';
 
 const QRPage = () => {
     const { tema, setVisibleNav } = useApp();
     const { qrList, getQRs, getQR, deleteAllQRs, loadingQRs } = useQR();
+    const [showModal, setShowModal] = useState(false);
     const [QRInfo, setQRInfo] = useState([]);
     const isDark = tema === 'oscuro';
+
+    const handleModal = () => {
+        setShowModal(!showModal);
+    };
 
     const handleFetchQRs = async () => {
         setVisibleNav(false);
@@ -27,6 +33,14 @@ const QRPage = () => {
 
     const handleRefresh = async () => {
         await handleFetchQRs();
+    };
+
+    const handleDeleteAll = async () => {
+        const confirm = window.confirm(`¿Eliminar todos los QRs?`);
+        if (confirm) {
+            await deleteAllQRs();
+            await getQR();
+        }
     };
 
     useEffect(() => {
@@ -64,11 +78,14 @@ const QRPage = () => {
                     )
                 }
                 {
-                    qrList.length > 0 && (
+                    (qrList.length > 0 && !loadingQRs) && (
                         <div className="flex justify-center">
                             <button
                                 className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
                                 title="Eliminar todos"
+                                onClick={handleDeleteAll}
+                                data-tooltip-id='deleteAllLabel'
+                                data-tooltip-content='Eliminar todos los QRs generados'
                             >
                                 <span className="text-white flex text-center items-center space-x-2">
                                     {/* <!-- Imagen con trazos blancos--> */}
@@ -76,43 +93,46 @@ const QRPage = () => {
                                     <p className="font-bold">Eliminar todos</p>
                                 </span>
                             </button>
+                            <ReactTooltip id="deleteAllLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
                         </div>
                     )
                 }
             </div>
-            
-            {/* <!-- Modal para la creacion de un QR mediante texto--> */}
-                
-            <NavActions>
-                <button
-                    href="javascript:openModal()"
-                    className={`p-2 rounded-lg transition-all duration-300
-                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                        hover:scale-95 shadow-lg hover:shadow-xl`}
-                    title="Crear un QR a partir de texto"
-                    data-tooltip-id="QRLabel"
-                    data-tooltip-content="Crear un código QR a partir de un texto"
-                >
-                    <span className="text-3xl">
-                        <IoMdAdd className="text-2xl"/>
-                    </span>
-                </button>
-                <button
-                    onClick={handleRefresh}
-                    className={`p-2 rounded-lg transition-all duration-300
-                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                        hover:scale-95 shadow-lg hover:shadow-xl`}
-                    title="Actualizar lista"
-                    data-tooltip-id="RefreshLabel"
-                    data-tooltip-content="Actualizar la lista de archivos"
-                >
-                    <span className="text-3xl">
-                        <HiOutlineRefresh className='text-2xl' />
-                    </span>
-                </button>
-                <ReactTooltip id="QRLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-            </NavActions>
+            { showModal && <CreateQRModal handleModal={handleModal} />}
+            {
+                !showModal && (
+                    <NavActions>
+                        <button
+                            onClick={handleModal}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Crear un QR a partir de texto"
+                            data-tooltip-id="QRLabel"
+                            data-tooltip-content="Crear un código QR a partir de un texto"
+                        >
+                            <span className="text-3xl">
+                                <IoMdAdd className="text-2xl"/>
+                            </span>
+                        </button>
+                        <button
+                            onClick={handleRefresh}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Actualizar lista"
+                            data-tooltip-id="RefreshLabel"
+                            data-tooltip-content="Actualizar la lista de archivos"
+                        >
+                            <span className="text-3xl">
+                                <HiOutlineRefresh className='text-2xl' />
+                            </span>
+                        </button>
+                        <ReactTooltip id="QRLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
+                        <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
+                    </NavActions>
+                )
+            } 
         </>
     )
 }

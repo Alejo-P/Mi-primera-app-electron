@@ -19,7 +19,7 @@ export const FilesProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al cargar el archivo', 5000);
+            handleNotificacion('error', 'Error al cargar el archivo ' + name, 5000);
             return null;
         }
     };
@@ -27,6 +27,7 @@ export const FilesProvider = ({ children }) => {
     // Obtener todos los archivos
     const getFiles = async () => {
         setLoadingFiles(true);
+        setFileList([]);
         try {
             const response = await axios.get(`${URL_BACKEND}/files`);
             let data = [];

@@ -23,7 +23,7 @@ const Dashboard = () => {
     }, [pathname]); // Se ejecuta cuando cambia la ruta
 
     return (
-        <div className={`grid grid-cols-[20%_80%] grid-rows-[auto_1fr] h-screen transition-all duration-300
+        <div className={`grid grid-cols-[20%_80%] grid-rows-[auto_1fr] h-screen transition-all duration-300 min-w-[525px]
             ${isDark ? 'bg-gray-900 text-white' : 'bg-slate-200 text-gray-900'}`}
         >
             {/* 🟢 Header */}
