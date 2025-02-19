@@ -14,9 +14,13 @@ import Notification from '../components/Notification'
 import NavButton from '../components/NavButton';
 
 const Dashboard = () => {
-    const { notificacion, tema } = useApp();
+    const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
     const isDark = tema === 'oscuro';
+
+    useEffect(() => {
+        setCurrentPath(pathname);
+    }, [pathname]); // Se ejecuta cuando cambia la ruta
 
     return (
         <div className={`grid grid-cols-[20%_80%] grid-rows-[auto_1fr] h-screen transition-all duration-300

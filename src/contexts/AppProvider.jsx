@@ -12,6 +12,8 @@ export const AppProvider = ({ children }) => {
         images: ["png", "jpg", "jpeg", "gif"],
     })
     const [ selectedFile, setSelectedFile ] = useState(null);
+    const [ currentPath, setCurrentPath ] = useState(null);
+    const [ visibleNav, setVisibleNav ] = useState(true);
 
     // Cambia el tema y lo guarda en localStorage
     const handleTheme = () => {
@@ -43,7 +45,22 @@ export const AppProvider = ({ children }) => {
     }, [tema]);
 
     // Memoriza el valor del contexto para evitar renders innecesarios
-    const contextValue = useMemo(() => ({ tema, handleTheme, notificacion, selectedFile, setSelectedFile, handleNotificacion, convertUnit, extensiones, fileTypes, maxSize }), [tema, notificacion, selectedFile]);
+    const contextValue = useMemo(() => ({
+        tema,
+        notificacion,
+        selectedFile,
+        extensiones,
+        fileTypes,
+        maxSize,
+        currentPath,
+        visibleNav,
+        setVisibleNav,
+        setCurrentPath,
+        setSelectedFile,
+        handleNotificacion,
+        convertUnit,
+        handleTheme,
+    }), [tema, notificacion, selectedFile, currentPath, visibleNav]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

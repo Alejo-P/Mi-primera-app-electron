@@ -14,7 +14,7 @@ import LoadingCard from '../components/LoadingCard';
 import NavActions from '../components/NavActions';
 
 const FilesPage = () => {
-    const { selectedFile, tema } = useApp();
+    const { selectedFile, tema, setVisibleNav } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const [showModal, setShowModal] = useState(false);
     const isDark = tema === 'oscuro';
@@ -23,13 +23,20 @@ const FilesPage = () => {
         setShowModal(!showModal);
     };
 
-    const handleRefresh = () => {
-        getFiles();
+    const handleFetchFiles = async () => {
+        setVisibleNav(false);
+        await getFiles();
+        setVisibleNav(true);
+    };
+
+    const handleRefresh = async () => {
+        await handleFetchFiles();
     };
 
     useEffect(() => {
+        
         if (fileList.length === 0) {
-            getFiles();
+            handleFetchFiles();
         }
     }, []);
 
@@ -76,26 +83,22 @@ const FilesPage = () => {
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} />
             }
-            {
-                !loadingFiles && (
-                    <NavActions>
-                        <button
-                            onClick={handleRefresh}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Actualizar lista"
-                            data-tooltip-id="RefreshLabel"
-                            data-tooltip-content="Actualizar la lista de archivos"
-                        >
-                            <span className="text-3xl">
-                                <HiOutlineRefresh className='text-2xl'/>
-                            </span>
-                        </button>
-                        <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                    </NavActions>
-                )
-            }
+            <NavActions>
+                <button
+                    onClick={handleRefresh}
+                    className={`p-2 rounded-lg transition-all duration-300
+                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                        hover:scale-95 shadow-lg hover:shadow-xl`}
+                    title="Actualizar lista"
+                    data-tooltip-id="RefreshLabel"
+                    data-tooltip-content="Actualizar la lista de archivos"
+                >
+                    <span className="text-3xl">
+                        <HiOutlineRefresh className='text-2xl'/>
+                    </span>
+                </button>
+                <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
+            </NavActions>
         </>
     )
 }
