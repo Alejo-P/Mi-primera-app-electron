@@ -13,6 +13,7 @@ const QRPage = () => {
     const { tema } = useApp();
     const { qrList, getQRs, getQR, deleteAllQRs, loadingQRs } = useQR();
     const [QRInfo, setQRInfo] = useState([]);
+    const isDark = tema === 'oscuro';
 
     useEffect(() => {
         if (qrList.length === 0) {
@@ -22,8 +23,10 @@ const QRPage = () => {
     }, []); // Se ejecuta cada vez que qrList cambia
     return (
         <>
-            <div className="relative overflow-x-auto shadow-lg sm:rounded-lg m-3 p-3 bg-white w-full">
-                <h2 className="text-2xl text-center text-slate-800 font-bold">
+            <div className={`overflow-x-auto shadow-lg p-3 sm:rounded-lg w-full
+                ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} transition-all duration-300
+            `}>
+                <h2 className="text-2xl text-center font-bold">
                     QRs generados
                 </h2>
 
@@ -46,24 +49,23 @@ const QRPage = () => {
                         </div>
                     )
                 }
-                
+                {
+                    qrList.length > 0 && (
+                        <div className="flex justify-center">
+                            <button
+                                className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+                                title="Eliminar todos"
+                            >
+                                <span className="text-white flex text-center items-center space-x-2">
+                                    {/* <!-- Imagen con trazos blancos--> */}
+                                    <MdDeleteSweep className='text-xl' />
+                                    <p className="font-bold">Eliminar todos</p>
+                                </span>
+                            </button>
+                        </div>
+                    )
+                }
             </div>
-            {
-                qrList.length > 0 && (
-                    <div className="flex justify-center">
-                        <button
-                            className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-                            title="Eliminar todos"
-                        >
-                            <span className="text-white flex text-center items-center space-x-2">
-                                {/* <!-- Imagen con trazos blancos--> */}
-                                <MdDeleteSweep className='text-xl' />
-                                <p className="font-bold">Eliminar todos</p>
-                            </span>
-                        </button>
-                    </div>
-                )
-            }
             
             {/* <!-- Modal para la creacion de un QR mediante texto--> */}
 

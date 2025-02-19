@@ -12,9 +12,10 @@ import ViewFilesModal from '../modals/ViewFilesModal';
 import LoadingCard from '../components/LoadingCard';
 
 const FilesPage = () => {
-    const { selectedFile } = useApp();
+    const { selectedFile, tema } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const [showModal, setShowModal] = useState(false);
+    const isDark = tema === 'oscuro';
 
     const handleModal = () => {
         setShowModal(!showModal);
@@ -32,9 +33,10 @@ const FilesPage = () => {
 
     return (
         <>
-
-            <div className="relative overflow-x-auto shadow-lg sm:rounded-lg m-3 p-3 bg-white w-full">
-                <h2 className="text-2xl text-center text-slate-800 font-bold">
+            <div className={`overflow-x-auto shadow-lg p-3 sm:rounded-lg w-full
+                ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} transition-all duration-300
+            `}>
+                <h2 className="text-2xl text-center font-bold">
                     Archivos subidos
                 </h2>
                 {
@@ -54,22 +56,21 @@ const FilesPage = () => {
                         </div>
                     )
                 }
+                {
+                    fileList.length > 0 && (
+                        <div className="flex justify-center">
+                            <button
+                                className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+                                title="Eliminar todos"
+                                onClick={deleteAllFiles}
+                            >
+                                <MdDeleteSweep className="text-2xl" />
+                                <p className="font-bold">Eliminar todos</p>
+                            </button>
+                        </div>
+                    )
+                }
             </div>
-            {
-                fileList.length > 0 && (
-                    <div className="flex justify-center">
-                        <button
-                            className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-                            title="Eliminar todos"
-                            onClick={deleteAllFiles}
-                        >
-                            <MdDeleteSweep className="text-2xl" />
-                            <p className="font-bold">Eliminar todos</p>
-                        </button>
-                    </div>
-                )
-            }
-            
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} />
             }

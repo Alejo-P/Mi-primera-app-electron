@@ -71,8 +71,8 @@ const Dashboard = () => {
             </div>
 
             {/* 🔵 Contenedor de Contenido */}
-            <div className={`flex flex-row items-center justify-center m-4 p-4 border rounded-lg flex-1 shadow-lg 
-                ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300 shadow-md'} transition-all duration-300`}
+            <div className={`flex flex-row m-4 border rounded-lg flex-1 shadow-lg overflow-y-auto
+                ${isDark ? 'border-gray-600' : 'border-gray-300 shadow-md'} transition-all duration-300`}
             >
                 {notificacion && <Notification {...notificacion} />}
                 <Outlet />

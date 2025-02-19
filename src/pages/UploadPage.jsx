@@ -7,10 +7,11 @@ import { useApp } from '../contexts/AppProvider'
 import { useFiles } from '../contexts/FilesProvider'
 
 const UploadPage = () => {
-    const { extensiones, maxSize, convertUnit, handleNotificacion } = useApp()
+    const { extensiones, maxSize, convertUnit, handleNotificacion, tema } = useApp()
     const { uploadFile } = useFiles()
     const fileInput = useRef(null)
     const [file, setFile] = useState(null)
+    const isDark = tema === 'oscuro';
 
     const handleChargeFile = async (e) => {
         let file = e.target.files[0]
@@ -54,8 +55,10 @@ const UploadPage = () => {
     }
 
     return (
-        <div className="overflow-x-auto shadow-lg sm:rounded-lg bg-white w-full">
-            <h2 className="text-2xl text-center text-slate-800 font-bold">
+        <div className={`overflow-x-auto shadow-lg p-3 sm:rounded-lg w-full
+            ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} transition-all duration-300
+        `}>
+            <h2 className="text-2xl text-center font-bold">
                 Selecciona un archivo para subir
             </h2>
 
@@ -64,7 +67,7 @@ const UploadPage = () => {
                     type="file"
                     name="file"
                     id="fileInput"
-                    className="border text-gray-900 border-gray-300 p-2 rounded-lg w-full mr-3 md:w-1/2 mt-4 md:mt-0 transition-all duration-300"
+                    className="border border-gray-300 p-2 rounded-lg w-full mr-3 md:w-1/2 mt-4 md:mt-0 transition-all duration-300 flex-1"
                     title="Selecciona un archivo"
                     onChange={handleChargeFile}
                     ref={fileInput}
