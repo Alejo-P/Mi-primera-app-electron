@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 
 // Importamos el contexto
@@ -10,6 +10,7 @@ import { FilesProvider } from './contexts/FilesProvider'
 import UploadPage from './pages/UploadPage'
 import QRPage from './pages/QRPage'
 import FilesPage from './pages/FilesPage'
+import Dashboard from './layouts/Dashboard'
 
 function App() {
 
@@ -19,9 +20,19 @@ function App() {
         <QRProvider>
           <FilesProvider>
             <Routes>
-              <Route path="/" element={<UploadPage />} />
-              <Route path="/qr" element={<QRPage />} />
-              <Route path="/files" element={<FilesPage />} />
+              <Route index element={
+                // Redirigimos a la página de inicio
+                <Navigate to="/dashboard/" />
+              } />
+              <Route path="/dashboard/*" element={
+                <Routes>
+                  <Route element={<Dashboard />}>
+                    <Route index element={<UploadPage />} />
+                    <Route path="qr" element={<QRPage />} />
+                    <Route path="files" element={<FilesPage />} />
+                  </Route>
+                </Routes>
+              } />
             </Routes>
           </FilesProvider>
         </QRProvider>

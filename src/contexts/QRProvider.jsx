@@ -112,6 +112,20 @@ export const QRProvider = ({ children }) => {
         }
     };
 
+    // Crear un QR a partir de un archivo
+    const createQRFile = async (fileName) => {
+        setLoadingQRs(true);
+        try {
+            const response = await axios.post(`${URL_BACKEND}/qr/file/${fileName}`);
+            console.log(response);
+            getQRs();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoadingQRs(false);
+        }
+    };
+
     const downloadQR = async (name) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/download/qr/${name}`, {
@@ -150,6 +164,7 @@ export const QRProvider = ({ children }) => {
         deleteQR,
         deleteAllQRs,
         createQR,
+        createQRFile,
         downloadQR,
         loadingQRs,
         notificacion

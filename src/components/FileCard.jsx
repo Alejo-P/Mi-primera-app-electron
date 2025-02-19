@@ -13,7 +13,7 @@ import { useQR } from '../contexts/QRProvider';
 const FileCard = ({ fileName, fileImage, showModal }) => {
     const { downloadFile, deleteFile } = useFiles();
     const { fileTypes, setSelectedFile } = useApp();
-    const { getQR, createQR } = useQR();
+    const { getQR, createQRFile } = useQR();
 
     const handleDownload = async () => {
         const confirm = window.confirm(`¿Descargar ${fileName}?`);
@@ -41,7 +41,7 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
     const handleCreateQR = async () => {
         const confirm = window.confirm(`¿Crear QR para ${fileName}?`);
         if (confirm) {
-            await createQR(fileName);
+            await createQRFile(fileName);
         }
     };
 

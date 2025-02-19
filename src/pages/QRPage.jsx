@@ -8,7 +8,6 @@ import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
 
 // Importamos los componentes
-import HeaderNav from '../components/HeaderNav';
 import Notification from '../components/Notification';
 import QRCard from '../components/QRCard';
 import LoadingCard from '../components/LoadingCard';
@@ -25,7 +24,6 @@ const QRPage = () => {
     }, []); // Se ejecuta cada vez que qrList cambia
     return (
         <>
-            <HeaderNav text={"Lista de QRS"}/>
             <div className="flex flex-col items-center align-center h-full m-4 p-4 border border-gray-300 rounded-lg bg-gray-300">
                 {notificacion && <Notification {...notificacion} />}
 
@@ -91,7 +89,7 @@ const QRPage = () => {
                         </div>
 
                         <Link
-                            to="/"
+                            to="/dashboard/"
                             className="fixed bottom-6 left-6 bg-blue-500 text-white w-14 h-14 flex items-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(59,130,246,0.7)] hover:shadow-[0_0_25px_6px_rgba(59,130,246,1)] hover:scale-110 transition-transform duration-300 animate-all"
                             title="Regresar al inicio"
                         >

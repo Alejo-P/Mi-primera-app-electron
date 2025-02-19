@@ -10,7 +10,6 @@ import { useApp } from '../contexts/AppProvider';
 import { useFiles } from '../contexts/FilesProvider';
 
 // Importamos los componentes
-import HeaderNav from '../components/HeaderNav';
 import Notification from '../components/Notification';
 import FileCard from '../components/FileCard';
 import ViewFilesModal from '../modals/ViewFilesModal';
@@ -25,6 +24,10 @@ const FilesPage = () => {
         setShowModal(!showModal);
     };
 
+    const handleRefresh = () => {
+        getFiles();
+    };
+
     useEffect(() => {
         if (fileList.length === 0) {
             getFiles();
@@ -33,7 +36,6 @@ const FilesPage = () => {
 
     return (
         <>
-            <HeaderNav text={"Lista de archivos"}/>
             <div className='flex flex-col items-center align-center h-full m-4 p-4 border border-gray-300 rounded-lg bg-gray-300'>
                 {notificacion && <Notification {...notificacion} />}
 
@@ -41,7 +43,6 @@ const FilesPage = () => {
                     <h2 className="text-2xl text-center text-slate-800 font-bold">
                         Archivos subidos
                     </h2>
-                    
                     {
                         loadingFiles ? (
                             <LoadingCard />
@@ -59,7 +60,6 @@ const FilesPage = () => {
                             </div>
                         )
                     }
-
                 </div>
                 {
                     fileList.length > 0 && (
@@ -83,7 +83,7 @@ const FilesPage = () => {
                 !loadingFiles && (
                     <>
                         <Link
-                            to="/"
+                            to="/dashboard/"
                             className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 flex items-center text-center justify-center rounded-lg shadow-[0_0_15px_4px_rgba(130,129,129,0.7)] hover:shadow-[0_0_25px_6px_rgba(130,129,129,1)] hover:scale-110 transition-transform duration-300 animate-all mb-4"
                             title="Ir a inicio"
                             data-tooltip-id="homeLabel"

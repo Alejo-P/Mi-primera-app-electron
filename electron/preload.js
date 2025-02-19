@@ -7,6 +7,4 @@ window.addEventListener("DOMContentLoaded", () => {
     const tema = localStorage.getItem("tema") || "oscuro";
     // guardar el tema en localStorage
     localStorage.setItem("tema", tema);
-
-    body.classList.add("transition-all", "duration-300");
 });

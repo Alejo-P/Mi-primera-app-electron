@@ -12,7 +12,6 @@ export const AppProvider = ({ children }) => {
         images: ["png", "jpg", "jpeg", "gif"],
     })
     const [ selectedFile, setSelectedFile ] = useState(null);
-    const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
 
     // Cambia el tema y lo guarda en localStorage
     const handleTheme = () => {
