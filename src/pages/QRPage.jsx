@@ -56,8 +56,8 @@ const QRPage = () => {
                             }
                         </div>
                     ) : (
-                        <div className="flex items-center justify-center p-4">
-                            <p className="text-center text-gray-500 font-bold italic">
+                        <div className="flex items-center justify-center text-gray-400">
+                            <p className="text-center font-bold italic">
                                 No hay QRs generados
                             </p>
                         </div>

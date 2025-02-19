@@ -60,8 +60,8 @@ const FilesPage = () => {
                             }
                         </div>
                     ) : (
-                        <div className="flex items-center justify-center">
-                            <p className="text-lg text-gray-500">No hay archivos subidos</p>
+                        <div className={`grid items-center justify-center flex-1 text-gray-400 transition-all duration-300`}>
+                            <p className="text-center font-bold italic">No hay archivos subidos</p>
                         </div>
                     )
                 }
