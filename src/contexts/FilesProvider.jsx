@@ -40,9 +40,7 @@ export const FilesProvider = ({ children }) => {
                         return { ...source };
                     })
                 );
-                handleNotificacion('success', 'Archivos cargados correctamente', 5000);
             }
-            console.log(data);
             setFileList(data);
         } catch (error) {
             console.error(error);

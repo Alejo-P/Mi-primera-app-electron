@@ -40,9 +40,7 @@ export const QRProvider = ({ children }) => {
                         return { ...source };
                     })
                 );
-                handleNotificacion('success', 'QRs cargados correctamente', 5000);
             }
-
             setQRList(data);
         } catch (error) {
             console.error(error);
