@@ -19,10 +19,13 @@ app.whenReady().then(() => {
     },
   });
 
-  const startURL =
-    process.env.ELECTRON_START_URL ||
-    `file://${path.join(__dirname, "../react/index.html")}`;
-  mainWindow.loadURL(startURL); // Cargar React en modo desarrollo
+  // const startURL =
+  //   process.env.ELECTRON_START_URL ||
+  //   `file://${path.join(__dirname, "../react/index.html")}`;
+  // mainWindow.loadURL(startURL); // Cargar React en modo desarrollo
+
+  mainWindow.loadURL("http://localhost:5173"); // Cargar React en modo desarrollo
+
 });
 
 app.on("window-all-closed", () => {

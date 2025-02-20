@@ -3,7 +3,7 @@
   "description": "Mi aplicación con Electron",
   "author": "Alejo",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "main": "electron/main.js",
   "scripts": {
