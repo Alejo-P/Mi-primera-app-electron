@@ -1,14 +1,38 @@
 {
   "name": "electron-app-react",
+  "description": "Mi aplicación con Electron",
+  "author": "Alejo",
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build && electron-builder",
     "lint": "eslint .",
     "start": "electronmon electron/main.js --inspect",
     "preview": "vite preview"
+  },
+  "build": {
+    "appId": "electron-app-react",
+    "productName": "docTools", 
+    "copyright": "Copyright © 2025 Alejo",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**",
+      "dist/react/**",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "dependencies": {
     "@pdfslick/react": "^2.1.3",
@@ -29,6 +53,7 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "electron": "^34.2.0",
+    "electron-builder": "^25.1.8",
     "electronmon": "^2.0.3",
     "eslint": "^9.19.0",
     "eslint-plugin-react": "^7.37.4",
