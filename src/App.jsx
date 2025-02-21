@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 
 // Importamos el contexto
@@ -15,7 +15,7 @@ import Dashboard from './layouts/Dashboard'
 function App() {
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppProvider>
         <QRProvider>
           <FilesProvider>
@@ -37,7 +37,7 @@ function App() {
           </FilesProvider>
         </QRProvider>
       </AppProvider>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

@@ -45,7 +45,7 @@ export const QRProvider = ({ children }) => {
             setQRList(data);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
         } finally {
             setLoadingQRs(false);
         }
@@ -101,7 +101,7 @@ export const QRProvider = ({ children }) => {
             getQRs();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error', error?.response?.data?.message || error.message, 5000);
         } finally {
             setLoadingQRs(false);
         }
@@ -116,7 +116,7 @@ export const QRProvider = ({ children }) => {
             getQRs();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
         } finally {
             setLoadingQRs(false);
         }
@@ -149,7 +149,7 @@ export const QRProvider = ({ children }) => {
             handleNotificacion('success', 'QR descargado correctamente', 5000);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
         }
     };    
 

@@ -14,17 +14,17 @@ app.whenReady().then(() => {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
-      contextIsolation: true,
+      contextIsolation: false,
       enableRemoteModule: false,
     },
   });
 
-  // const startURL =
-  //   process.env.ELECTRON_START_URL ||
-  //   `file://${path.join(__dirname, "../react/index.html")}`;
-  // mainWindow.loadURL(startURL); // Cargar React en modo desarrollo
+  const startURL =
+    process.env.ELECTRON_START_URL ||
+    `file://${path.join(__dirname, "../dist/react/index.html")}`;
+  mainWindow.loadURL(startURL); // Cargar React en modo desarrollo
 
-  mainWindow.loadURL("http://localhost:5173"); // Cargar React en modo desarrollo
+  //mainWindow.loadURL("http://localhost:5173"); // Cargar React en modo desarrollo
 
 });
 

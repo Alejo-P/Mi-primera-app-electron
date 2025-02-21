@@ -47,7 +47,7 @@ export const FilesProvider = ({ children }) => {
             setFileList(data);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error', error?.response?.data?.message || error.message, 5000);
         } finally {
             setLoadingFiles(false);
         }
@@ -61,7 +61,7 @@ export const FilesProvider = ({ children }) => {
             getFiles();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
         }
     }
 
@@ -81,7 +81,7 @@ export const FilesProvider = ({ children }) => {
             link.remove();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
         }
     };
 
@@ -97,7 +97,7 @@ export const FilesProvider = ({ children }) => {
             }, 2000);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
         }
     };
 
@@ -112,7 +112,7 @@ export const FilesProvider = ({ children }) => {
             }, 2000);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', error?.response.data?.message || error.message, 5000);
+            handleNotificacion('error', error?.response?.data?.message || error.message, 5000);
         }
     };
 
