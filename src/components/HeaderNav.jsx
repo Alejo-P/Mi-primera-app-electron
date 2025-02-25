@@ -1,6 +1,7 @@
 import React from 'react'
-import { FaMoon } from "react-icons/fa";
+import { FaMoon, FaWindowMinimize, FaWindowMaximize } from "react-icons/fa";
 import { MdOutlineWbSunny } from "react-icons/md";
+import { IoCloseSharp } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos el contexto
@@ -8,7 +9,7 @@ import { useApp } from '../contexts/AppProvider'
 
 const HeaderNav = ({text, isDark}) => {
     const { tema, handleTheme } = useApp();
-
+    
     return (
         <div className={`flex items-center justify-between gap-3 p-3 rounded-lg`}>
             <h1 className={`text-4xl text-center flex-1 font-bold uppercase ${isDark ? 'text-white' : 'text-gray-900'} transition-all duration-300`}>
