@@ -28,19 +28,19 @@ const TitleBar = () => {
 
     return (
         <>
-            <div className='flex flex-row justify-between w-full items-center px-4 py-2'>
+            <div className='flex flex-row justify-between w-full items-center px-4 py-1'>
                 <div className='flex items-center space-x-2 font-bold'>
                     <p>DocTools</p>
                 </div>
                 <div className='flex items-end space-x-2'>
                     
                 </div>
-                <div className='flex space-x-2 h-full'>
+                <div className='flex space-x-2 h-full items-center'>
                     <button
                         id='options'
                         data-tooltip-id='options'
                         data-tooltip-content={`Mas opciones`}
-                        className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-1'
+                        className='hover:text-gray-400 rounded-md p-2'
                         onClick={handleOptions}
                     >
                         <SlOptions />
@@ -50,7 +50,7 @@ const TitleBar = () => {
                         data-tooltip-id='minimize'
                         data-tooltip-content={`Minimizar`}
                         onClick={() => window.electronAPI.minimize()}
-                        className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-1'
+                        className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-2'
                     >
                         <FaWindowMinimize />
                     </button>
@@ -59,7 +59,7 @@ const TitleBar = () => {
                         data-tooltip-id='maximize'
                         data-tooltip-content={isMaximized ? `Restaurar` : `Maximizar`}
                         onClick={() => isMaximized ? window.electronAPI.unmaximize() : window.electronAPI.maximize()}
-                        className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-1'
+                        className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-2'
                     >
                         {isMaximized ? <FaWindowRestore /> : <FaWindowMaximize />}
                     </button>
@@ -68,7 +68,7 @@ const TitleBar = () => {
                         data-tooltip-id='close'
                         data-tooltip-content={`Cerrar`}
                         onClick={() => window.electronAPI.close()}
-                        className='hover:bg-red-600 hover:text-gray-400 rounded-md p-1'
+                        className='hover:bg-red-600 hover:text-gray-400 rounded-md p-2'
                     >
                         <IoClose className='font-semibold' />
                     </button>
