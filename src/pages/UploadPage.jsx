@@ -83,14 +83,14 @@ const UploadPage = () => {
                 >
                     <span>
                         <FaUpload className="inline-block"/>
-                        Subir archivo
+                        Cargar archivo
                     </span>
                 </button>
             </form>
             <ReactTooltip id="uploadLabel" place="top" effect="solid" />
 
             <p className="text-center text-gray-400 mt-4 font-semibold">
-                <small>Máximo tamaño permitido: <span>{convertUnit(maxSize)} MB</span></small> <br/>
+                <small>Máximo tamaño permitido: <span>{convertUnit(maxSize)}</span></small> <br/>
                 <small> Las extensiones de archivos permitidas son <span>{extensiones.join(', ')}</span></small>
             </p>
         </div>

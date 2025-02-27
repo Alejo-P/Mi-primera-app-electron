@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import axios from "axios";
 
 const AppContext = createContext();
 
@@ -14,6 +15,7 @@ export const AppProvider = ({ children }) => {
     const [ selectedFile, setSelectedFile ] = useState(null);
     const [ currentPath, setCurrentPath ] = useState(null);
     const [ visibleNav, setVisibleNav ] = useState(true);
+    const [ showOptions, setShowOptions ] = useState(false);
 
     // Cambia el tema y lo guarda en localStorage
     const handleTheme = () => {
@@ -21,6 +23,10 @@ export const AppProvider = ({ children }) => {
         setTema(nuevoTema);
         localStorage.setItem("tema", nuevoTema);
     };
+
+    const handleOptions = () => {
+        setShowOptions(!showOptions);
+    }
 
     // Muestra una notificación temporalmente
     const handleNotificacion = (type, content, timeout = 3000) => {
@@ -35,7 +41,7 @@ export const AppProvider = ({ children }) => {
     // Convertir unidad de medida de bytes a cualquier otra
     const convertUnit = (bytes, unit = "MB") => {
         const units = { B: 1, KB: 1024, MB: 1048576, GB: 1073741824 };
-        return (bytes / units[unit]).toFixed(2);
+        return (bytes / units[unit]).toFixed(2) + unit.padStart(3, " ");
     };
 
     // Aplica la clase del tema al body cuando cambia
@@ -54,13 +60,15 @@ export const AppProvider = ({ children }) => {
         maxSize,
         currentPath,
         visibleNav,
+        showOptions,
+        handleOptions,
         setVisibleNav,
         setCurrentPath,
         setSelectedFile,
         handleNotificacion,
         convertUnit,
         handleTheme,
-    }), [tema, notificacion, selectedFile, currentPath, visibleNav]);
+    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

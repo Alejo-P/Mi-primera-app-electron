@@ -38,7 +38,7 @@ const Dashboard = () => {
             <div className="w-full col-span-full h-12 flex items-center justify-evenly">
                 <HeaderNav
                     text={
-                        pathname === '/dashboard/' ? "Subir un archivo" : 
+                        pathname === '/dashboard/' ? "Cargar un archivo" : 
                         pathname === '/dashboard/files' ? "Lista de archivos" :
                         pathname === '/dashboard/qr' ? "Lista de códigos QR" : 
                         "Inicio"

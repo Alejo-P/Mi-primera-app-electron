@@ -1,11 +1,14 @@
 import { app, BrowserWindow, ipcMain } from "electron";
+import { spawn } from "child_process";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 let mainWindow;
+let server;
 
 app.whenReady().then(() => {
   mainWindow = new BrowserWindow({
@@ -27,27 +30,38 @@ app.whenReady().then(() => {
   //mainWindow.loadURL(startURL); // Cargar React en modo desarrollo
 
   mainWindow.loadURL("http://localhost:5173"); // Cargar React en modo desarrollo
+  
+  // Escuchar eventos de maximización/restauración
+  mainWindow.on("maximize", () => mainWindow.webContents.send("maximized"));
+  mainWindow.on("unmaximize", () => mainWindow.webContents.send("unmaximized"));
+  
+  ipcMain.on("minimize", () => mainWindow.minimize());
+  ipcMain.on("maximize", () => mainWindow.maximize());
+  ipcMain.on("unmaximize", () => mainWindow.restore());
+  ipcMain.on("close", () => mainWindow.close());
 
-});
-
-ipcMain.on("minimize", () => {
-  mainWindow.minimize();
-});
-
-ipcMain.on("maximize", () => {
-  if (mainWindow.isMaximized()) {
-    mainWindow.unmaximize();
+  // Iniciar el servidor backend compilado (Python Flask API)
+  const serverPath = path.join(__dirname, "backend", "server.exe");
+  if (fs.existsSync(serverPath)) {
+    server = spawn(serverPath, [], { detached: true, stdio: "ignore" });
+    server.unref();
   } else {
-    mainWindow.maximize();
+    console.error("⚠️ No se encontró el server.exe en:", serverPath);
   }
 });
 
-ipcMain.on("close", () => {
-  mainWindow.close();
+app.on("quit", () => {
+  if (server) {
+    server.kill("SIGTERM");
+  }
 });
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+
+  if (server) {
+    server.kill("SIGTERM");
   }
 });

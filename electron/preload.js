@@ -3,7 +3,11 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("electronAPI", {
     minimize: () => ipcRenderer.send("minimize"),
     maximize: () => ipcRenderer.send("maximize"),
+    unmaximize: () => ipcRenderer.send("unmaximize"),
     close: () => ipcRenderer.send("close"),
+    onMaximize: (callback) => ipcRenderer.on("maximized", callback),
+    onUnmaximize: (callback) => ipcRenderer.on("unmaximized", callback),
+    removeAllListeners: (event) => ipcRenderer.removeAllListeners(event),
 });
 
 window.addEventListener("DOMContentLoaded", () => {
