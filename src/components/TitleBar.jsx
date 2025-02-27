@@ -10,9 +10,8 @@ import { useApp } from '../contexts/AppProvider';
 import OptionsCard from './OptionsCard';
 
 const TitleBar = () => {
-    const { tema, showOptions, handleOptions } = useApp();
+    const { showOptions, handleOptions } = useApp();
     const [isMaximized, setIsMaximized] = useState(false);
-    const isDark = tema === 'oscuro';
 
     useEffect(() => {
         const { electronAPI } = window;
@@ -30,7 +29,7 @@ const TitleBar = () => {
     return (
         <>
             <div className='flex flex-row justify-between w-full items-center px-4 py-2'>
-                <div className='flex items-center space-x-2'>
+                <div className='flex items-center space-x-2 font-bold'>
                     <p>DocTools</p>
                 </div>
                 <div className='flex items-end space-x-2'>

@@ -14,8 +14,8 @@ app.whenReady().then(() => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    //frame: false, // Oculta la barra de título nativa
-    //titleBarStyle: "hidden", // Opcional: Oculta la barra pero mantiene los botones en macOS
+    frame: false, // Oculta la barra de título nativa
+    titleBarStyle: "hidden", // Opcional: Oculta la barra pero mantiene los botones en macOS
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,

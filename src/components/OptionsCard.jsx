@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaMoon } from "react-icons/fa";
 import { MdOutlineWbSunny } from "react-icons/md";
@@ -8,8 +8,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from '../contexts/AppProvider'
 
 const OptionsCard = () => {
-    const { tema, handleTheme, showOptions } = useApp();
+    const { tema, handleTheme, showOptions, handleOptions } = useApp();
     const isDark = tema === 'oscuro';
+
+    // Ocultar automaticamente despues de 8 segundos si no se hace click
+    useEffect(() => {
+        if (showOptions) {
+            const timer = setTimeout(() => {
+                handleOptions();
+            }, 8000);
+            return () => clearTimeout(timer);
+        }
+    }, [showOptions, handleOptions]);
 
     return (
         <AnimatePresence>
@@ -19,7 +29,7 @@ const OptionsCard = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className={`absolute top-12 right-0 z-50 p-2 rounded-lg shadow-lg
+                    className={`absolute top-12 right-6 z-50 p-2 rounded-lg shadow-lg
                         ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                     `}
                 >
