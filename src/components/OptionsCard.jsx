@@ -2,15 +2,26 @@ import React, { useEffect } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaMoon } from "react-icons/fa";
 import { MdOutlineWbSunny } from "react-icons/md";
-import { IoTimer } from "react-icons/io5";
+import { PiNotepadFill } from "react-icons/pi";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider'
 
 const OptionsCard = () => {
-    const { tema, handleTheme, showOptions, handleOptions } = useApp();
+    const {
+        tema,
+        handleTheme,
+        showOptions,
+        handleOptions,
+        showLogsModal,
+        setShowLogsModal
+    } = useApp();
     const isDark = tema === 'oscuro';
+
+    const handleLogs = () => {
+        setShowLogsModal(!showLogsModal);
+    };
 
     // Ocultar automaticamente despues de 8 segundos si no se hace click
     useEffect(() => {
@@ -50,21 +61,22 @@ const OptionsCard = () => {
                             ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                         `}
                     />
-                    <button
+                    {/* <button
                         className={`p-2 rounded-lg transition-all duration-300
                             ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
                             hover:scale-95 shadow-lg hover:shadow-xl`}
-                        title="Cambiar duración"
-                        data-tooltip-id="duracionLabel"
-                        data-tooltip-content="Cambiar la duración de las notificaciones"
+                        title="Ver logs"
+                        data-tooltip-id="logsLabel"
+                        data-tooltip-content="Ver los logs de la aplicación"
+                        onClick={handleLogs}
                     >
-                        <IoTimer className="text-2xl"/>
+                        <PiNotepadFill className="text-2xl"/>
                     </button>
-                    <ReactTooltip id="duracionLabel" place="top" effect="solid"
+                    <ReactTooltip id="logsLabel" place="top" effect="solid"
                         className={`p-2 rounded-lg shadow-lg
                             ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                         `}
-                    />
+                    /> */}
                 </motion.div>
             )}
         </AnimatePresence>

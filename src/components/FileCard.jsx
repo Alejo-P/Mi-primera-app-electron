@@ -92,7 +92,7 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
             <p className="mt-4 w-full text-lg text-center text-blue-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
                 {fileName}
             </p>
-            <div className='flex justify-center mt-4 space-x-4'>
+            <div className='flex justify-center mt-4 space-x-4 gap-3'>
                 <button
                     className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
                     title={`Crear QR para ${fileName}`}

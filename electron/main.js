@@ -27,9 +27,9 @@ app.whenReady().then(() => {
   const startURL =
     process.env.ELECTRON_START_URL ||
     `file://${path.join(__dirname, "../dist/react/index.html")}`;
-  //mainWindow.loadURL(startURL); // Cargar React en modo desarrollo
+  mainWindow.loadURL(startURL); // Cargar React en modo produccion
 
-  mainWindow.loadURL("http://localhost:5173"); // Cargar React en modo desarrollo
+  //mainWindow.loadURL("http://localhost:5173"); // Cargar React en modo desarrollo
   
   // Escuchar eventos de maximización/restauración
   mainWindow.on("maximize", () => mainWindow.webContents.send("maximized"));
@@ -39,9 +39,11 @@ app.whenReady().then(() => {
   ipcMain.on("maximize", () => mainWindow.maximize());
   ipcMain.on("unmaximize", () => mainWindow.restore());
   ipcMain.on("close", () => mainWindow.close());
-
+  
   // Iniciar el servidor backend compilado (Python Flask API)
-  const serverPath = path.join(__dirname, "backend", "server.exe");
+  const serverPath = path.join(__dirname, "../server.exe"); // Para producción
+  //const serverPath = path.join(__dirname, "backend", "server.exe"); // Para desarrollo
+  
   if (fs.existsSync(serverPath)) {
     server = spawn(serverPath, [], { detached: true, stdio: "ignore" });
     server.unref();

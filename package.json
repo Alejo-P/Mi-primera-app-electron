@@ -32,7 +32,13 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "extraFiles": [
+      {
+        "from": "electron/backend/server.exe",
+        "to": "dist/server.exe"
+      }
+    ]
   },
   "dependencies": {
     "@pdfslick/react": "^2.1.3",

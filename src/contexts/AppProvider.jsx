@@ -12,10 +12,12 @@ export const AppProvider = ({ children }) => {
         documents: ["txt", "pdf"],
         images: ["png", "jpg", "jpeg", "gif"],
     })
-    const [ selectedFile, setSelectedFile ] = useState(null);
-    const [ currentPath, setCurrentPath ] = useState(null);
-    const [ visibleNav, setVisibleNav ] = useState(true);
-    const [ showOptions, setShowOptions ] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [currentPath, setCurrentPath] = useState(null);
+    const [visibleNav, setVisibleNav] = useState(true);
+    const [showOptions, setShowOptions] = useState(false);
+    const [showLogsModal, setShowLogsModal] = useState(false);
+    const [isMaximized, setIsMaximized] = useState(false);
 
     // Cambia el tema y lo guarda en localStorage
     const handleTheme = () => {
@@ -61,6 +63,10 @@ export const AppProvider = ({ children }) => {
         currentPath,
         visibleNav,
         showOptions,
+        isMaximized,
+        showLogsModal,
+        setShowLogsModal,
+        setIsMaximized,
         handleOptions,
         setVisibleNav,
         setCurrentPath,
@@ -68,7 +74,7 @@ export const AppProvider = ({ children }) => {
         handleNotificacion,
         convertUnit,
         handleTheme,
-    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions]);
+    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions, isMaximized, showLogsModal]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

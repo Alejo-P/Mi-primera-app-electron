@@ -10,8 +10,12 @@ import { useApp } from '../contexts/AppProvider';
 import OptionsCard from './OptionsCard';
 
 const TitleBar = () => {
-    const { showOptions, handleOptions } = useApp();
-    const [isMaximized, setIsMaximized] = useState(false);
+    const {
+        showOptions,
+        handleOptions,
+        isMaximized,
+        setIsMaximized
+    } = useApp();
 
     useEffect(() => {
         const { electronAPI } = window;
