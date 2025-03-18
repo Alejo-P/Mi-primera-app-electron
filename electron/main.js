@@ -1,9 +1,12 @@
+// @ts-check
 import { app, BrowserWindow, ipcMain } from "electron";
 import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
+dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -19,17 +22,15 @@ app.whenReady().then(() => {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
-      contextIsolation: true,
-      enableRemoteModule: false,
+      contextIsolation: true
     },
   });
 
-  const startURL =
-    process.env.ELECTRON_START_URL ||
-    `file://${path.join(__dirname, "../dist/react/index.html")}`;
-  mainWindow.loadURL(startURL); // Cargar React en modo produccion
+  const startURL = process.env.ENV === "development" ? 
+  process.env.REACT_DEV_URL : // Cargar React en modo desarrollo
+  `file://${path.join(__dirname, "../dist/react/index.html")}`; // Cargar React en modo produccion
 
-  //mainWindow.loadURL("http://localhost:5173"); // Cargar React en modo desarrollo
+  mainWindow.loadURL(startURL); // Cargar la URL de inicio
   
   // Escuchar eventos de maximización/restauración
   mainWindow.on("maximize", () => mainWindow.webContents.send("maximized"));
@@ -41,15 +42,15 @@ app.whenReady().then(() => {
   ipcMain.on("close", () => mainWindow.close());
   
   // Iniciar el servidor backend compilado (Python Flask API)
-  const serverPath = path.join(__dirname, "../server.exe"); // Para producción
-  //const serverPath = path.join(__dirname, "backend", "server.exe"); // Para desarrollo
+  // const serverPath = path.join(process.resourcesPath, "../server.exe"); // Para producción
+  // //const serverPath = path.join(__dirname, "backend", "server.exe"); // Para desarrollo
   
-  if (fs.existsSync(serverPath)) {
-    server = spawn(serverPath, [], { detached: true, stdio: "ignore" });
-    server.unref();
-  } else {
-    console.error("⚠️ No se encontró el server.exe en:", serverPath);
-  }
+  // if (fs.existsSync(serverPath)) {
+  //   server = spawn(serverPath, [], { detached: true, stdio: "ignore" });
+  //   server.unref();
+  // } else {
+  //   console.error("⚠️ No se encontró el server.exe en:", serverPath);
+  // }
 });
 
 app.on("quit", () => {

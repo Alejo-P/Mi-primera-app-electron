@@ -21,12 +21,12 @@ const TitleBar = () => {
         const { electronAPI } = window;
 
         // Escuchar eventos de la ventana
-        electronAPI.onMaximize(() => setIsMaximized(true));
-        electronAPI.onUnmaximize(() => setIsMaximized(false));
+        electronAPI?.onMaximize(() => setIsMaximized(true));
+        electronAPI?.onUnmaximize(() => setIsMaximized(false));
 
         return () => {
-            electronAPI.removeAllListeners('maximize');
-            electronAPI.removeAllListeners('unmaximize');
+            electronAPI?.removeAllListeners('maximize');
+            electronAPI?.removeAllListeners('unmaximize');
         };
     }, []);
 
