@@ -3,6 +3,7 @@ import './App.css'
 
 // Importamos el contexto
 import { AppProvider } from './contexts/AppProvider'
+import { AuthProvider } from './contexts/AuthContext'
 import { QRProvider } from './contexts/QRProvider'
 import { FilesProvider } from './contexts/FilesProvider'
 
@@ -10,32 +11,53 @@ import { FilesProvider } from './contexts/FilesProvider'
 import UploadPage from './pages/UploadPage'
 import QRPage from './pages/QRPage'
 import FilesPage from './pages/FilesPage'
+import NotFound from './pages/NotFound'
 import Dashboard from './layouts/Dashboard'
+
+// Rutas para la autenticación
+import Auth from './layouts/Auth'
+import LoginPage from './pages/LoginPage'
 
 function App() {
 
   return (
     <HashRouter>
       <AppProvider>
-        <QRProvider>
-          <FilesProvider>
-            <Routes>
-              <Route index element={
-                // Redirigimos a la página de inicio
-                <Navigate to="/dashboard/" />
-              } />
-              <Route path="/dashboard/*" element={
-                <Routes>
-                  <Route element={<Dashboard />}>
-                    <Route index element={<UploadPage />} />
-                    <Route path="qr" element={<QRPage />} />
-                    <Route path="files" element={<FilesPage />} />
-                  </Route>
-                </Routes>
-              } />
-            </Routes>
-          </FilesProvider>
-        </QRProvider>
+        <AuthProvider>
+          <QRProvider>
+            <FilesProvider>
+              <Routes>
+                <Route index element={
+                  // Redirigimos a la página de inicio
+                  <Navigate to="/dashboard/" />
+                } />
+
+                <Route path="/" element={<Auth />}>
+                  <Route path="login" element={<LoginPage />} />
+                  <Route path="register" element={<Register />} />
+                  <Route path="forgot/:id" element={<Forgot />} />
+                  <Route path="confirmar/:token" element={<Confirmar />} />
+                  <Route
+                    path="recuperar-password/:token"
+                    element={<Restablecer />}
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+
+                <Route path="/dashboard/*" element={
+                  <Routes>
+                    <Route element={<Dashboard />}>
+                      <Route index element={<UploadPage />} />
+                      <Route path="qr" element={<QRPage />} />
+                      <Route path="files" element={<FilesPage />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Route>
+                  </Routes>
+                } />
+              </Routes>
+            </FilesProvider>
+          </QRProvider>
+        </AuthProvider>
       </AppProvider>
     </HashRouter>
   )

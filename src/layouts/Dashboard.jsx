@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, Navigate } from 'react-router-dom'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
 import { FaQrcode } from "react-icons/fa6";
 import { FaRegFileAlt } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 // Importamos los contextos
 import { useApp } from '../contexts/AppProvider'
+import { useAuth } from '../contexts/AuthContext';
 
 // Importamos los componentes
 import HeaderNav from '../components/HeaderNav'
@@ -16,6 +18,7 @@ import TitleBar from '../components/TitleBar';
 
 const Dashboard = () => {
     const { notificacion, tema, setCurrentPath } = useApp();
+    const { tokens } = useAuth();
     const { pathname } = useLocation();
     const isDark = tema === 'oscuro';
 
@@ -72,6 +75,13 @@ const Dashboard = () => {
                     tooltip="Archivos cargados" 
                     isDark={isDark}
                 />
+                <NavButton 
+                    to="/dashboard/profile" 
+                    active={pathname === "/dashboard/profile"} 
+                    icon={<FaUser className="text-3xl" />} 
+                    tooltip="Perfil de usuario" 
+                    isDark={isDark}
+                />
             </div>
 
             {/* 🔴 Contenedor de Contenido */}
@@ -79,7 +89,7 @@ const Dashboard = () => {
                 ${isDark ? 'border-gray-600' : 'border-gray-300 shadow-md'} transition-all duration-300`}
             >
                 {notificacion && <Notification {...notificacion} />}
-                <Outlet />
+                {tokenAuth ? <Outlet/> : <Navigate to="/login" />}
             </div>
         </div>
     )
