@@ -63,7 +63,7 @@ const FilesPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                             {
                                 fileList.map((file, index) => (
-                                    <FileCard key={index} fileName={file.filename} fileImage={file.url} showModal={handleModal}/>
+                                    <FileCard key={index} file={file} showModal={handleModal}/>
                                 ))
                             }
                         </div>

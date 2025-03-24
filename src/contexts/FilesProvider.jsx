@@ -57,6 +57,7 @@ export const FilesProvider = ({ children }) => {
                 );
             }
             setFileList(data);
+            console.log("Lista de archivos", data);
         } catch (error) {
             console.error(error);
             handleNotificacion('error', error, 5000);

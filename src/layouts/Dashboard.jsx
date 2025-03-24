@@ -53,28 +53,28 @@ const Dashboard = () => {
             <div className={`flex flex-col m-2 w-full justify-evenly gap-2 p-2 rounded-lg border
                 ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300 shadow-md'} transition-all duration-300`}
             >
-                <NavButton 
+                <NavButton
                     to="/dashboard/" 
                     active={pathname === "/dashboard/"} 
                     icon={<HiHome className="text-3xl" />} 
                     tooltip="Inicio" 
                     isDark={isDark}
                 />
-                <NavButton 
+                <NavButton
                     to="/dashboard/qr" 
                     active={pathname === "/dashboard/qr"} 
                     icon={<FaQrcode className="text-3xl" />} 
                     tooltip="QRs generados" 
                     isDark={isDark}
                 />
-                <NavButton 
+                <NavButton
                     to="/dashboard/files" 
                     active={pathname === "/dashboard/files"} 
                     icon={<FaRegFileAlt className="text-3xl" />} 
                     tooltip="Archivos cargados" 
                     isDark={isDark}
                 />
-                <NavButton 
+                <NavButton
                     to="/dashboard/profile" 
                     active={pathname === "/dashboard/profile"} 
                     icon={<FaUser className="text-3xl" />} 
@@ -88,7 +88,6 @@ const Dashboard = () => {
                 ${isDark ? 'border-gray-600' : 'border-gray-300 shadow-md'} transition-all duration-300`}
             >
                 {notificacion && <Notification {...notificacion} />}
-                {console.log(access_token)}
                 {access_token ? <Outlet/> : <Navigate to="/login" />}
             </div>
         </div>

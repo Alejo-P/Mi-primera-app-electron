@@ -12,12 +12,13 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
+    const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
+    const refresh_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).refresh_token : null;
 
     // Iniciar sesión
     const login = async (data) => {
         try {
             const response = await axios.post(`${URL_BACKEND}/login`, data);
-            console.log(response.data);
             localStorage.setItem('tokens', JSON.stringify(response.data));
             handleNotificacion('success', 'Sesión iniciada correctamente', 5000);
             navigate('/dashboard/');
@@ -40,7 +41,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/profile`, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('tokens').aceess_token}`,
+                    Authorization: `Bearer ${access_token}`,
+                    "Content-Type": "application/json",
                 }
             });
             setUser(response.data);
@@ -54,9 +56,8 @@ export const AuthProvider = ({ children }) => {
     const refreshToken = async () => {
         try {
             const response = await axios.post(`${URL_BACKEND}/refresh`, {
-                refresh_token: localStorage.getItem('tokens').refresh_token,
+                refresh_token: refresh_token,
             });
-            console.log(response.data);
             localStorage.setItem('tokens', JSON.stringify(response.data));
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
         } catch (error) {
@@ -70,7 +71,7 @@ export const AuthProvider = ({ children }) => {
         if (storedTokens) {
             const tokens = JSON.parse(storedTokens);
             if (tokens.access_token) {
-                refreshToken();
+                profile();
             }
         }
     }, []);

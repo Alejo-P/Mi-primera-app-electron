@@ -6,27 +6,30 @@ import { FaFileLines, FaFileImage } from "react-icons/fa6";
 import { QrCode } from 'lucide-react';
 
 // Importar el contexto
+import { useAuth } from '../contexts/AuthContext'; 
 import { useFiles } from '../contexts/FilesProvider';
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
 
-const FileCard = ({ fileName, fileImage, showModal }) => {
+const FileCard = ({ file, showModal }) => {
+    const { user } = useAuth();
     const { downloadFile, deleteFile } = useFiles();
-    const { fileTypes, setSelectedFile, setVisibleNav, tema } = useApp();
+    const { fileTypes, setSelectedFile, setVisibleNav, convertUnit, tema } = useApp();
     const { getQR, createQRFile } = useQR();
     const isDark = tema === 'oscuro';
+    console.log("Archivo ->",file);
 
     const handleDownload = async () => {
-        const confirm = window.confirm(`¿Descargar ${fileName}?`);
+        const confirm = window.confirm(`¿Descargar ${file.filename}?`);
         if (confirm) {
-            await downloadFile(fileName);
+            await downloadFile(file.filename);
         }
     };
 
     const handleDelete = async () => {
-        const confirm = window.confirm(`¿Eliminar ${fileName}?`);
+        const confirm = window.confirm(`¿Eliminar ${file.filename}?`);
         if (confirm) {
-            await deleteFile(fileName);
+            await deleteFile(file.filename);
             await getQR();
         }
     };
@@ -34,8 +37,8 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
     const handleClick = async () => {
         setVisibleNav(false);
         setSelectedFile({
-            filename: fileName,
-            url: fileImage
+            filename: file.filename,
+            url: file.url
         });
         setTimeout(() => {
             showModal();
@@ -43,9 +46,9 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
     };
 
     const handleCreateQR = async () => {
-        const confirm = window.confirm(`¿Crear QR para ${fileName}?`);
+        const confirm = window.confirm(`¿Crear QR para ${file.filename}?`);
         if (confirm) {
-            await createQRFile(fileName);
+            await createQRFile(file.filename);
         }
     };
 
@@ -58,16 +61,16 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
                 }}
                 onClick={handleClick}
                 data-tooltip-id='viewLabel'
-                data-tooltip-content={`Ver ${fileName}`}
+                data-tooltip-content={`Ver ${file.filename}`}
             >
                 {
-                    fileTypes.images.includes(fileName.split('.').pop()) ? (
+                    fileTypes.images.includes(file.filename.split('.').pop()) ? (
                         /* Si el archivo es una imagen, mostrar la imagen */
-                        fileImage ? (
+                        file.url ? (
                             <img
-                                alt={fileName}
+                                alt={file.filename}
                                 className='w-full h-full object-cover rounded-lg'
-                                src={fileImage}
+                                src={file.url}
                             />
                         ) : (
                             <FaFileImage
@@ -90,14 +93,34 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
                 }
             </div>
             <p className="mt-4 w-full text-lg text-center text-blue-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
-                {fileName}
+                {file.filename}
+            </p>
+            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
+                Tamaño: {convertUnit(file.file_size)}
+            </p>
+            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
+                Tipo: {file.file_type.split('.').pop()}
+            </p>
+            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
+                Subido: {new Date(file.uploaded_at).toLocaleString()}
+            </p>
+            <p className={`mt-2 w-full text-sm text-center overflow-hidden whitespace-nowrap overflow-ellipsis
+                ${user?.id === file.uploaded_by?.id ? 'text-blue-500 font-bold' : 'text-gray-500 font-semibold'}    
+            `}>
+                Subido por: {
+                    file.uploaded_by?.name === user?.name ? 'Tú' : file.uploaded_by?.name
+                } <span
+                    className={`${user?.role !== "admin" ? 'hidden' : ''}`}
+                >
+                    ({file.uploaded_by?.role})
+                </span>
             </p>
             <div className='flex justify-center mt-4 space-x-4 gap-3'>
                 <button
                     className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
-                    title={`Crear QR para ${fileName}`}
+                    title={`Crear QR para ${file.filename}`}
                     data-tooltip-id='createQRLabel'
-                    data-tooltip-content={`Crear QR de descarga para ${fileName}`}
+                    data-tooltip-content={`Crear QR de descarga para ${file.filename}`}
                     onClick={handleCreateQR}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
@@ -107,9 +130,9 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
 
                 <button
                     className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
-                    title={`Descargar ${fileName}`}
+                    title={`Descargar ${file.filename}`}
                     data-tooltip-id='downloadLabel'
-                    data-tooltip-content={`Descargar ${fileName}`}
+                    data-tooltip-content={`Descargar ${file.filename}`}
                     onClick={handleDownload}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
@@ -119,9 +142,9 @@ const FileCard = ({ fileName, fileImage, showModal }) => {
 
                 <button
                     className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition duration-300 cursor-pointer"
-                    title={`Eliminar ${fileName}`}
+                    title={`Eliminar ${file.filename}`}
                     data-tooltip-id='deleteLabel'
-                    data-tooltip-content={`Eliminar ${fileName}`}
+                    data-tooltip-content={`Eliminar ${file.filename}`}
                     onClick={handleDelete}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
