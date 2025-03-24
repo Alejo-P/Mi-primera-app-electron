@@ -35,22 +35,19 @@ app.whenReady().then(() => {
   // Escuchar eventos de maximización/restauración
   mainWindow.on("maximize", () => mainWindow.webContents.send("maximized"));
   mainWindow.on("unmaximize", () => mainWindow.webContents.send("unmaximized"));
-  
+
+  // Manejar la apertura de nuevas ventanas
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    createNewWindow(url); // Llamamos a la función que crea la ventana
+    return { action: "deny" }; // Evita que se abra en la misma ventana
+  });
+  // Enviar el estado de maximización al frontend
+  ipcMain.handle("is-window-maximized", () => mainWindow.isMaximized());
   ipcMain.on("minimize", () => mainWindow.minimize());
   ipcMain.on("maximize", () => mainWindow.maximize());
   ipcMain.on("unmaximize", () => mainWindow.restore());
   ipcMain.on("close", () => mainWindow.close());
   
-  // Iniciar el servidor backend compilado (Python Flask API)
-  // const serverPath = path.join(process.resourcesPath, "../server.exe"); // Para producción
-  // //const serverPath = path.join(__dirname, "backend", "server.exe"); // Para desarrollo
-  
-  // if (fs.existsSync(serverPath)) {
-  //   server = spawn(serverPath, [], { detached: true, stdio: "ignore" });
-  //   server.unref();
-  // } else {
-  //   console.error("⚠️ No se encontró el server.exe en:", serverPath);
-  // }
 });
 
 app.on("quit", () => {
@@ -63,8 +60,22 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
-
-  if (server) {
-    server.kill("SIGTERM");
-  }
 });
+
+// Función para crear una nueva ventana
+function createNewWindow(url) {
+  let newWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    title: "Nueva Ventana",
+    webPreferences: {
+      nodeIntegration: false,
+    },
+  });
+
+  newWindow.loadURL(url);
+
+  newWindow.on("closed", () => {
+    newWindow = null;
+  });
+}

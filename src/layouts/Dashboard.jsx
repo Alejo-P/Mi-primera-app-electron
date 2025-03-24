@@ -8,7 +8,6 @@ import { FaUser } from "react-icons/fa";
 
 // Importamos los contextos
 import { useApp } from '../contexts/AppProvider'
-import { useAuth } from '../contexts/AuthContext';
 
 // Importamos los componentes
 import HeaderNav from '../components/HeaderNav'
@@ -18,9 +17,9 @@ import TitleBar from '../components/TitleBar';
 
 const Dashboard = () => {
     const { notificacion, tema, setCurrentPath } = useApp();
-    const { tokens } = useAuth();
     const { pathname } = useLocation();
     const isDark = tema === 'oscuro';
+    const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
 
     useEffect(() => {
         setCurrentPath(pathname);
@@ -89,7 +88,8 @@ const Dashboard = () => {
                 ${isDark ? 'border-gray-600' : 'border-gray-300 shadow-md'} transition-all duration-300`}
             >
                 {notificacion && <Notification {...notificacion} />}
-                {tokenAuth ? <Outlet/> : <Navigate to="/login" />}
+                {console.log(access_token)}
+                {access_token ? <Outlet/> : <Navigate to="/login" />}
             </div>
         </div>
     )

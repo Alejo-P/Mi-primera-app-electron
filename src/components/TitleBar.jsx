@@ -20,6 +20,11 @@ const TitleBar = () => {
     useEffect(() => {
         const { electronAPI } = window;
 
+        // Verificar si la ventana ya está maximizada al iniciar
+        if (electronAPI?.isWindowMaximized) {
+            electronAPI.isWindowMaximized().then(setIsMaximized);
+        }
+
         // Escuchar eventos de la ventana
         electronAPI?.onMaximize(() => setIsMaximized(true));
         electronAPI?.onUnmaximize(() => setIsMaximized(false));

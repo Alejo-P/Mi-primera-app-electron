@@ -7,8 +7,11 @@ import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { useApp } from '../contexts/AppProvider';
 import { useAuth } from '../contexts/AuthContext';
 
+// Importamos los componentes
+import Notification from '../components/Notification';
+
 const LoginPage = () => {
-    const { tema } = useApp();
+    const { tema, notificacion } = useApp();
     const isDark = tema === 'oscuro';
     const navigate = useNavigate();
     const { login } = useAuth();
@@ -20,18 +23,16 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        login(formData.email, formData.password);
-        navigate('/dashboard/');
+        login(formData);
     }
 
     return (
         <div className={`fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn`}>
-            <div
-                className={`p-6 rounded-lg shadow-lg w-3/5 min-w-[525px] max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl
-                    ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
-                    relative flex flex-col items-center max-h-screen overflow-auto`
-                }
-            >
+            {notificacion && <Notification {...notificacion} />}
+            <div className={`p-6 rounded-lg shadow-lg w-3/5 min-w-[525px] max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl
+                ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
+                relative flex flex-col items-center max-h-screen overflow-auto`
+            }>
                 <IoLogIn className="text-5xl text-blue-500" />
                 <h2 className="text-xl md:text-2xl text-center font-bold">
                     Iniciar sesión

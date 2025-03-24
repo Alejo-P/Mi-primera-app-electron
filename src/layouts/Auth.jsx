@@ -1,12 +1,13 @@
 import { Outlet, Navigate } from 'react-router-dom'
 
 const Auth = () => {
-    const token = localStorage.getItem("token")
-    return (
-        <main className="flex justify-center content-center w-full h-screen ">
-          {token ? <Navigate to="/dashboard" />: <Outlet/>}
-        </main>
-    )
+  const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
+
+  return (
+    <>
+      {access_token ? <Navigate to="/dashboard/" />: <Outlet/>}
+    </>
+  )
 }
 
 export default Auth

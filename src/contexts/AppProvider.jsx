@@ -31,9 +31,13 @@ export const AppProvider = ({ children }) => {
 
     // Muestra una notificación temporalmente
     const handleNotificacion = (type, content, timeout = 3000) => {
+        console.log(content, typeof content);
+        const message = content?.response?.data?.msg || content?.response?.data?.error || content?.message || content;
+        console.log(message, typeof message);
+
         setNotificacion({ 
             type,
-            content,
+            content: message,
             onClose: () => setNotificacion(null),
             duration: timeout
         });

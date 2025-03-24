@@ -36,7 +36,7 @@ const ViewFilesModal = ({ fileInfo, handleModal }) => {
                 ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                 relative flex flex-col items-center max-h-screen overflow-auto`
             }>
-                <h2 className="text-xl md:text-2xl text-center font-bold">
+                <h2 className="text-xl md:text-2xl text-center font-bold w-full overflow-hidden whitespace-nowrap overflow-ellipsis">
                     {fileInfo.filename}
                 </h2>
 

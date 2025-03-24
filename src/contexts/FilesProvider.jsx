@@ -13,11 +13,18 @@ export const FilesProvider = ({ children }) => {
     const [fileList, setFileList] = useState([]);
     const [loadingFiles, setLoadingFiles] = useState(false);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
+    const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
+
 
     // Obtener un archivo por su nombre
     const getFile = async (name) => {
         try {
-            const response = await axios.get(`${URL_BACKEND}/file/${name}`);
+            const response = await axios.get(`${URL_BACKEND}/file/${name}`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
             return response.data;
         } catch (error) {
             console.error(error);
@@ -31,7 +38,12 @@ export const FilesProvider = ({ children }) => {
         setLoadingFiles(true);
         setFileList([]);
         try {
-            const response = await axios.get(`${URL_BACKEND}/files`);
+            const response = await axios.get(`${URL_BACKEND}/files`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
             let data = [];
 
             if (response.data?.files.length === 0) {
@@ -47,7 +59,7 @@ export const FilesProvider = ({ children }) => {
             setFileList(data);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', error?.response?.data?.message || error.message, 5000);
+            handleNotificacion('error', error, 5000);
         } finally {
             setLoadingFiles(false);
         }
@@ -56,12 +68,17 @@ export const FilesProvider = ({ children }) => {
     // Subir un archivo
     const uploadFile = async (data) => {
         try {
-            const response = await axios.post(`${URL_BACKEND}/upload`, data);
+            const response = await axios.post(`${URL_BACKEND}/upload`, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
             handleNotificacion('success', 'Archivo subido correctamente', 5000);
             getFiles();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
+            handleNotificacion('error',  error, 5000);
         }
     }
 
@@ -70,6 +87,9 @@ export const FilesProvider = ({ children }) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/download/file/${name}`, {
                 responseType: 'blob',
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
             });
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -81,14 +101,18 @@ export const FilesProvider = ({ children }) => {
             link.remove();
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
+            handleNotificacion('error',  error, 5000);
         }
     };
 
     // Eliminar un archivo por su nombre
     const deleteFile = async (name) => {
         try {
-            await axios.delete(`${URL_BACKEND}/delete/file/${name}`);
+            await axios.delete(`${URL_BACKEND}/delete/file/${name}`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
             setFileList((prev) => prev.filter((file) => file.filename !== name));
             setQRList((prev) => prev.filter((qr) => qr.filename !== name));
             handleNotificacion('success', 'Archivo eliminado correctamente', 5000);
@@ -97,14 +121,18 @@ export const FilesProvider = ({ children }) => {
             }, 2000);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error',  error?.response?.data?.message || error.message, 5000);
+            handleNotificacion('error',  error, 5000);
         }
     };
 
     // Eliminar todos los archivos
     const deleteAllFiles = async () => {
         try {
-            await axios.delete(`${URL_BACKEND}/delete/all`);
+            await axios.delete(`${URL_BACKEND}/delete/all`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
             setFileList([]);
             handleNotificacion('success', 'Archivos eliminados correctamente', 5000);
             setTimeout(() => {
@@ -112,7 +140,7 @@ export const FilesProvider = ({ children }) => {
             }, 2000);
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', error?.response?.data?.message || error.message, 5000);
+            handleNotificacion('error', error, 5000);
         }
     };
 
