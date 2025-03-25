@@ -10,7 +10,7 @@ const NotFound = () => {
     const isDark = tema === 'oscuro';
     const navigate = useNavigate();
 
-    const handleNavvigate = () => {
+    const handleNavigate = () => {
         navigate('/dashboard/');
     }
 
@@ -30,7 +30,7 @@ const NotFound = () => {
                     La página que buscas no existe. Por favor, verifica la URL.
                 </p>
                 <button
-                    onClick={handleNavvigate}
+                    onClick={handleNavigate}
                     className={`mt-4 px-4 py-2 rounded-lg text-white font-bold
                         ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'}
                     `}

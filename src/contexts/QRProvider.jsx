@@ -26,7 +26,7 @@ export const QRProvider = ({ children }) => {
             return response.data;
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al cargar el QR ' + name, 5000);
+            handleNotificacion('error', error, 5000);
             return null;
         }
     };

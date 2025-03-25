@@ -12,6 +12,7 @@ import UploadPage from './pages/UploadPage'
 import QRPage from './pages/QRPage'
 import FilesPage from './pages/FilesPage'
 import NotFound from './pages/NotFound'
+import ProfilePage from './pages/ProfilePage'
 import Dashboard from './layouts/Dashboard'
 
 // Rutas para la autenticación
@@ -38,6 +39,7 @@ function App() {
                       <Route index element={<UploadPage />} />
                       <Route path="qr" element={<QRPage />} />
                       <Route path="files" element={<FilesPage />} />
+                      <Route path="profile" element={<ProfilePage />} />
                       <Route path="*" element={<NotFound />} />
                     </Route>
                   </Routes>

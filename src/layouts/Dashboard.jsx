@@ -42,7 +42,8 @@ const Dashboard = () => {
                     text={
                         pathname === '/dashboard/' ? "Cargar un archivo" : 
                         pathname === '/dashboard/files' ? "Lista de archivos" :
-                        pathname === '/dashboard/qr' ? "Lista de códigos QR" : 
+                        pathname === '/dashboard/qr' ? "Lista de códigos QR" :
+                        pathname === '/dashboard/profile' ? "Perfil de usuario" : 
                         "Inicio"
                     }
                     isDark={isDark}
