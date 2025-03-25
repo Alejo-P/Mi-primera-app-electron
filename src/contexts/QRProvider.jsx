@@ -17,13 +17,12 @@ export const QRProvider = ({ children }) => {
     const getQR = async (name) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/qr/${name}`, {
-                responseType: 'blob',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${access_token}`,
                 },
-
             });
+            console.log(response);
             return response.data;
         } catch (error) {
             console.error(error);
@@ -56,6 +55,7 @@ export const QRProvider = ({ children }) => {
                 );
             }
             setQRList(data);
+            console.log("Lista de QRs", data);
         } catch (error) {
             console.error(error);
             handleNotificacion('error',  error, 5000);

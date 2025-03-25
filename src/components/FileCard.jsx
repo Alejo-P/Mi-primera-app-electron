@@ -102,12 +102,12 @@ const FileCard = ({ file, showModal }) => {
                 Tipo: {file.file_type.split('.').pop()}
             </p>
             <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
-                Subido: {new Date(file.uploaded_at).toLocaleString()}
+                Subido en {new Date(file.uploaded_at).toLocaleString()}
             </p>
             <p className={`mt-2 w-full text-sm text-center overflow-hidden whitespace-nowrap overflow-ellipsis
                 ${user?.id === file.uploaded_by?.id ? 'text-blue-500 font-bold' : 'text-gray-500 font-semibold'}    
             `}>
-                Subido por: {
+                Subido por {
                     file.uploaded_by?.id === user?.id ? 'Tú' : file.uploaded_by?.name
                 } <span
                     className={`${user?.role !== "admin" ? 'hidden' : ''}`}

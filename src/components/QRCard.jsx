@@ -4,22 +4,24 @@ import { MdDeleteForever } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importar el contexto
+import { useAuth } from '../contexts/AuthContext';
 import { useQR } from '../contexts/QRProvider';
 
-const QRCard = ({ QRName, QRImage }) => {
+const QRCard = ({ QRInfo }) => {
+    const { user } = useAuth();
     const { downloadQR , deleteQR } = useQR();
     
     const handleDownload = async () => {
-        const confirm = window.confirm(`¿Descargar ${QRName}?`);
+        const confirm = window.confirm(`¿Descargar ${QRInfo.filename}?`);
         if (confirm) {
-            await downloadQR(QRName);
+            await downloadQR(QRInfo.filename);
         }
     };
 
     const handleDelete = async () => {
-        const confirm = window.confirm(`¿Eliminar ${QRName}?`);
+        const confirm = window.confirm(`¿Eliminar ${QRInfo.filename}?`);
         if (confirm) {
-            await deleteQR(QRName);
+            await deleteQR(QRInfo.filename);
         }
     };
 
@@ -28,17 +30,31 @@ const QRCard = ({ QRName, QRImage }) => {
             <img 
                 alt='QR Code'
                 className='w-64 h-64 rounded-lg border border-gray-300'
-                src={QRImage}
+                src={QRInfo.url}
             />
-            <p className="mt-4 w-48 text-lg text-center text-blue-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
-                {QRName}
+            <p className="mt-4 w-full text-lg text-center text-blue-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
+                {QRInfo.filename}
+            </p>
+            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
+                Creado el {new Date(QRInfo.created_at).toLocaleString()}
+            </p>
+            <p className={`mt-2 w-full text-sm text-center overflow-hidden whitespace-nowrap overflow-ellipsis
+                ${user?.id === QRInfo.created_by?.id ? 'text-blue-500 font-bold' : 'text-gray-500 font-semibold'}    
+            `}>
+                Creado por {
+                    QRInfo.created_by?.id === user?.id ? 'Tú' : QRInfo.created_by?.name
+                } <span
+                    className={`${user?.role !== "admin" ? 'hidden' : ''}`}
+                >
+                    ({QRInfo.created_by?.role})
+                </span>
             </p>
             <div className='flex justify-center mt-4 space-x-4 gap-3'>
                 <button
                     className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
-                    title={`Descargar ${QRName}`}
+                    title={`Descargar ${QRInfo.filename}`}
                     data-tooltip-id='downloadLabel'
-                    data-tooltip-content={`Descargar ${QRName}`}
+                    data-tooltip-content={`Descargar ${QRInfo.filename}`}
                     onClick={handleDownload}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
@@ -47,9 +63,9 @@ const QRCard = ({ QRName, QRImage }) => {
                 </button>
                 <button
                     className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition duration-300 cursor-pointer"
-                    title={`Eliminar ${QRName}`}
+                    title={`Eliminar ${QRInfo.filename}`}
                     data-tooltip-id='deleteLabel'
-                    data-tooltip-content={`Eliminar ${QRName}`}
+                    data-tooltip-content={`Eliminar ${QRInfo.filename}`}
                     onClick={handleDelete}
                 >
                     <span className="text-white flex text-center items-center space-x-2">

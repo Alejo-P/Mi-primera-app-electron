@@ -57,7 +57,6 @@ const QRPage = () => {
                 <h2 className="text-2xl text-center font-bold">
                     QRs generados
                 </h2>
-
                 {
                     loadingQRs ? (
                         <LoadingCard />
@@ -65,7 +64,7 @@ const QRPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                             {
                                 qrList.map((qr, index) => (
-                                    <QRCard key={index} QRName={qr.filename} QRImage={qr.url} />
+                                    <QRCard key={index} QRInfo={qr} />
                                 ))
                             }
                         </div>
