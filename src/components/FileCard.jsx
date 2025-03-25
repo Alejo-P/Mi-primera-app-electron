@@ -108,7 +108,7 @@ const FileCard = ({ file, showModal }) => {
                 ${user?.id === file.uploaded_by?.id ? 'text-blue-500 font-bold' : 'text-gray-500 font-semibold'}    
             `}>
                 Subido por: {
-                    file.uploaded_by?.name === user?.name ? 'Tú' : file.uploaded_by?.name
+                    file.uploaded_by?.id === user?.id ? 'Tú' : file.uploaded_by?.name
                 } <span
                     className={`${user?.role !== "admin" ? 'hidden' : ''}`}
                 >
@@ -117,9 +117,9 @@ const FileCard = ({ file, showModal }) => {
             </p>
             <div className='flex justify-center mt-4 space-x-4 gap-3'>
                 <button
-                    className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
+                    className={`flex text-white p-2 rounded-lg transition duration-300 cursor-pointer ${file.qr_code ? 'hidden' : 'bg-blue-500 hover:bg-blue-600'}`}
                     title={`Crear QR para ${file.filename}`}
-                    data-tooltip-id='createQRLabel'
+                    data-tooltip-id={`${file.qr_code ? `QR ya creado para ${file.filename}` : `Crear QR para ${file.filename}`}`}
                     data-tooltip-content={`Crear QR de descarga para ${file.filename}`}
                     onClick={handleCreateQR}
                 >
