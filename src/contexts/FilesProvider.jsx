@@ -57,7 +57,6 @@ export const FilesProvider = ({ children }) => {
                 );
             }
             setFileList(data);
-            console.log("Lista de archivos", data);
         } catch (error) {
             console.error(error);
             handleNotificacion('error', error, 5000);
@@ -75,7 +74,7 @@ export const FilesProvider = ({ children }) => {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
-            handleNotificacion('success', 'Archivo subido correctamente', 5000);
+            handleNotificacion('success', response.data.msg, 5000);
             getFiles();
         } catch (error) {
             console.error(error);
@@ -109,14 +108,14 @@ export const FilesProvider = ({ children }) => {
     // Eliminar un archivo por su nombre
     const deleteFile = async (name) => {
         try {
-            await axios.delete(`${URL_BACKEND}/delete/file/${name}`, {
+            const response = await axios.delete(`${URL_BACKEND}/delete/file/${name}`, {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
             setFileList((prev) => prev.filter((file) => file.filename !== name));
             setQRList((prev) => prev.filter((qr) => qr.filename !== name));
-            handleNotificacion('success', 'Archivo eliminado correctamente', 5000);
+            handleNotificacion('success', response.data.msg, 5000);
             setTimeout(() => {
                 getQRs();
             }, 2000);
@@ -129,13 +128,13 @@ export const FilesProvider = ({ children }) => {
     // Eliminar todos los archivos
     const deleteAllFiles = async () => {
         try {
-            await axios.delete(`${URL_BACKEND}/delete/all`, {
+            const response = await axios.delete(`${URL_BACKEND}/delete/all`, {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
             setFileList([]);
-            handleNotificacion('success', 'Archivos eliminados correctamente', 5000);
+            handleNotificacion('success', response.data.msg, 5000);
             setTimeout(() => {
                 getQRs();
             }, 2000);

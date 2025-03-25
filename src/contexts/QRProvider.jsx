@@ -76,7 +76,7 @@ export const QRProvider = ({ children }) => {
             });
             console.log(response);
             setQRList((prev) => prev.filter((qr) => qr.filename !== name));
-            handleNotificacion('success', response.data.message, 5000);
+            handleNotificacion('success', response.data.msg, 5000);
         } catch (error) {
             console.error(error);
         } finally {
@@ -96,7 +96,7 @@ export const QRProvider = ({ children }) => {
             });
             console.log(response);
             setQRList([]);
-            handleNotificacion('success', response.data.message, 5000);
+            handleNotificacion('success', response.data.msg, 5000);
         } catch (error) {
             console.error(error);
         } finally {
@@ -125,7 +125,7 @@ export const QRProvider = ({ children }) => {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
-            handleNotificacion('success', response.data.message, 5000);
+            handleNotificacion('success', response.data.msg, 5000);
             getQRs();
         } catch (error) {
             console.error(error);
@@ -145,7 +145,7 @@ export const QRProvider = ({ children }) => {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
-            handleNotificacion('success', response.data.message, 5000);
+            handleNotificacion('success', response.data.msg, 5000);
             getQRs();
         } catch (error) {
             console.error(error);
@@ -181,8 +181,6 @@ export const QRProvider = ({ children }) => {
             
             // Revocar el objeto URL para liberar memoria
             window.URL.revokeObjectURL(url);
-    
-            handleNotificacion('success', 'QR descargado correctamente', 5000);
         } catch (error) {
             console.error(error);
             handleNotificacion('error',  error, 5000);
