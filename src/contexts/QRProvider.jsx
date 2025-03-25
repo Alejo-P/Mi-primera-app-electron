@@ -163,8 +163,6 @@ export const QRProvider = ({ children }) => {
                 },
                 responseType: 'blob',
             });
-
-            console.log(response);
     
             // Crear un objeto URL para el archivo
             const url = window.URL.createObjectURL(new Blob([response.data]));
