@@ -158,11 +158,13 @@ export const QRProvider = ({ children }) => {
     const downloadQR = async (name) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/download/qr/${name}`, {
-                responseType: 'blob',
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
+                responseType: 'blob',
             });
+
+            console.log(response);
     
             // Crear un objeto URL para el archivo
             const url = window.URL.createObjectURL(new Blob([response.data]));
