@@ -147,6 +147,7 @@ export const QRProvider = ({ children }) => {
             });
             handleNotificacion('success', response.data.msg, 5000);
             getQRs();
+            
         } catch (error) {
             console.error(error);
             handleNotificacion('error',  error, 5000);

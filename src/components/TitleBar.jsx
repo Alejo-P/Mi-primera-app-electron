@@ -5,11 +5,17 @@ import { SlOptions } from "react-icons/sl";
 import { IoClose } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { useApp } from '../contexts/AppProvider';
+import { FaUserShield } from "react-icons/fa6";
+import { FaUserCheck } from "react-icons/fa6";
+import { FaUserXmark } from "react-icons/fa6";
+import { ImSpinner9 } from "react-icons/im";
 
 // Importamos los componentes
+import { useAuth } from '../contexts/AuthContext';
 import OptionsCard from './OptionsCard';
 
 const TitleBar = () => {
+    const { user, loading } = useAuth();
     const {
         showOptions,
         handleOptions,
@@ -42,7 +48,20 @@ const TitleBar = () => {
                     <p>DocTools</p>
                 </div>
                 <div className='flex items-end space-x-2'>
-                    
+                    {
+                        loading ? <ImSpinner9 className='animate-spin text-xl' />
+                        :
+                        user?.role === 'admin' ? <FaUserShield className='text-xl' />
+                        : 
+                        user?.role === 'user' ? <FaUserCheck className='text-xl' />
+                        :
+                        <FaUserXmark className='text-xl' />
+                    }
+                    <span
+                        className='text-sm font-semibold'
+                    >
+                        {loading ? 'Cargando...' : user?.name || 'Invitado'}
+                    </span>
                 </div>
                 <div className='flex space-x-2 h-full items-center'>
                     <button

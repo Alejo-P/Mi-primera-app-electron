@@ -7,6 +7,7 @@ import { FaRegFileAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 
 // Importamos los contextos
+import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../contexts/AppProvider'
 
 // Importamos los componentes
@@ -16,6 +17,7 @@ import NavButton from '../components/NavButton';
 import TitleBar from '../components/TitleBar';
 
 const Dashboard = () => {
+    const { profile } = useAuth();
     const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
     const isDark = tema === 'oscuro';
@@ -24,6 +26,15 @@ const Dashboard = () => {
     useEffect(() => {
         setCurrentPath(pathname);
     }, [pathname]); // Se ejecuta cuando cambia la ruta
+
+    // Cargar el perfil del usuario
+    useEffect(() => {
+        async function loadProfile() {
+            await profile();
+        }
+        
+        if (access_token) loadProfile();
+    }, []);
 
     return (
         <div className={`grid grid-cols-[20%_80%] grid-rows-[40px_50px_1fr] h-screen transition-all duration-300 min-w-[525px]

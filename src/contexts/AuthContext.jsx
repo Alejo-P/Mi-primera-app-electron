@@ -10,6 +10,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
     const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }) => {
 
     // Obtener perfil del usuario
     const profile = async () => {
+        setLoading(true);
         try {
             const response = await axios.get(`${URL_BACKEND}/profile`, {
                 headers: {
@@ -49,6 +51,8 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error(error);
             handleNotificacion('error', error, 5000);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -66,24 +70,25 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
-        const storedTokens = localStorage.getItem('tokens');
-        if (storedTokens) {
-            const tokens = JSON.parse(storedTokens);
-            if (tokens.access_token) {
-                profile();
-            }
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedTokens = localStorage.getItem('tokens');
+    //     if (storedTokens) {
+    //         const tokens = JSON.parse(storedTokens);
+    //         if (tokens.access_token) {
+    //             profile();
+    //         }
+    //     }
+    // }, []);
 
     // Memoriza el valor del contexto para evitar renders innecesarios
     const contextValue = useMemo(() => ({
         user,
+        loading,
         login,
         logout,
         profile,
         refreshToken
-    }), [user]);
+    }), [user, loading]);
 
     return (
         <AuthContext.Provider value={contextValue}>
