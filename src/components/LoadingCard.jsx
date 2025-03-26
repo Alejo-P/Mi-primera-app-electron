@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2 } from 'lucide-react'; // Ícono de carga
+import { ImSpinner9 } from "react-icons/im"; // Ícono de carga
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
@@ -18,7 +18,7 @@ const LoadingCard = () => {
                 <div className={`flex items-center justify-center bg-gray-200 rounded-full h-20 w-20
                     ${isDark ? 'text-white bg-gray-700' : 'text-gray-900 bg-gray-200'}
                 `}>
-                    <Loader2 className="w-12 h-12 animate-spin" />
+                    <ImSpinner9 className="w-12 h-12 animate-spin" />
                 </div>
                 {/* Texto */}
                 <p className={`text-lg font-semibold
