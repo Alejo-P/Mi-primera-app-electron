@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { MdDeleteSweep, MdAdd } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiOutlineRefresh } from 'react-icons/hi';
+import { LuFileSearch2 } from "react-icons/lu";
 
 // Importamos el contexto
+import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../contexts/AppProvider';
 import { useFiles } from '../contexts/FilesProvider';
 
@@ -12,9 +14,11 @@ import FileCard from '../components/FileCard';
 import ViewFilesModal from '../modals/ViewFilesModal';
 import LoadingCard from '../components/LoadingCard';
 import NavActions from '../components/NavActions';
+import NavTools from '../components/NavTools';
 
 const FilesPage = () => {
-    const { selectedFile, tema, setVisibleNav } = useApp();
+    const { user } = useAuth();
+    const { selectedFile, tema, setVisibleNav, setVisibleToolbar } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const [showModal, setShowModal] = useState(false);
     const isDark = tema === 'oscuro';
@@ -25,8 +29,10 @@ const FilesPage = () => {
 
     const handleFetchFiles = async () => {
         setVisibleNav(false);
+        setVisibleToolbar(false);
         await getFiles();
         setVisibleNav(true);
+        setVisibleToolbar(true);
     };
 
     const handleRefresh = async () => {
@@ -112,6 +118,39 @@ const FilesPage = () => {
                         </button>
                         <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
                     </NavActions>
+                )
+            }
+            {
+                (!showModal && user?.role === 'admin') && (
+                    <NavTools>
+                        <div className='relative'>
+                            <input
+                                type="text"
+                                className={`p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                    ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'}
+                                `}
+                                placeholder="Buscar archivo"
+                                title="Buscar archivo"
+                            />
+                            <div className="absolute top-2 right-2">
+                                <LuFileSearch2 className="text-xl" />
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleModal}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Subir archivo"
+                            data-tooltip-id="uploadLabel"
+                            data-tooltip-content="Subir un archivo al servidor"
+                        >
+                            <span className="text-3xl">
+                                <MdAdd className='text-2xl'/>
+                            </span>
+                        </button>
+                        <ReactTooltip id="uploadLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
+                    </NavTools>
                 )
             }
         </>

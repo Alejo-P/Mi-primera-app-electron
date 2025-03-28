@@ -9,21 +9,23 @@ import { useApp } from '../contexts/AppProvider';
 import NavActions from '../components/NavActions';
 
 const ViewFilesModal = ({ fileInfo, handleModal }) => {
-    const { fileTypes, setVisibleNav, visibleNav, tema } = useApp();
+    const { fileTypes, setVisibleNav, setVisibleToolbar, visibleNav, tema } = useApp();
     const isDark = tema === 'oscuro';
 
     const ReloadNav = () => {
         setVisibleNav(false);
+        setVisibleToolbar(false);
         setTimeout(() => {
             setVisibleNav(true);
-        }, 200);
+            setVisibleToolbar(true);
+        }, 250);
     };
 
     const handleClose = async () => {
         ReloadNav();
         setTimeout(() => {
             handleModal();
-        }, 200);
+        }, 250);
     };
 
     useEffect(() => {

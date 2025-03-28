@@ -3,12 +3,15 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaMoon } from "react-icons/fa";
 import { MdOutlineWbSunny } from "react-icons/md";
 import { PiNotepadFill } from "react-icons/pi";
+import { IoLogOut } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Importamos el contexto
+import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../contexts/AppProvider'
 
 const OptionsCard = () => {
+    const { logout } = useAuth();
     const {
         tema,
         handleTheme,
@@ -22,6 +25,11 @@ const OptionsCard = () => {
     const handleLogs = () => {
         setShowLogsModal(!showLogsModal);
     };
+
+    const handleLogout = async () => {
+        await logout();
+    }
+
 
     // Ocultar automaticamente despues de 8 segundos si no se hace click
     useEffect(() => {
@@ -77,6 +85,22 @@ const OptionsCard = () => {
                             ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                         `}
                     /> */}
+                    <button
+                        className={`p-2 rounded-lg transition-all duration-300 hover:bg-red-400
+                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Cerrar sesión"
+                        data-tooltip-id="logoutLabel"
+                        data-tooltip-content="Cerrar la sesión actual"
+                        onClick={handleLogout}
+                    >
+                        <IoLogOut className="text-2xl"/>
+                    </button>
+                    <ReactTooltip id="logoutLabel" place="top" effect="solid"
+                        className={`p-2 rounded-lg shadow-lg
+                            ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
+                        `}  
+                    />
                 </motion.div>
             )}
         </AnimatePresence>

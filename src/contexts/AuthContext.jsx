@@ -13,13 +13,18 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
-    const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
-    const refresh_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).refresh_token : null;
+    const [tokens, setTokens] = useState(() => {
+        const storedTokens = localStorage.getItem('tokens');
+        return storedTokens ? JSON.parse(storedTokens) : null;
+    });
+    const access_token = tokens?.access_token;
+    const refresh_token = tokens?.refresh_token;
 
     // Iniciar sesión
     const login = async (data) => {
         try {
             const response = await axios.post(`${URL_BACKEND}/login`, data);
+            setTokens(response.data);
             localStorage.setItem('tokens', JSON.stringify(response.data));
             handleNotificacion('success', 'Sesión iniciada correctamente', 5000);
             navigate('/dashboard/');
@@ -56,12 +61,13 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Refrescar token de acceso
+    // Refrescar token
     const refreshToken = async () => {
         try {
             const response = await axios.post(`${URL_BACKEND}/refresh`, {
                 refresh_token: refresh_token,
             });
+            setTokens(response.data); // Actualiza el estado con los nuevos tokens
             localStorage.setItem('tokens', JSON.stringify(response.data));
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
         } catch (error) {

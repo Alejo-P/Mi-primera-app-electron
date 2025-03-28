@@ -14,7 +14,7 @@ import { useQR } from '../contexts/QRProvider';
 const FileCard = ({ file, showModal }) => {
     const { user } = useAuth();
     const { downloadFile, deleteFile } = useFiles();
-    const { fileTypes, setSelectedFile, setVisibleNav, convertUnit, tema } = useApp();
+    const { fileTypes, setSelectedFile, setVisibleNav, setVisibleToolbar, convertUnit, tema } = useApp();
     const { getQR, createQRFile } = useQR();
     const isDark = tema === 'oscuro';
     console.log("Archivo ->",file);
@@ -36,6 +36,7 @@ const FileCard = ({ file, showModal }) => {
 
     const handleClick = async () => {
         setVisibleNav(false);
+        setVisibleToolbar(false);
         setSelectedFile({
             filename: file.filename,
             url: file.url
