@@ -1,8 +1,9 @@
+// @ts-check
 import React, { useEffect, useState } from 'react'
 import { MdDeleteSweep, MdAdd } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiOutlineRefresh } from 'react-icons/hi';
-import { LuFileSearch2 } from "react-icons/lu";
+import { LuFileSearch2,LuFileUser } from "react-icons/lu";
 
 // Importamos el contexto
 import { useAuth } from '../contexts/AuthContext';
@@ -15,16 +16,23 @@ import ViewFilesModal from '../modals/ViewFilesModal';
 import LoadingCard from '../components/LoadingCard';
 import NavActions from '../components/NavActions';
 import NavTools from '../components/NavTools';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 const FilesPage = () => {
     const { user } = useAuth();
-    const { selectedFile, tema, setVisibleNav, setVisibleToolbar } = useApp();
+    const { selectedFile, tema, setVisibleNav, setVisibleToolbar, visibleToolbar } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const [showModal, setShowModal] = useState(false);
+    const [inputSearch, setFileInput] = useState({
+        fileSearch: '',
+        userSearch: ''
+    });
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const isDark = tema === 'oscuro';
 
     const handleModal = () => {
         setShowModal(!showModal);
+        setVisibleToolbar(!visibleToolbar);
     };
 
     const handleFetchFiles = async () => {
@@ -47,8 +55,15 @@ const FilesPage = () => {
         }
     };
 
+    const handleChangeInput = (e) => {
+        const { name, value } = e.target;
+        setFileInput({
+            ...inputSearch,
+            [name]: value
+        });
+    };
+
     useEffect(() => {
-        
         if (fileList.length === 0) {
             handleFetchFiles();
         }
@@ -121,36 +136,57 @@ const FilesPage = () => {
                 )
             }
             {
-                (!showModal && user?.role === 'admin') && (
-                    <NavTools>
-                        <div className='relative'>
-                            <input
-                                type="text"
-                                className={`p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-                                    ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'}
+                (visibleToolbar && user?.role === 'admin') && (
+                    <>
+                        {/* Sidebar de navegación */}
+                        <div className={`fixed top-10 right-0 h-[calc(100%-40px)] shadow-lg transition-all duration-300 rounded-tl-xl rounded-bl-xl
+                            ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
+                            ${sidebarOpen ? 'w-64 p-4' : 'w-12 p-2 bg-transparent'}
+                        `}>
+                            <button
+                                className="mb-4 text-xl transition-all duration-300"
+                                onClick={() => setSidebarOpen(!sidebarOpen)}
+                            >
+                                {sidebarOpen ? <FaTimes /> : <FaBars />}
+                            </button>
+
+                            <div
+                                className={`flex items-center justify-between mb-4 transition-all duration-300 border-b-2 border-gray-300 pb-4
+                                    ${sidebarOpen ? 'opacity-100' : 'opacity-0'}
                                 `}
-                                placeholder="Buscar archivo"
-                                title="Buscar archivo"
-                            />
-                            <div className="absolute top-2 right-2">
-                                <LuFileSearch2 className="text-xl" />
+                            >
+                                <div className={`flex flex-col gap-4 ${sidebarOpen ? 'block' : 'hidden'} transition-all duration-300`}>
+                                    {[
+                                        { icon: <LuFileSearch2 className="text-2xl" />, placeholder: "Buscar archivo", title: "Buscar archivo", name: "fileSearch" },
+                                        { icon: <LuFileUser className="text-2xl" />, placeholder: "Buscar por usuario", title: "Buscar por usuario", name: "userSearch" },
+                                    ].map((item, index) => (
+                                        <div key={index} className={`relative group transition-all duration-300
+                                            ${inputSearch[item.name] !== "" ? 'w-full' : 'w-12 hover:w-full'}
+                                        `}>
+                                            <input
+                                                type="text"
+                                                id={item.name}
+                                                name={item.name}
+                                                className={`
+                                                    w-full p-2 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                                                    ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'}
+                                                    transition-all duration-300
+                                                `}
+                                                value={inputSearch[item.name]}
+                                                onChange={handleChangeInput}
+                                                placeholder={item.placeholder}
+                                                title={item.title}
+                                            />
+                                            <div className="absolute top-2 left-3 text-white group-hover:text-gray-500 transition-all duration-300 text-center">
+                                                {item.icon}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
+
                         </div>
-                        <button
-                            onClick={handleModal}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Subir archivo"
-                            data-tooltip-id="uploadLabel"
-                            data-tooltip-content="Subir un archivo al servidor"
-                        >
-                            <span className="text-3xl">
-                                <MdAdd className='text-2xl'/>
-                            </span>
-                        </button>
-                        <ReactTooltip id="uploadLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                    </NavTools>
+                    </>
                 )
             }
         </>

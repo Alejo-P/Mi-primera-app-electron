@@ -14,10 +14,8 @@ const ViewFilesModal = ({ fileInfo, handleModal }) => {
 
     const ReloadNav = () => {
         setVisibleNav(false);
-        setVisibleToolbar(false);
         setTimeout(() => {
             setVisibleNav(true);
-            setVisibleToolbar(true);
         }, 250);
     };
 

@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Outlet, useLocation, Navigate } from 'react-router-dom'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
-import { FaQrcode } from "react-icons/fa6";
-import { FaRegFileAlt } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
+import { FaQrcode } from 'react-icons/fa6';
+import { FaRegFileAlt, FaUser, FaBars } from "react-icons/fa";
 
 // Importamos los contextos
 import { useAuth } from '../contexts/AuthContext';
@@ -20,6 +19,7 @@ const Dashboard = () => {
     const { profile } = useAuth();
     const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const isDark = tema === 'oscuro';
     const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
 
@@ -61,7 +61,7 @@ const Dashboard = () => {
                 />
             </div>
 
-            {/* 🟡 Sidebar de navegación */}
+            {/* 🟡 Sidebar de navegación (Viejo Sidebar) */}
             <div className={`flex flex-col m-2 w-full justify-evenly gap-2 p-2 rounded-lg border
                 ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300 shadow-md'} transition-all duration-300`}
             >

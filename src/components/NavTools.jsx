@@ -9,16 +9,16 @@ const NavTools = ({ children }) => {
         <AnimatePresence>
             {visibleToolbar && (
                 <motion.div
-                    initial={{ y: 100, opacity: 0 }} // Comienza más abajo
+                    initial={{ y: -100, opacity: 0 }} // Comienza más arriba
                     animate={{ y: 0, opacity: 1 }} // Se mueve hacia su posición final
-                    exit={{ y: 100, opacity: 0 }} // Se oculta bajando
+                    exit={{ y: -100, opacity: 0 }} // Se oculta subiendo
                     transition={{ 
                         type: "spring", 
                         stiffness: 120, 
                         damping: 15, 
                         duration: 0.5 
                     }}
-                    className={`fixed bottom-6 left-6 flex flex-col gap-3 p-3 rounded-lg 
+                    className={`flex flex-col gap-3 p-3 rounded-lg 
                         shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300 border
                         ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'}
                     `}
