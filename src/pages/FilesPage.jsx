@@ -5,7 +5,7 @@ import { HiOutlineRefresh } from 'react-icons/hi';
 import { LuFileSearch2,LuFileUser } from "react-icons/lu";
 
 // Importamos el contexto
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider';
 import { useFiles } from '../contexts/FilesProvider';
 

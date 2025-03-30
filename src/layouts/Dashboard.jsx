@@ -6,7 +6,7 @@ import { FaQrcode } from 'react-icons/fa6';
 import { FaRegFileAlt, FaUser, FaBars } from "react-icons/fa";
 
 // Importamos los contextos
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider'
 
 // Importamos los componentes
@@ -19,7 +19,6 @@ const Dashboard = () => {
     const { profile } = useAuth();
     const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const isDark = tema === 'oscuro';
     const access_token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
 

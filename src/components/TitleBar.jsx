@@ -11,7 +11,7 @@ import { FaUserXmark } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
 
 // Importamos los componentes
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthProvider';
 import OptionsCard from './OptionsCard';
 
 const TitleBar = () => {

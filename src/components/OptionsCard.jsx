@@ -7,7 +7,7 @@ import { IoLogOut } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Importamos el contexto
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider'
 
 const OptionsCard = () => {

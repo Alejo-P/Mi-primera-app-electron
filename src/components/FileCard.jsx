@@ -6,7 +6,7 @@ import { FaFileLines, FaFileImage } from "react-icons/fa6";
 import { QrCode } from 'lucide-react';
 
 // Importar el contexto
-import { useAuth } from '../contexts/AuthContext'; 
+import { useAuth } from '../contexts/AuthProvider'; 
 import { useFiles } from '../contexts/FilesProvider';
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';

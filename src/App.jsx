@@ -3,7 +3,7 @@ import './App.css'
 
 // Importamos el contexto
 import { AppProvider } from './contexts/AppProvider'
-import { AuthProvider } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthProvider'
 import { QRProvider } from './contexts/QRProvider'
 import { FilesProvider } from './contexts/FilesProvider'
 

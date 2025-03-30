@@ -3,7 +3,7 @@ import { IoLogIn } from "react-icons/io5";
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthProvider';
 
 // Importamos los componentes
 import Notification from '../components/Notification';
