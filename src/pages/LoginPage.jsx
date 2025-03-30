@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { IoLogIn} from "react-icons/io5";
-import { useNavigate } from 'react-router-dom';
-import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import { IoLogIn } from "react-icons/io5";
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
@@ -9,13 +7,12 @@ import { useAuth } from '../contexts/AuthContext';
 
 // Importamos los componentes
 import Notification from '../components/Notification';
+import CustomInput from '../components/CustomInput';
 
 const LoginPage = () => {
     const { tema, notificacion } = useApp();
     const isDark = tema === 'oscuro';
-    const navigate = useNavigate();
     const { login } = useAuth();
-    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -41,31 +38,21 @@ const LoginPage = () => {
                     onSubmit={handleSubmit}
                     className="w-full mt-2"
                 >
-                    <input
-                        type="email"
-                        placeholder="Correo electrónico"
-                        className={`w-full px-4 py-2 rounded-lg border-2 mb-2
-                            ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}
-                        `}
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    />
-                    <div className="relative">
-                        <input
-                            type={showPassword ? 'text' : 'password'}
-                            placeholder="Contraseña"
-                            className={`w-full px-4 py-2 rounded-lg border-2 mb-2
-                                ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}
-                            `}
-                            value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        />
-                        <div
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-2 top-2 cursor-pointer"
-                        >
-                            {showPassword ? <IoIosEyeOff className="text-xl" /> : <IoIosEye className="text-xl" />}
-                        </div>
+                    <div className="relative mb-4">
+                        {[
+                            { placeholder: "Tu correo electronico", name: "email", disabled: false },
+                            { placeholder: "Tu contraseña", name: "password", disabled: false },
+                        ].map((field, index) => (
+                            <CustomInput
+                                key={index}
+                                Itype={field.name}
+                                Iname={field.name}
+                                Ivalue={formData[field.name]}
+                                IonChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                                Iplaceholder={field.placeholder}
+                                Idisabled={field.disabled}
+                            />
+                        ))}
                     </div>
                     <button
                         type="submit"

@@ -13,7 +13,6 @@ export const FilesProvider = ({ children }) => {
     const [fileList, setFileList] = useState([]);
     const [loadingFiles, setLoadingFiles] = useState(false);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
-    const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
 
 
     // Obtener un archivo por su nombre
@@ -22,8 +21,7 @@ export const FilesProvider = ({ children }) => {
             const response = await axios.get(`${URL_BACKEND}/file/${name}`,{
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             return response.data;
         } catch (error) {
@@ -41,8 +39,7 @@ export const FilesProvider = ({ children }) => {
             const response = await axios.get(`${URL_BACKEND}/files`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             let data = [];
 
@@ -71,8 +68,7 @@ export const FilesProvider = ({ children }) => {
             const response = await axios.post(`${URL_BACKEND}/upload`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             handleNotificacion('success', response.data.msg, 5000);
             getFiles();
@@ -88,8 +84,7 @@ export const FilesProvider = ({ children }) => {
             const response = await axios.get(`${URL_BACKEND}/download/file/${name}`, {
                 responseType: 'blob',
                 headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -110,8 +105,7 @@ export const FilesProvider = ({ children }) => {
         try {
             const response = await axios.delete(`${URL_BACKEND}/delete/file/${name}`, {
                 headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             setFileList((prev) => prev.filter((file) => file.filename !== name));
             setQRList((prev) => prev.filter((qr) => qr.filename !== name));
@@ -130,8 +124,7 @@ export const FilesProvider = ({ children }) => {
         try {
             const response = await axios.delete(`${URL_BACKEND}/delete/all`, {
                 headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             setFileList([]);
             handleNotificacion('success', response.data.msg, 5000);

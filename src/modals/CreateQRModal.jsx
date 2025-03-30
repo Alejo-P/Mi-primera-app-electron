@@ -9,6 +9,7 @@ import { useQR } from '../contexts/QRProvider';
 
 // Importamos los componentes
 import NavActions from '../components/NavActions';
+import CustomInput from '../components/CustomInput';
 
 const CreateQRModal = ({ handleModal }) => {
     const { visibleNav, setVisibleNav, tema } = useApp();
@@ -67,43 +68,31 @@ const CreateQRModal = ({ handleModal }) => {
                 relative flex flex-col items-center max-h-screen overflow-auto`
             }>
                 <h2 className="text-2xl text-center font-bold">Crear un QR</h2>
-
-                <div className="mt-4 w-full">
-                    <label htmlFor="QRname" className="font-bold">
-                        Nombre del QR
-                        <span className="text-gray-400 text-md">
-                            <small> (opcional)</small>
-                        </span>
-                    </label>
-                    <input
-                        type="text"
-                        id="QRname"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
-                        placeholder="Ingresa un nombre para el QR"
-                        value={QRForm.QRname}
-                        onChange={handleChanges}
-                    />
-                    <p className="text-gray-400 text-sm">
-                        <small>Si no se especifica, se usará el nombre del archivo.</small>
-                    </p>
-                </div>  
-
-                <div className="mt-4 w-full">
-                    <label htmlFor="QRtext" className="font-bold">
-                        Texto <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="QRtext"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
-                        placeholder="Ingresa el texto personalizado para el QR"
-                        value={QRForm.QRtext}
-                        onChange={handleChanges}
-                        required
-                    />
-                    <p className="text-gray-400 text-sm">
-                        <small>Este será el contenido del QR (URL, mensaje, etc.).</small>
-                    </p>
+                <div className="mt-4 w-full flex flex-col gap-4">
+                    {[
+                        { placeholder: "Nombre del archivo QR", name: "QRname", disabled: false, type: "text", optional:true },
+                        { placeholder: "Texto del QR", name: "QRemail", disabled: false, type: "text", optional:false },
+                        { placeholder: "Imagen del QR", name: "QRicon", disabled: true, type: "file", optional:true }
+                    ].map((field, index) => (
+                        <div key={index} className="w-full">
+                            <CustomInput
+                                key={index}
+                                Itype={field.type}
+                                Iname={field.name}
+                                Ivalue={QRForm[field.name]}
+                                IonChange={(e) => setQRForm({ ...QRForm, [field.name]: e.target.value })}
+                                Iplaceholder={field.placeholder}
+                                Idisabled={field.disabled}
+                                Irequired={!field.optional}
+                            />
+                            <p className="text-gray-400 text-sm">
+                                <small>
+                                    {field.optional ? "Este campo es opcional." : "Este campo es obligatorio."}
+                                    {field.type === "file" && " Se recomienda un icono cuadrado (100x100 px) en formato PNG."}  
+                                </small>
+                            </p>
+                        </div>
+                    ))}
                 </div>
 
                 <div className="mt-4 w-full">

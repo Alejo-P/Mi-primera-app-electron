@@ -11,7 +11,6 @@ export const QRProvider = ({ children }) => {
     const [qrList, setQRList] = useState([]);
     const [loadingQRs, setLoadingQRs] = useState(false);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
-    const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
 
     // Obtener un QR por su nombre
     const getQR = async (name) => {
@@ -19,8 +18,7 @@ export const QRProvider = ({ children }) => {
             const response = await axios.get(`${URL_BACKEND}/qr/${name}`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             console.log(response);
             return response.data;
@@ -39,8 +37,7 @@ export const QRProvider = ({ children }) => {
             const response = await axios.get(`${URL_BACKEND}/qrs`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             let data = [];
 
@@ -71,8 +68,7 @@ export const QRProvider = ({ children }) => {
             const response = await axios.delete(`${URL_BACKEND}/qr/${name}`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             console.log(response);
             setQRList((prev) => prev.filter((qr) => qr.filename !== name));
@@ -91,8 +87,7 @@ export const QRProvider = ({ children }) => {
             const response = await axios.delete(`${URL_BACKEND}/qrs`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             console.log(response);
             setQRList([]);
@@ -122,8 +117,7 @@ export const QRProvider = ({ children }) => {
             const response = await axios.post(`${URL_BACKEND}/qr`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             handleNotificacion('success', response.data.msg, 5000);
             getQRs();
@@ -142,8 +136,7 @@ export const QRProvider = ({ children }) => {
             const response = await axios.post(`${URL_BACKEND}/qr/file/${fileName}`, null, {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
             });
             handleNotificacion('success', response.data.msg, 5000);
             getQRs();
@@ -160,8 +153,7 @@ export const QRProvider = ({ children }) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/download/qr/${name}`, {
                 headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
                 responseType: 'blob',
             });
     

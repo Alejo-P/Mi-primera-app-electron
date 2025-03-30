@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,19 +13,13 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
-    const [tokens, setTokens] = useState(() => {
-        const storedTokens = localStorage.getItem('tokens');
-        return storedTokens ? JSON.parse(storedTokens) : null;
-    });
-    const access_token = tokens?.access_token;
-    const refresh_token = tokens?.refresh_token;
 
     // Iniciar sesión
     const login = async (data) => {
         try {
             const response = await axios.post(`${URL_BACKEND}/login`, data);
-            setTokens(response.data);
-            localStorage.setItem('tokens', JSON.stringify(response.data));
+            localStorage.setItem('access_token', response.data.access_token);
+            localStorage.setItem('refresh_token', response.data.refresh_token);
             handleNotificacion('success', 'Sesión iniciada correctamente', 5000);
             navigate('/dashboard/');
         } catch (error) {
@@ -35,11 +29,23 @@ export const AuthProvider = ({ children }) => {
     };
 
     // Cerrar sesión
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('tokens');
-        navigate('/login');
-        handleNotificacion('success', 'Sesión cerrada correctamente', 5000);
+    const logout = async () => {
+        try {
+            const response = await axios.post(`${URL_BACKEND}/logout`, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    "Content-Type": "application/json",
+                }
+            });
+            setUser(null);
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            navigate('/login');
+            handleNotificacion('success', response.data.msg, 5000);
+        } catch (error) {       
+            console.error(error);
+            handleNotificacion('error', error, 5000);
+        }
     };
 
     // Obtener perfil del usuario
@@ -48,13 +54,13 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.get(`${URL_BACKEND}/profile`, {
                 headers: {
-                    Authorization: `Bearer ${access_token}`,
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
                     "Content-Type": "application/json",
                 }
             });
             setUser(response.data);
         } catch (error) {
-            console.error(error);
+            console.error(error);	
             handleNotificacion('error', error, 5000);
         } finally {
             setLoading(false);
@@ -65,26 +71,21 @@ export const AuthProvider = ({ children }) => {
     const refreshToken = async () => {
         try {
             const response = await axios.post(`${URL_BACKEND}/refresh`, {
-                refresh_token: refresh_token,
-            });
-            setTokens(response.data); // Actualiza el estado con los nuevos tokens
-            localStorage.setItem('tokens', JSON.stringify(response.data));
+                refresh_token: localStorage.getItem('refresh_token'),
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+                    "Content-Type": "application/json",
+                }
+            }); 
+            localStorage.setItem('access_token', response.data.access_token);
+            localStorage.setItem('refresh_token', response.data.refresh_token);
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
         } catch (error) {
             console.error(error);
             handleNotificacion('error', error, 5000);
         }
     };
-
-    // useEffect(() => {
-    //     const storedTokens = localStorage.getItem('tokens');
-    //     if (storedTokens) {
-    //         const tokens = JSON.parse(storedTokens);
-    //         if (tokens.access_token) {
-    //             profile();
-    //         }
-    //     }
-    // }, []);
 
     // Memoriza el valor del contexto para evitar renders innecesarios
     const contextValue = useMemo(() => ({

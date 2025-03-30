@@ -21,7 +21,7 @@ const Dashboard = () => {
     const { pathname } = useLocation();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const isDark = tema === 'oscuro';
-    const access_token = localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')).access_token : null;
+    const access_token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
 
     useEffect(() => {
         setCurrentPath(pathname);

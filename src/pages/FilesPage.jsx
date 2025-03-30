@@ -1,4 +1,3 @@
-// @ts-check
 import React, { useEffect, useState } from 'react'
 import { MdDeleteSweep, MdAdd } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
@@ -161,7 +160,7 @@ const FilesPage = () => {
                                         { icon: <LuFileUser className="text-2xl" />, placeholder: "Buscar por usuario", title: "Buscar por usuario", name: "userSearch" },
                                     ].map((item, index) => (
                                         <div key={index} className={`relative group transition-all duration-300
-                                            ${inputSearch[item.name] !== "" ? 'w-full' : 'w-12 hover:w-full'}
+                                            ${inputSearch[item.name] !== "" ? 'w-full   ' : 'w-12 hover:w-full'}
                                         `}>
                                             <input
                                                 type="text"
