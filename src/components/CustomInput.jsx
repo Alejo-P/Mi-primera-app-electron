@@ -13,6 +13,7 @@ const CustomInput = ({
     Iplaceholder,
     Idisabled = false,
     Irequired = false,
+    Iaccept = null,
 }) => {
     const [showPassword, setShowPassword] = useState(false);
     const { tema } = useApp();
@@ -46,6 +47,8 @@ const CustomInput = ({
                     placeholder={Iplaceholder}
                     title={Iplaceholder}
                     disabled={Idisabled}
+                    required={Irequired}
+                    accept={Iaccept}
                 />
                 <div className="absolute top-2 left-2 text-gray-400 group-hover:left-3 transition-all duration-300 text-center">
                     {

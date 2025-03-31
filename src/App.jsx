@@ -20,7 +20,6 @@ import Auth from './layouts/Auth'
 import LoginPage from './pages/LoginPage'
 
 function App() {
-
   return (
     <HashRouter>
       <AppProvider>

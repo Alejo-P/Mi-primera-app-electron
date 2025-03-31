@@ -22,6 +22,8 @@ const CreateQRModal = ({ handleModal }) => {
         QRicon: null  // Ahora el icono se almacena como archivo
     });
 
+    console.log(QRForm);
+
     const handleChanges = (e) => {
         const { id, value, files } = e.target;
         setQRForm((prev) => ({
@@ -71,19 +73,20 @@ const CreateQRModal = ({ handleModal }) => {
                 <div className="mt-4 w-full flex flex-col gap-4">
                     {[
                         { placeholder: "Nombre del archivo QR", name: "QRname", disabled: false, type: "text", optional:true },
-                        { placeholder: "Texto del QR", name: "QRemail", disabled: false, type: "text", optional:false },
-                        { placeholder: "Imagen del QR", name: "QRicon", disabled: true, type: "file", optional:true }
+                        { placeholder: "Texto del QR", name: "QRtext", disabled: false, type: "text", optional:false },
+                        { placeholder: "Seleccione un icono para el QR", name: "QRicon", disabled: false, type: "file", optional:true }
                     ].map((field, index) => (
                         <div key={index} className="w-full">
                             <CustomInput
                                 key={index}
                                 Itype={field.type}
                                 Iname={field.name}
-                                Ivalue={QRForm[field.name]}
-                                IonChange={(e) => setQRForm({ ...QRForm, [field.name]: e.target.value })}
+                                Ivalue={field.name === "QRicon" ? undefined : QRForm[field.name]}
+                                IonChange={handleChanges}
                                 Iplaceholder={field.placeholder}
                                 Idisabled={field.disabled}
                                 Irequired={!field.optional}
+                                Iaccept={field.type === "file" ? "image/*" : null}
                             />
                             <p className="text-gray-400 text-sm">
                                 <small>
@@ -93,27 +96,6 @@ const CreateQRModal = ({ handleModal }) => {
                             </p>
                         </div>
                     ))}
-                </div>
-
-                <div className="mt-4 w-full">
-                    <label htmlFor="QRicon" className="font-bold">
-                        Seleccione un icono para el QR
-                        <span className="text-gray-400 text-md">
-                            <small> (opcional)</small>
-                        </span>
-                    </label>
-                    <input
-                        type="file"
-                        id="QRicon"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
-                        accept="image/*"
-                        onChange={handleChanges}  // Ahora sí se maneja correctamente
-                    />
-                    <p className="text-gray-400 text-sm">
-                        <small>
-                            Se recomienda un icono cuadrado (100x100 px) en formato PNG.
-                        </small>
-                    </p>
                 </div>
             </div>
             {
