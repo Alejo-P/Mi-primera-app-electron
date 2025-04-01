@@ -25,14 +25,6 @@ const ProfilePage = () => {
     const [profileInfo, setProfileInfo] = useState(initialProfileInfo);
     const [passwordForm, setPasswordForm] = useState(initialPasswordForm);
     const [isFormDirty, setIsFormDirty] = useState(false);
-    const [showPasswordInputs, setShowPasswordInputs] = useState({
-        password: false,
-        confirmPassword: false
-    });
-
-    const handlePasswordVisibility = (field) => {
-        setShowPasswordInputs((prev) => ({ ...prev, [field]: !prev[field] }));
-    };
 
     // Detectar si hubo cambios en los formularios
     useEffect(() => {

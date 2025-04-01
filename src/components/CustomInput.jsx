@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { motion } from "framer-motion";
 import { MdOutlinePassword } from "react-icons/md";
 import { FiUser, FiMail, FiShield, FiFile } from "react-icons/fi";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
@@ -66,13 +67,16 @@ const CustomInput = ({
                     }
                 </div>
                 {Itype === "password" && (
-                    <div
-                        className="absolute right-2 top-2 cursor-pointer"
+                    <motion.div
+                        className={`absolute right-2 top-2 cursor-pointer ${Ivalue ? 'block' : 'hidden'}`}
                         onClick={handlePasswordVisibility}
                         title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                        initial={{ scale: 1, opacity: 1 }}
+                        whileTap={{ scale: 0.8, opacity: 0.7 }}  // 🔥 Rebote al presionar
+                        transition={{ duration: 0.2, ease: "easeInOut" }}  // Suaviza el efecto
                     >
                         {showPassword ? <IoIosEyeOff className="text-2xl" /> : <IoIosEye className="text-2xl" />}
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </div>
