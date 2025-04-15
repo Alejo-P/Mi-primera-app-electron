@@ -26,7 +26,7 @@ const Dashboard = () => {
         setCurrentPath(pathname);
     }, [pathname]); // Se ejecuta cuando cambia la ruta
 
-    // Cargar el perfil del usuario
+    //Cargar el perfil del usuario
     useEffect(() => {
         async function loadProfile() {
             await profile();

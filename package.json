@@ -7,7 +7,7 @@
   "type": "module",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "vite --host --port 5173",
+    "dev": "vite",
     "dev:electron": "electronmon electron/main.js",
     "build": "vite build && electron-builder",
     "lint": "eslint .",

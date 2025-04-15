@@ -1,100 +1,126 @@
-import { createContext, useContext, useState, useMemo } from 'react';
-import axios from 'axios';
+import { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Importamos el contexto
 import { useApp } from './AppProvider';
+import { useAxios } from '../hooks/useAxios';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
+    const { request, loading } = useAxios(); // ¡aquí la magia!
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
 
-    // Iniciar sesión
     const login = async (data) => {
-        try {
-            const response = await axios.post(`${URL_BACKEND}/login`, data);
-            localStorage.setItem('access_token', response.data.access_token);
-            localStorage.setItem('refresh_token', response.data.refresh_token);
+        console.log('AuthProvider.jsx: Iniciando sesión...');
+        const response = await request({
+            method: 'post',
+            url: '/login',
+            payload: data
+        });
+
+        if (response) {
+            localStorage.setItem('access_token', response.access_token);
+            localStorage.setItem('refresh_token', response.refresh_token);
             handleNotificacion('success', 'Sesión iniciada correctamente', 5000);
             navigate('/dashboard/');
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error', error, 5000);
         }
     };
 
-    // Cerrar sesión
     const logout = async () => {
-        try {
-            const response = await axios.post(`${URL_BACKEND}/logout`, {}, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                    "Content-Type": "application/json",
-                }
-            });
-            setUser(null);
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
-            navigate('/login');
-            handleNotificacion('success', response.data.msg, 5000);
-        } catch (error) {       
-            console.error(error);
-            handleNotificacion('error', error, 5000);
+        const response = await request({
+            method: 'post',
+            url: '/logout',
+            notify: false // ya notificamos después nosotros
+        });
+
+        setUser(null);
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        navigate('/login');
+
+        if (response?.msg) {
+            handleNotificacion('success', response.msg, 5000);
         }
     };
 
-    // Obtener perfil del usuario
     const profile = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`${URL_BACKEND}/profile`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                    "Content-Type": "application/json",
-                }
-            });
-            setUser(response.data);
-        } catch (error) {
-            console.error(error);	
-            handleNotificacion('error', error, 5000);
-        } finally {
-            setLoading(false);
+        const response = await request({
+            method: 'get',
+            url: '/profile',
+            notify: false
+        });
+
+        if (response) {
+            setUser(response);
+        } else {
+            await refreshToken();
         }
     };
 
-    // Refrescar token
     const refreshToken = async () => {
-        try {
-            const response = await axios.post(`${URL_BACKEND}/refresh`, {
-                refresh_token: localStorage.getItem('refresh_token'),
-            }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                    "Content-Type": "application/json",
-                }
-            }); 
-            localStorage.setItem('access_token', response.data.access_token);
-            localStorage.setItem('refresh_token', response.data.refresh_token);
+        const response = await request({
+            method: 'post',
+            url: '/refresh',
+            notify: false
+        });
+
+        if (response) {
+            localStorage.setItem('access_token', response.access_token);
+            localStorage.setItem('refresh_token', response.refresh_token);
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error', error, 5000);
+        } else {
+            // Si el refresh falla, probablemente sea necesario cerrar sesión
+            logout();
         }
     };
 
-    // Memoriza el valor del contexto para evitar renders innecesarios
+    const addRole = async (role, user_id) => {
+        const response = await request({
+            method: 'post',
+            url: '/add_role',
+            payload: {
+                role_name: role,
+                user_id: user_id
+            },
+            notify: false
+        });
+
+        if (response) {
+            handleNotificacion('success', 'Rol añadido correctamente', 5000);
+        } else {
+            handleNotificacion('error', 'Error al añadir el rol', 5000);
+        }
+    }
+
+    const removeRole = async (role, user_id) => {
+        const response = await request({
+            method: 'delete',
+            url: '/remove_role',
+            payload: {
+                role_name: role,
+                user_id: user_id
+            },
+            notify: false
+        });
+
+        if (response) {
+            handleNotificacion('success', 'Rol eliminado correctamente', 5000);
+        } else {
+            handleNotificacion('error', 'Error al eliminar el rol', 5000);
+        }
+    }
+
     const contextValue = useMemo(() => ({
         user,
         loading,
         login,
         logout,
         profile,
-        refreshToken
+        refreshToken,
+        addRole,
+        removeRole,
     }), [user, loading]);
 
     return (
@@ -104,4 +130,4 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export const useAuth = () =>  useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);

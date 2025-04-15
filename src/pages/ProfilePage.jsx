@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider';
 import { FaUserCircle } from "react-icons/fa";
+import { FiShield } from "react-icons/fi";
+import { IoMdCloseCircle } from "react-icons/io";
 
 // Importamos los componentes
 import CustomInput from '../components/CustomInput';
+import RolesField from '../components/RolesField';
 
 const ProfilePage = () => {
-    const { user } = useAuth();
-    const { tema } = useApp();
+    const { user, removeRole } = useAuth();
+    const { tema, handleNotificacion } = useApp();
     const isDark = tema === 'oscuro';
 
     const initialProfileInfo = {
         name: user?.name || "N/A",
         email: user?.email || "N/A",
-        role: user?.role || "N/A"
+        roles: user?.roles || "N/A"
     };
 
     const initialPasswordForm = {
@@ -25,6 +28,17 @@ const ProfilePage = () => {
     const [profileInfo, setProfileInfo] = useState(initialProfileInfo);
     const [passwordForm, setPasswordForm] = useState(initialPasswordForm);
     const [isFormDirty, setIsFormDirty] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleDeleteRole = async (role, userId) => {
+        if (user?.roles?.includes("Administrador") && user?.roles?.length > 1) {
+            setIsLoading(true);
+            await removeRole(role, userId);
+            setIsLoading(false);
+        } else {
+            handleNotificacion('error', 'No puedes eliminar tu rol de Administrador', 5000);
+        }
+    };
 
     // Detectar si hubo cambios en los formularios
     useEffect(() => {
@@ -33,7 +47,7 @@ const ProfilePage = () => {
         setIsFormDirty(isProfileChanged || isPasswordChanged);
     }, [profileInfo, passwordForm]);
 
-    // Manejar el evento beforeunload
+    // Manejar el evento beforeunload para advertir al usuario
     useEffect(() => {
         const handleBeforeUnload = (event) => {
             if (isFormDirty) {
@@ -51,8 +65,8 @@ const ProfilePage = () => {
         setProfileInfo({
             name: user?.name || "N/A",
             email: user?.email || "N/A",
-            role: user?.role || "N/A"
-        }); 
+            roles: user?.roles || "N/A"
+        });
     }, [user]);
 
     return (
@@ -71,18 +85,32 @@ const ProfilePage = () => {
                     {[
                         { placeholder: "Tu nombre de usuario", name: "name", disabled: false, type: "username" },
                         { placeholder: "Tu correo electronico", name: "email", disabled: false, type: "email" },
-                        { placeholder: "Tus roles", name: "role", disabled: true, type: "security" },
+                        { placeholder: "Tus roles", name: "roles", disabled: true, type: "security" },
                     ].map((field, index) => (
-
-                        <CustomInput
-                            key={index}
-                            Itype={field.type}
-                            Iname={field.name}
-                            Ivalue={profileInfo[field.name]}
-                            IonChange={(e) => setProfileInfo({ ...profileInfo, [field.name]: e.target.value })}
-                            Iplaceholder={field.placeholder}
-                            Idisabled={field.disabled}
-                        />
+                        <>
+                            {
+                                field.name !== "roles" ? (
+                                    <CustomInput
+                                        key={index}
+                                        Itype={field.type}
+                                        Iname={field.name}
+                                        Ivalue={profileInfo[field.name]}
+                                        IonChange={(e) => setProfileInfo({ ...profileInfo, [field.name]: e.target.value })}
+                                        Iplaceholder={field.placeholder}
+                                        Idisabled={field.disabled}
+                                    />
+                                ) : (
+                                    <RolesField
+                                        key={index}
+                                        field={field}
+                                        profileInfo={profileInfo}
+                                        isDark={isDark}
+                                        user={user}
+                                        onDeleteRole={handleDeleteRole}
+                                    />
+                                )
+                            }
+                        </>
                     ))}
                     <button
                         type="submit"

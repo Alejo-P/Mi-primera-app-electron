@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 
 // Importamos el contexto
@@ -13,6 +13,7 @@ import QRPage from './pages/QRPage'
 import FilesPage from './pages/FilesPage'
 import NotFound from './pages/NotFound'
 import ProfilePage from './pages/ProfilePage'
+import LandingPage from './pages/LandingPage'
 import Dashboard from './layouts/Dashboard'
 
 // Rutas para la autenticación
@@ -28,6 +29,7 @@ function App() {
             <FilesProvider>
               <Routes>
                 <Route path="/" element={<Auth />}>
+                  <Route index element={<LandingPage />} />
                   <Route path="login" element={<LoginPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Route>
