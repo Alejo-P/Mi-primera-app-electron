@@ -1,4 +1,6 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import './App.css'
 
 // Importamos el contexto
@@ -20,37 +22,40 @@ import Dashboard from './layouts/Dashboard'
 import Auth from './layouts/Auth'
 import LoginPage from './pages/LoginPage'
 
+const queryClient = new QueryClient();
 function App() {
   return (
-    <HashRouter>
-      <AppProvider>
-        <AuthProvider>
-          <QRProvider>
-            <FilesProvider>
-              <Routes>
-                <Route path="/" element={<Auth />}>
-                  <Route index element={<LandingPage />} />
-                  <Route path="login" element={<LoginPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Route>
+    <QueryClientProvider client={queryClient}>
+      <HashRouter>
+        <AppProvider>
+          <AuthProvider>
+            <QRProvider>
+              <FilesProvider>
+                <Routes>
+                  <Route path="/" element={<Auth />}>
+                    <Route index element={<LandingPage />} />
+                    <Route path="login" element={<LoginPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Route>
 
-                <Route path="/dashboard/*" element={
-                  <Routes>
-                    <Route element={<Dashboard />}>
-                      <Route index element={<UploadPage />} />
-                      <Route path="qr" element={<QRPage />} />
-                      <Route path="files" element={<FilesPage />} />
-                      <Route path="profile" element={<ProfilePage />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Route>
-                  </Routes>
-                } />
-              </Routes>
-            </FilesProvider>
-          </QRProvider>
-        </AuthProvider>
-      </AppProvider>
-    </HashRouter>
+                  <Route path="/dashboard/*" element={
+                    <Routes>
+                      <Route element={<Dashboard />}>
+                        <Route index element={<UploadPage />} />
+                        <Route path="qr" element={<QRPage />} />
+                        <Route path="files" element={<FilesPage />} />
+                        <Route path="profile" element={<ProfilePage />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Route>
+                    </Routes>
+                  } />
+                </Routes>
+              </FilesProvider>
+            </QRProvider>
+          </AuthProvider>
+        </AppProvider>
+      </HashRouter>
+    </QueryClientProvider>
   )
 }
 

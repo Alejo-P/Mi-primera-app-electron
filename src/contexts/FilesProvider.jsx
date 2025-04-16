@@ -1,7 +1,9 @@
-import { createContext, useContext, useState, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 
 // Importamos el contexto
+import { useAxios } from '../hooks/useAxios';
+import { useAxiosQuery } from '../hooks/useAxiosQuery';
 import { useApp } from './AppProvider';
 import { useQR } from './QRProvider';
 
@@ -9,59 +11,55 @@ const FilesContext = createContext();
 
 export const FilesProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
+    const { request, loading, error } = useAxios(); // ¡aquí la magia!
     const { getQRs } = useQR();
     const [fileList, setFileList] = useState([]);
-    const [loadingFiles, setLoadingFiles] = useState(false);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
 
-    // Obtener un archivo por su nombre
+    // 1. Obtener contenido de un archivo individual
     const getFile = async (name) => {
         try {
-            const response = await axios.get(`${URL_BACKEND}/file/${name}`,{
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                },
+            const response = await request({
+                method: 'get',
+                url: `/file/${name}`,
+                notify: false,
             });
-            return response.data;
+            return response;
         } catch (error) {
             console.error(error);
-            handleNotificacion('error', 'Error al cargar el archivo ' + name, 5000);
+            handleNotificacion('error', `Error al cargar el archivo ${name}`, 5000);
             return null;
         }
     };
 
-    // Obtener todos los archivos
-    const getFiles = async () => {
-        setLoadingFiles(true);
-        setFileList([]);
-        try {
-            const response = await axios.get(`${URL_BACKEND}/files`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                },
-            });
-            let data = [];
+    // 2. Obtener lista de nombres de archivos
+    const {
+        data: fileNames,
+        refetch: getFiles,
+    } = useAxiosQuery({
+        queryKey: ['files'],
+        url: '/files',
+        enabled: true,
+        select: (data) => data.files, // Devuelve array de nombres
+    });
 
-            if (response.data?.files.length === 0) {
-                handleNotificacion('info', 'No hay archivos cargados', 5000);
-            } else {
-                data = await Promise.all(
-                    response.data.files.map(async (file) => {
-                        const source = await getFile(file);
-                        return { ...source };
-                    })
-                );
-            }
-            setFileList(data);
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error', error, 5000);
-        } finally {
-            setLoadingFiles(false);
-        }
-    };
+    // 3. Obtener detalles de cada archivo cuando cambian los nombres
+    useEffect(() => {
+        const cargarDetalles = async () => {
+            if (!fileNames) return;
+
+            const archivosDetallados = await Promise.all(
+                fileNames.map(async (name) => {
+                    const contenido = await getFile(name);
+                    return contenido ? { ...contenido } : null;
+                })
+            );
+
+            setFileList(archivosDetallados.filter(Boolean)); // Elimina los null
+        };
+
+        cargarDetalles();
+    }, [fileNames]);
 
     // Subir un archivo
     const uploadFile = async (data) => {
@@ -143,7 +141,16 @@ export const FilesProvider = ({ children }) => {
     };
 
     // Memoriza el valor del contexto para evitar renders innecesarios
-    const contextValue = useMemo(() => ({ fileList, uploadFile, getFiles, getFile, downloadFile, deleteFile, deleteAllFiles, loadingFiles }), [fileList, loadingFiles]);
+    const contextValue = useMemo(() => ({
+        fileList,
+        uploadFile,
+        getFiles,
+        getFile,
+        downloadFile,
+        deleteFile,
+        deleteAllFiles,
+        loading
+    }), [fileList, loading]);
 
     return <FilesContext.Provider value={contextValue}>{children}</FilesContext.Provider>;
 }

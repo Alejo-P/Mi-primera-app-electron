@@ -22,8 +22,6 @@ const CreateQRModal = ({ handleModal }) => {
         QRicon: null  // Ahora el icono se almacena como archivo
     });
 
-    console.log(QRForm);
-
     const handleChanges = (e) => {
         const { id, value, files } = e.target;
         setQRForm((prev) => ({
