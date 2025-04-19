@@ -8,22 +8,23 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
-    const { request, loading } = useAxios(); // ¡aquí la magia!
+    const { request } = useAxios(); // ¡aquí la magia!
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const login = async (data) => {
-        console.log('AuthProvider.jsx: Iniciando sesión...');
         const response = await request({
             method: 'post',
             url: '/login',
-            payload: data
+            payload: data,
+            notify: true // ya notificamos después nosotros
         });
 
         if (response) {
             localStorage.setItem('access_token', response.access_token);
             localStorage.setItem('refresh_token', response.refresh_token);
-            handleNotificacion('success', 'Sesión iniciada correctamente', 5000);
+            //handleNotificacion('success', response.msg, 5000);
             navigate('/dashboard/');
         }
     };
@@ -72,6 +73,8 @@ export const AuthProvider = ({ children }) => {
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
         } else {
             // Si el refresh falla, probablemente sea necesario cerrar sesión
+            handleNotificacion('error', "Error en la autenticacion", 5000);
+            setUser(null);
             logout();
         }
     };

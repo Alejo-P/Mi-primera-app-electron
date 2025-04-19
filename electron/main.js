@@ -1,8 +1,5 @@
-// @ts-check
 import { app, BrowserWindow, ipcMain } from "electron";
-import { spawn } from "child_process";
 import path from "path";
-import fs from "fs";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 

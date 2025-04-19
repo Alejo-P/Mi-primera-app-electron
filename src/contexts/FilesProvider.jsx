@@ -3,7 +3,6 @@ import axios from 'axios';
 
 // Importamos el contexto
 import { useAxios } from '../hooks/useAxios';
-import { useAxiosQuery } from '../hooks/useAxiosQuery';
 import { useApp } from './AppProvider';
 import { useQR } from './QRProvider';
 
@@ -24,6 +23,7 @@ export const FilesProvider = ({ children }) => {
                 url: `/file/${name}`,
                 notify: false,
             });
+
             return response;
         } catch (error) {
             console.error(error);
@@ -33,33 +33,26 @@ export const FilesProvider = ({ children }) => {
     };
 
     // 2. Obtener lista de nombres de archivos
-    const {
-        data: fileNames,
-        refetch: getFiles,
-    } = useAxiosQuery({
-        queryKey: ['files'],
-        url: '/files',
-        enabled: true,
-        select: (data) => data.files, // Devuelve array de nombres
-    });
-
-    // 3. Obtener detalles de cada archivo cuando cambian los nombres
-    useEffect(() => {
-        const cargarDetalles = async () => {
-            if (!fileNames) return;
-
-            const archivosDetallados = await Promise.all(
-                fileNames.map(async (name) => {
-                    const contenido = await getFile(name);
-                    return contenido ? { ...contenido } : null;
+    const getFiles = async () => {
+        const response = await request({
+            method: 'get',
+            url: '/files',
+            notify: false,
+        });
+        if (response) {
+            let data = [];
+            data = await Promise.all(
+                response.files.map(async (file) => {
+                    const { file:fileData } = await getFile(file);
+                    return { ...fileData };
                 })
             );
-
-            setFileList(archivosDetallados.filter(Boolean)); // Elimina los null
-        };
-
-        cargarDetalles();
-    }, [fileNames]);
+            setFileList(data);
+            
+        } else {
+            handleNotificacion('error', error, 5000);
+        }
+    };
 
     // Subir un archivo
     const uploadFile = async (data) => {

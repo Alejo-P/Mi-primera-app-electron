@@ -12,6 +12,7 @@ import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
 
 const FileCard = ({ file, showModal }) => {
+    console.log("FileCard ->",file);
     const { user } = useAuth();
     const { downloadFile, deleteFile } = useFiles();
     const { fileTypes, setSelectedFile, setVisibleNav, setVisibleToolbar, convertUnit, tema } = useApp();

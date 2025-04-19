@@ -20,7 +20,8 @@ const TitleBar = () => {
         showOptions,
         handleOptions,
         isMaximized,
-        setIsMaximized
+        setIsMaximized,
+        isElectron
     } = useApp();
 
     useEffect(() => {
@@ -43,11 +44,11 @@ const TitleBar = () => {
 
     return (
         <>
-            <div className='flex flex-row justify-between w-full items-center px-4 py-1'>
-                <div className='flex items-center space-x-2 font-bold'>
+            <div className='flex flex-row justify-between w-full items-center px-4 py-1' style={{ WebkitAppRegion: 'drag' }}>
+                <div className='flex items-center space-x-2 font-bold' style={{ WebkitAppRegion: 'no-drag' }}>
                     <p>DocTools</p>
                 </div>
-                <div className='flex items-end space-x-2'>
+                <div className='flex items-end space-x-2' style={{ WebkitAppRegion: 'no-drag' }}>
                     {
                         loading ? <ImSpinner9 className='animate-spin text-xl' />
                         :
@@ -63,7 +64,7 @@ const TitleBar = () => {
                         {loading ? 'Cargando...' : user?.name || 'Invitado'}
                     </span>
                 </div>
-                <div className='flex space-x-2 h-full items-center'>
+                <div className='flex space-x-2 h-full items-center' style={{ WebkitAppRegion: 'no-drag' }}>
                     <button
                         id='options'
                         data-tooltip-id='options'
@@ -73,33 +74,40 @@ const TitleBar = () => {
                     >
                         <SlOptions />
                     </button>
-                    <button
-                        id='minimize'
-                        data-tooltip-id='minimize'
-                        data-tooltip-content={`Minimizar`}
-                        onClick={() => window.electronAPI.minimize()}
-                        className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-2'
-                    >
-                        <FaWindowMinimize />
-                    </button>
-                    <button
-                        id='maximize'
-                        data-tooltip-id='maximize'
-                        data-tooltip-content={isMaximized ? `Restaurar` : `Maximizar`}
-                        onClick={() => isMaximized ? window.electronAPI.unmaximize() : window.electronAPI.maximize()}
-                        className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-2'
-                    >
-                        {isMaximized ? <FaWindowRestore /> : <FaWindowMaximize />}
-                    </button>
-                    <button
-                        id='close'
-                        data-tooltip-id='close'
-                        data-tooltip-content={`Cerrar`}
-                        onClick={() => window.electronAPI.close()}
-                        className='hover:bg-red-600 hover:text-gray-400 rounded-md p-2'
-                    >
-                        <IoClose className='font-semibold' />
-                    </button>
+                    {
+                        isElectron && (
+                            <>
+                                <button
+                                    id='minimize'
+                                    data-tooltip-id='minimize'
+                                    data-tooltip-content={`Minimizar`}
+                                    onClick={() => window.electronAPI.minimize()}
+                                    className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-2'
+                                >
+                                    <FaWindowMinimize />
+                                </button>
+                                <button
+                                    id='maximize'
+                                    data-tooltip-id='maximize'
+                                    data-tooltip-content={isMaximized ? `Restaurar` : `Maximizar`}
+                                    onClick={() => isMaximized ? window.electronAPI.unmaximize() : window.electronAPI.maximize()}
+                                    className='hover:bg-gray-600 hover:text-gray-400 rounded-md p-2'
+                                >
+                                    {isMaximized ? <FaWindowRestore /> : <FaWindowMaximize />}
+                                </button>
+                                <button
+                                    id='close'
+                                    data-tooltip-id='close'
+                                    data-tooltip-content={`Cerrar`}
+                                    onClick={() => window.electronAPI.close()}
+                                    className='hover:bg-red-600 hover:text-gray-400 rounded-md p-2'
+                                >
+                                    <IoClose className='font-semibold' />
+                                </button>
+                            </>
+                        )
+                    }
+                    
                 </div>
                 <ReactTooltip id='minimize' place='top' />
                 <ReactTooltip id='maximize' place='top' />

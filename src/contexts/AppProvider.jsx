@@ -18,6 +18,9 @@ export const AppProvider = ({ children }) => {
     const [showOptions, setShowOptions] = useState(false);
     const [showLogsModal, setShowLogsModal] = useState(false);
     const [isMaximized, setIsMaximized] = useState(false);
+    // Deteccion de Electron
+    const [isElectron, setIsElectron] = useState(false);
+
 
     // Cambia el tema y lo guarda en localStorage
     const handleTheme = () => {
@@ -55,6 +58,13 @@ export const AppProvider = ({ children }) => {
         document.body.classList.add(tema === "claro" ? "bg-white" : "bg-gray-800");
     }, [tema]);
 
+    // Detecta si la aplicación se está ejecutando en Electron
+    useEffect(() => {
+        if (window?.electronAPI) {
+            setIsElectron(true);
+        }
+    }, []);
+
     // Memoriza el valor del contexto para evitar renders innecesarios
     const contextValue = useMemo(() => ({
         tema,
@@ -69,6 +79,7 @@ export const AppProvider = ({ children }) => {
         isMaximized,
         showLogsModal,
         visibleToolbar,
+        isElectron,
         setVisibleToolbar,
         setShowLogsModal,
         setIsMaximized,
@@ -79,7 +90,7 @@ export const AppProvider = ({ children }) => {
         handleNotificacion,
         convertUnit,
         handleTheme,
-    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions, isMaximized, showLogsModal, visibleToolbar]);
+    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions, isMaximized, showLogsModal, visibleToolbar, isElectron]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };
