@@ -4,10 +4,17 @@ import { useApp } from '../contexts/AppProvider';
 
 export const useAxios = () => {
     const { handleNotificacion } = useApp(); // Importa la función de notificación del contexto de la aplicación
-    let data = null; // Variable para almacenar la respuesta de la API
-    let error = null; // Variable para almacenar el error de la API
 
-    const request = async ({ method, url, payload = null, config = {}, notify = true }) => {
+    const request = async ({
+        method,
+        url,
+        payload = null,
+        config = {},
+        notify = {
+            success: true,
+            error: true
+        }
+    }) => {
         try {
             const response = await axiosInstance({
                 method,
@@ -18,25 +25,20 @@ export const useAxios = () => {
 
             console.log('useAxios.jsx: response', response); // Log the response data
 
-            data = response.data; // Almacena la respuesta en la variable data
-            error = null; // Resetea el error si la respuesta es exitosa
-
-            if (notify) {
-                handleNotificacion('success', data.msg, 4000);
+            if (notify.success) {
+                handleNotificacion('success', response.data.msg, 4000);
             }
-            return data; // Devuelve la respuesta de la API
+            return response.data; // Devuelve la respuesta de la API
         } catch (err) {
             console.error(err);
             const message = err?.response?.data?.detail || 'Error inesperado';
-            error = message; // Almacena el error en la variable error
-            data = null; // Resetea la respuesta si hay un error
 
-            if (notify) {
+            if (notify.error) {
                 handleNotificacion('error', message, 5000);
             }
             return null; // Devuelve null si hay un error
         }
     };
 
-    return { error, data, request };
+    return { request };
 };

@@ -1,164 +1,248 @@
 import { createContext, useContext, useState, useMemo } from 'react';
-import axios from 'axios';
 
 // Importamos el contexto
+import { useAxios } from '../hooks/useAxios';
 import { useApp } from './AppProvider';
 
 const QRContext = createContext();
 
 export const QRProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
+    const { request } = useAxios(); // ¡aquí la magia!
     const [qrList, setQRList] = useState([]);
     const [loadingQRs, setLoadingQRs] = useState(false);
     const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
 
     // Obtener un QR por su nombre
     const getQR = async (name) => {
-        try {
-            const response = await axios.get(`${URL_BACKEND}/qr/${name}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-            });
-            console.log(response);
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error', error, 5000);
-            return null;
+        const response = await request({
+            method: 'get',
+            url: `/qr/${name}`,
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+        if (response) {
+            console.log('getQR', response);
+            return response;
         }
+        return null;
     };
 
     // Obtener todos los QRs
     const getQRs = async () => {
         setLoadingQRs(true);
         setQRList([]);
-        try {
-            const response = await axios.get(`${URL_BACKEND}/qrs`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-            });
+        const response = await request({
+            method: 'get',
+            url: '/qrs',
+            notify: {
+                success: false,
+                error: true
+            },
+        });
+        if (response) {
             let data = [];
-
-            if (response.data?.files.length === 0) {
+            if (response.files.length === 0) {
                 handleNotificacion('info', 'No hay QRs generados', 5000);
             } else {
                 data = await Promise.all(
-                    response.data.files.map(async (qr) => {
+                    response.files.map(async (qr) => {
                         const source = await getQR(qr);
                         return { ...source };
                     })
                 );
             }
             setQRList(data);
-            console.log("Lista de QRs", data);
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error',  error, 5000);
-        } finally {
-            setLoadingQRs(false);
         }
+        setLoadingQRs(false);
     };
 
     // Eliminar un QR por su nombre
     const deleteQR = async (name) => {
-        setLoadingQRs(true);
-        try {
-            const response = await axios.delete(`${URL_BACKEND}/qr/${name}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-            });
-            console.log(response);
-            setQRList((prev) => prev.filter((qr) => qr.filename !== name));
-            handleNotificacion('success', response.data.msg, 5000);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoadingQRs(false);
+        if (!name) {
+            handleNotificacion('error', 'No se ha seleccionado ningún QR', 5000);
+            return;
         }
+        const response = await request({
+            method: 'delete',
+            url: `/qr/${name}`,
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+        
+        if (response) {
+            console.log('deleteQR', response);
+            setQRList((prev) => prev.filter((qr) => qr.filename !== name));
+            handleNotificacion('success', response.msg, 5000);
+        }
+        // try {
+        //     const response = await axios.delete(`${URL_BACKEND}/qr/${name}`, {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
+        //     });
+        //     console.log(response);
+        //     setQRList((prev) => prev.filter((qr) => qr.filename !== name));
+        //     handleNotificacion('success', response.data.msg, 5000);
+        // } catch (error) {
+        //     console.error(error);
+        // } finally {
+        //     setLoadingQRs(false);
+        // }
     };
 
     // Eliminar todos los QRs
     const deleteAllQRs = async () => {
-        setLoadingQRs(true);
-        try {
-            const response = await axios.delete(`${URL_BACKEND}/qrs`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-            });
-            console.log(response);
+        const confirm = window.confirm(`¿Eliminar todos los QRs?`);
+        if (!confirm) return;
+
+        const response = await request({
+            method: 'delete',
+            url: '/qrs',
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+
+        if (response) {
+            console.log('deleteAllQRs', response);
             setQRList([]);
-            handleNotificacion('success', response.data.msg, 5000);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoadingQRs(false);
+            handleNotificacion('success', response.msg, 5000);
         }
+
+        // try {
+        //     const response = await axios.delete(`${URL_BACKEND}/qrs`, {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
+        //     });
+        //     console.log(response);
+        //     setQRList([]);
+        //     handleNotificacion('success', response.data.msg, 5000);
+        // } catch (error) {
+        //     console.error(error);
+        // } finally {
+        //     setLoadingQRs(false);
+        // }
     };
 
     // Crear un QR a partir de un texto
     const createQR = async (data) => {
-        setLoadingQRs(true);
-        try {
-            const formData = new FormData();
-            formData.append('text', data.QRtext);
-
-            if (data?.QRname) {
-                formData.append('name', data.QRname);
-            }
-
-            if (data?.QRicon) {
-                formData.append('icon', data.QRicon);
-            }
-
-            const response = await axios.post(`${URL_BACKEND}/qr`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-            });
-            handleNotificacion('success', response.data.msg, 5000);
-            getQRs();
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error', error, 5000);
-        } finally {
-            setLoadingQRs(false);
+        if (!data?.QRtext) {
+            handleNotificacion('error', 'No se ha ingresado ningún texto', 5000);
+            return;
         }
+        setLoadingQRs(true);
+        const response = await request({
+            method: 'post',
+            url: '/qr',
+            payload: data,
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+
+        if (response) {
+            console.log('createQR', response);
+            handleNotificacion('success', response.msg, 5000);
+            getQRs();
+        }
+        setLoadingQRs(false);
+
+        // try {
+        //     const formData = new FormData();
+        //     formData.append('text', data.QRtext);
+
+        //     if (data?.QRname) {
+        //         formData.append('name', data.QRname);
+        //     }
+
+        //     if (data?.QRicon) {
+        //         formData.append('icon', data.QRicon);
+        //     }
+
+        //     const response = await axios.post(`${URL_BACKEND}/qr`, formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data',
+        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
+        //     });
+        //     handleNotificacion('success', response.data.msg, 5000);
+        //     getQRs();
+        // } catch (error) {
+        //     console.error(error);
+        //     handleNotificacion('error', error, 5000);
+        // } finally {
+        //     setLoadingQRs(false);
+        // }
     };
 
     // Crear un QR a partir de un archivo
     const createQRFile = async (fileName) => {
-        setLoadingQRs(true);
-        try {
-            const response = await axios.post(`${URL_BACKEND}/qr/file/${fileName}`, null, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-            });
-            handleNotificacion('success', response.data.msg, 5000);
-            getQRs();
-            
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error',  error, 5000);
-        } finally {
-            setLoadingQRs(false);
+        if (!fileName) {
+            handleNotificacion('error', 'No se ha seleccionado ningún archivo', 5000);
+            return;
         }
+        setLoadingQRs(true);
+        const response = await request({
+            method: 'post',
+            url: `/qr/file/${fileName}`,
+            notify: {
+                success: false,
+                error: true
+            },
+        });
+        if (response) {
+            console.log('createQRFile', response);
+            handleNotificacion('success', response.msg, 5000);
+            getQRs();
+        }
+        setLoadingQRs(false);
+
+        // try {
+        //     const response = await axios.post(`${URL_BACKEND}/qr/file/${fileName}`, null, {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
+        //     });
+        //     handleNotificacion('success', response.data.msg, 5000);
+        //     getQRs();
+            
+        // } catch (error) {
+        //     console.error(error);
+        //     handleNotificacion('error',  error, 5000);
+        // } finally {
+        //     setLoadingQRs(false);
+        // }
     };
 
     const downloadQR = async (name) => {
-        try {
-            const response = await axios.get(`${URL_BACKEND}/download/qr/${name}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-                responseType: 'blob',
-            });
-    
+        if (!name) {
+            handleNotificacion('error', 'No se ha seleccionado ningún QR', 5000);
+            return;
+        }
+
+        const response = await request({
+            method: 'get',
+            url: `/download/qr/${name}`,
+            notify: {
+                success: false,
+                error: true
+            },
+            config: {
+                responseType: 'blob'
+            }
+        });
+
+        if (response) {
+            console.log('downloadQR', response);
             // Crear un objeto URL para el archivo
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const url = window.URL.createObjectURL(new Blob([response]));
             
             // Crear un elemento <a> temporal
             const link = document.createElement('a');
@@ -174,10 +258,36 @@ export const QRProvider = ({ children }) => {
             
             // Revocar el objeto URL para liberar memoria
             window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error(error);
-            handleNotificacion('error',  error, 5000);
         }
+
+        // try {
+        //     const response = await axios.get(`${URL_BACKEND}/download/qr/${name}`, {
+        //         headers: {
+        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
+        //         responseType: 'blob',
+        //     });
+    
+        //     // Crear un objeto URL para el archivo
+        //     const url = window.URL.createObjectURL(new Blob([response.data]));
+            
+        //     // Crear un elemento <a> temporal
+        //     const link = document.createElement('a');
+        //     link.href = url;
+        //     link.setAttribute('download', `${name}`);
+        //     document.body.appendChild(link);
+    
+        //     // Simular clic para descargar
+        //     link.click();
+    
+        //     // Eliminar el <a> del DOM después de la descarga
+        //     document.body.removeChild(link);
+            
+        //     // Revocar el objeto URL para liberar memoria
+        //     window.URL.revokeObjectURL(url);
+        // } catch (error) {
+        //     console.error(error);
+        //     handleNotificacion('error',  error, 5000);
+        // }
     };    
 
     const contextValue = useMemo(() => ({

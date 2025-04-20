@@ -18,7 +18,10 @@ export const AuthProvider = ({ children }) => {
             method: 'post',
             url: '/login',
             payload: data,
-            notify: true // ya notificamos después nosotros
+            notify: {
+                success: true,
+                error: true
+            }
         });
 
         if (response) {
@@ -33,24 +36,26 @@ export const AuthProvider = ({ children }) => {
         const response = await request({
             method: 'post',
             url: '/logout',
-            notify: false // ya notificamos después nosotros
+            notify: {
+                success: true,
+                error: true
+            }
         });
 
         setUser(null);
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         navigate('/login');
-
-        if (response?.msg) {
-            handleNotificacion('success', response.msg, 5000);
-        }
     };
 
     const profile = async () => {
         const response = await request({
             method: 'get',
             url: '/profile',
-            notify: false
+            notify: {
+                success: false,
+                error: true
+            }
         });
 
         if (response) {
@@ -64,7 +69,10 @@ export const AuthProvider = ({ children }) => {
         const response = await request({
             method: 'post',
             url: '/refresh',
-            notify: false
+            notify: {
+                success: false,
+                error: true
+            }
         });
 
         if (response) {
@@ -73,7 +81,6 @@ export const AuthProvider = ({ children }) => {
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
         } else {
             // Si el refresh falla, probablemente sea necesario cerrar sesión
-            handleNotificacion('error', "Error en la autenticacion", 5000);
             setUser(null);
             logout();
         }
@@ -87,13 +94,14 @@ export const AuthProvider = ({ children }) => {
                 role_name: role,
                 user_id: user_id
             },
-            notify: false
+            notify: {
+                success: false,
+                error: true
+            }
         });
 
         if (response) {
             handleNotificacion('success', 'Rol añadido correctamente', 5000);
-        } else {
-            handleNotificacion('error', 'Error al añadir el rol', 5000);
         }
     }
 
@@ -105,13 +113,14 @@ export const AuthProvider = ({ children }) => {
                 role_name: role,
                 user_id: user_id
             },
-            notify: false
+            notify: {
+                success: false,
+                error: true
+            }
         });
 
         if (response) {
             handleNotificacion('success', 'Rol eliminado correctamente', 5000);
-        } else {
-            handleNotificacion('error', 'Error al eliminar el rol', 5000);
         }
     }
 
