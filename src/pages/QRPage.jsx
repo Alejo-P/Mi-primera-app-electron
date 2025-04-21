@@ -4,6 +4,9 @@ import { IoMdAdd } from "react-icons/io";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiOutlineRefresh } from 'react-icons/hi';
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
@@ -19,7 +22,7 @@ const QRPage = () => {
     const { qrList, getQRs, getQR, deleteAllQRs, loadingQRs } = useQR();
     const [showModal, setShowModal] = useState(false);
     const [QRInfo, setQRInfo] = useState([]);
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
 
     const handleModal = () => {
         setShowModal(!showModal);

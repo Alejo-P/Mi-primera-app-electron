@@ -1,10 +1,15 @@
 import React from 'react';
 import { motion, AnimatePresence } from "framer-motion";
+
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
+// Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 
 const NavTools = ({ children }) => {
     const { tema, visibleToolbar } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK; // Verificamos si el tema es oscuro
     return (
         <AnimatePresence>
             {visibleToolbar && (

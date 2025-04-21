@@ -2,6 +2,9 @@ import React, { useEffect } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { IoClose } from "react-icons/io5";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 
@@ -10,7 +13,7 @@ import NavActions from '../components/NavActions';
 
 const ViewFilesModal = ({ fileInfo, handleModal }) => {
     const { fileTypes, setVisibleNav, setVisibleToolbar, visibleNav, tema } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
 
     const ReloadNav = () => {
         setVisibleNav(false);

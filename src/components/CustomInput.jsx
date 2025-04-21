@@ -4,6 +4,11 @@ import { MdOutlinePassword } from "react-icons/md";
 import { FiUser, FiMail, FiShield, FiFile } from "react-icons/fi";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { IoText } from "react-icons/io5";
+
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
+// Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 
 const CustomInput = ({
@@ -20,7 +25,7 @@ const CustomInput = ({
 }) => {
     const [showPassword, setShowPassword] = useState(false);
     const { tema } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK; // Verificamos si el tema es oscuro
 
     const handlePasswordVisibility = () => {
         setShowPassword(!showPassword);

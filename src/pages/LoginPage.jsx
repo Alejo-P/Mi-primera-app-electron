@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { IoLogIn } from "react-icons/io5";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 import { useAuth } from '../contexts/AuthProvider';
@@ -11,7 +14,7 @@ import CustomInput from '../components/CustomInput';
 
 const LoginPage = () => {
     const { tema, notificacion } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
     const { login } = useAuth();
     const [formData, setFormData] = useState({
         email: '',

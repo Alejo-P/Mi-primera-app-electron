@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { IoClose } from "react-icons/io5";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
 
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
@@ -11,7 +13,7 @@ import NavActions from '../components/NavActions';
 
 const LogModal = () => {
     const { showLogsModal, setShowLogsModal, tema } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
     const [logs, setLogs] = useState('');
 
     const handleClose = () => {

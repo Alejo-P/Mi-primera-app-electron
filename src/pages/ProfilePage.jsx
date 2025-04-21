@@ -5,6 +5,9 @@ import { FaUserCircle } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { IoMdCloseCircle } from "react-icons/io";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos los componentes
 import CustomInput from '../components/CustomInput';
 import RolesField from '../components/RolesField';
@@ -12,7 +15,7 @@ import RolesField from '../components/RolesField';
 const ProfilePage = () => {
     const { user, removeRole } = useAuth();
     const { tema, handleNotificacion } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
 
     const initialProfileInfo = {
         name: user?.name || "N/A",

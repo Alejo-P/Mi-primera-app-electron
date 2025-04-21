@@ -52,6 +52,7 @@ export const FilesProvider = ({ children }) => {
                     return { ...fileData };
                 })
             );
+            console.log('getFiles', data);
             setFileList(data);
         }
         setLoadingFiles(false);

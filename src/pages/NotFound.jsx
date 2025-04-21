@@ -2,13 +2,16 @@ import React from 'react'
 import { TiInfoLarge } from "react-icons/ti";
 import { useNavigate } from 'react-router-dom';
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 
 const NotFound = () => {
     const { tema } = useApp();
-    const isDark = tema === 'oscuro';
     const navigate = useNavigate();
+    const isDark = tema === THEMES.DARK;
 
     const handleNavigate = () => {
         navigate('/dashboard/');

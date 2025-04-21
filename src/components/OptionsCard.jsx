@@ -6,6 +6,9 @@ import { PiNotepadFill } from "react-icons/pi";
 import { IoLogOut } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider'
@@ -20,7 +23,7 @@ const OptionsCard = () => {
         showLogsModal,
         setShowLogsModal
     } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK; // Verificamos si el tema es oscuro
 
     const handleLogs = () => {
         setShowLogsModal(!showLogsModal);

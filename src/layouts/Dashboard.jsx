@@ -5,6 +5,9 @@ import { HiHome } from "react-icons/hi";
 import { FaQrcode } from 'react-icons/fa6';
 import { FaRegFileAlt, FaUser, FaBars } from "react-icons/fa";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos los contextos
 import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider'
@@ -19,7 +22,7 @@ const Dashboard = () => {
     const { profile } = useAuth();
     const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
     const access_token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
 
     useEffect(() => {

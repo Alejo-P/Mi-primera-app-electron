@@ -3,6 +3,9 @@ import { Tooltip as ReactToolTip } from 'react-tooltip';
 import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
@@ -14,7 +17,7 @@ import CustomInput from '../components/CustomInput';
 const CreateQRModal = ({ handleModal }) => {
     const { visibleNav, setVisibleNav, tema } = useApp();
     const { createQR } = useQR();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
 
     const [QRForm, setQRForm] = useState({
         QRname: '',

@@ -1,12 +1,15 @@
 import React from 'react';
 import { ImSpinner9 } from "react-icons/im"; // Ícono de carga
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 
 const LoadingCard = () => {
     const { tema } = useApp();
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK; // Verificamos si el tema es oscuro
 
     return (
         <div className={`fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn`}>

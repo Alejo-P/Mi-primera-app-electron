@@ -2,6 +2,9 @@ import React, { useState, useRef } from 'react';
 import { FaUpload } from "react-icons/fa6";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 import { useFiles } from '../contexts/FilesProvider';
@@ -14,7 +17,7 @@ const UploadPage = () => {
     const { uploadFile } = useFiles();
     const fileInput = useRef(null);
     const [file, setFile] = useState(null);
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
 
     const handleChargeFile = async (e) => {
         const selectedFile = e.target.files[0];

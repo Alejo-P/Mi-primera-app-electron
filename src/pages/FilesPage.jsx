@@ -4,6 +4,10 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { LuFileSearch2,LuFileUser } from "react-icons/lu";
 
+// Importamos las constantes
+import { THEMES } from '../constants/temas';
+import { ROLES } from '../constants/roles';
+
 // Importamos el contexto
 import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider';
@@ -12,6 +16,7 @@ import { useFiles } from '../contexts/FilesProvider';
 // Importamos los componentes
 import FileCard from '../components/FileCard';
 import ViewFilesModal from '../modals/ViewFilesModal';
+import FileInfoModal from '../modals/FileInfoModal';
 import LoadingCard from '../components/LoadingCard';
 import NavActions from '../components/NavActions';
 import NavTools from '../components/NavTools';
@@ -27,7 +32,7 @@ const FilesPage = () => {
         userSearch: ''
     });
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const isDark = tema === 'oscuro';
+    const isDark = tema === THEMES.DARK;
 
     const handleModal = () => {
         setShowModal(!showModal);
@@ -135,7 +140,7 @@ const FilesPage = () => {
                 )
             }
             {
-                (visibleToolbar && user?.role === 'admin') && (
+                (visibleToolbar && user?.roles.includes(ROLES.ADMIN)) && (
                     <>
                         {/* Sidebar de navegación */}
                         <div className={`fixed top-10 right-0 h-[calc(100%-40px)] shadow-lg transition-all duration-300 rounded-tl-xl rounded-bl-xl

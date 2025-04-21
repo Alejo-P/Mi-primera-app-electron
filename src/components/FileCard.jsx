@@ -1,9 +1,12 @@
-import React from 'react'
-import { FaDownload, FaEye } from "react-icons/fa";
+import React, { useState } from 'react'
+import { FaDownload, FaInfo } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { FaFileLines, FaFileImage } from "react-icons/fa6";
 import { QrCode } from 'lucide-react';
+
+// Importar las constantes
+import { THEMES } from '../constants/temas';
 
 // Importar el contexto
 import { useAuth } from '../contexts/AuthProvider'; 
@@ -11,14 +14,24 @@ import { useFiles } from '../contexts/FilesProvider';
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
 
+// Importar los componentes
+import FileInfoModal from '../modals/FileInfoModal';
+
 const FileCard = ({ file, showModal }) => {
     console.log("FileCard ->",file);
     const { user } = useAuth();
+    console.log("User ->",user);
     const { downloadFile, deleteFile } = useFiles();
-    const { fileTypes, setSelectedFile, setVisibleNav, setVisibleToolbar, convertUnit, tema } = useApp();
+    const { fileTypes, setSelectedFile, setVisibleNav, setVisibleToolbar, tema } = useApp();
     const { getQR, createQRFile } = useQR();
-    const isDark = tema === 'oscuro';
-    console.log("Archivo ->",file);
+    const isDark = tema === THEMES.DARK;
+    const [showFileInfo, setShowFileInfo] = useState(false);
+
+    const handleFileInfoModal = () => {
+        setShowFileInfo(!showFileInfo);
+        setVisibleNav(!showFileInfo);
+        setVisibleToolbar(!showFileInfo);
+    };
 
     const handleDownload = async () => {
         const confirm = window.confirm(`¿Descargar ${file.filename}?`);
@@ -97,32 +110,12 @@ const FileCard = ({ file, showModal }) => {
             <p className="mt-4 w-full text-lg text-center text-blue-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
                 {file.filename}
             </p>
-            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
-                Tamaño: {convertUnit(file.file_size)}
-            </p>
-            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
-                Tipo: {file.file_type.split('.').pop()}
-            </p>
-            <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
-                Subido en {new Date(file.uploaded_at).toLocaleString()}
-            </p>
-            <p className={`mt-2 w-full text-sm text-center overflow-hidden whitespace-nowrap overflow-ellipsis
-                ${user?.id === file.uploaded_by?.id ? 'text-blue-500 font-bold' : 'text-gray-500 font-semibold'}    
-            `}>
-                Subido por {
-                    file.uploaded_by?.id === user?.id ? 'Tú' : file.uploaded_by?.name
-                } <span
-                    className={`${user?.role !== "admin" ? 'hidden' : ''}`}
-                >
-                    ({file.uploaded_by?.role})
-                </span>
-            </p>
             <div className='flex justify-center mt-4 space-x-4 gap-3'>
                 <button
                     className={`flex text-white p-2 rounded-lg transition duration-300 cursor-pointer ${file.qr_code ? 'hidden' : 'bg-blue-500 hover:bg-blue-600'}`}
                     title={`Crear QR para ${file.filename}`}
-                    data-tooltip-id={`${file.qr_code ? `QR ya creado para ${file.filename}` : `Crear QR para ${file.filename}`}`}
-                    data-tooltip-content={`Crear QR de descarga para ${file.filename}`}
+                    data-tooltip-id='createQRLabel'
+                    data-tooltip-content={`${file.qr_code ? `QR ya creado para ${file.filename}` : `Crear QR para ${file.filename}`}`}
                     onClick={handleCreateQR}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
@@ -153,11 +146,32 @@ const FileCard = ({ file, showModal }) => {
                         <MdDeleteForever className='text-xl' />
                     </span>
                 </button>
+
+                <button
+                    className="flex bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600 transition duration-300 cursor-pointer"
+                    title={`Ver información de ${file.filename}`}
+                    data-tooltip-id='infoFileLabel'
+                    data-tooltip-content={`Ver información de ${file.filename}`}
+                    onClick={handleFileInfoModal}
+                >
+                    <span className="text-white flex text-center items-center space-x-2">
+                        <FaInfo className='text-xl' />
+                    </span>
+                </button>
             </div>
+            {
+                showFileInfo && (
+                    <FileInfoModal
+                        file={file}
+                        handleModal={handleFileInfoModal}
+                    />
+                )
+            }
             <ReactTooltip id='viewLabel' place='top' />
             <ReactTooltip id='createQRLabel' place='top' />
             <ReactTooltip id='downloadLabel' place='top' />
             <ReactTooltip id='deleteLabel' place='top' />
+            <ReactTooltip id='infoFileLabel' place='top' />
         </div>
     )
 }
