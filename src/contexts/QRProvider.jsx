@@ -23,7 +23,6 @@ export const QRProvider = ({ children }) => {
             }
         });
         if (response) {
-            console.log('getQR', response);
             return response;
         }
         return null;
