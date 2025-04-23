@@ -1,14 +1,12 @@
 import { Outlet, Navigate } from 'react-router-dom'
+import Cookies from 'js-cookie';
 
 const Auth = () => {
-  const access_token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
-  console.log('Auth.jsx: Comprobando acceso...');
-  console.log('Auth.jsx: access_token:', access_token);
-  console.log('Auth.jsx: localStorage:', localStorage);
+  const csrf_access_token = Cookies.get('csrf_access_token');
 
   return (
     <>
-      {access_token ? <Navigate to="/dashboard/" />: <Outlet/>}
+      {csrf_access_token ? <Navigate to="/dashboard/" />: <Outlet/>}
     </>
   )
 }

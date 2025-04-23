@@ -32,7 +32,7 @@ const UploadPage = () => {
         }
 
         if (selectedFile.size > maxSize) {
-            handleNotificacion('error', 'El archivo es muy grande, máximo 16 MB', 5000);
+            handleNotificacion('error', `El archivo es muy grande, máximo ${convertUnit(maxSize, "MB")}`, 5000);
             return;
         }
 
@@ -43,10 +43,20 @@ const UploadPage = () => {
         e.preventDefault();
         if (!file) return;
 
-        const formData = new FormData();
-        formData.append('file', file);
+        const data = {
+            filename: file.name,
+            filetype: file.type,
+            filebase64: await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]); // Obtener solo la parte base64
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            }),
+            size: file.size,
+        }
 
-        await uploadFile(formData);
+        // Subir el archivo al servidor
+        await uploadFile(data);
         setFile(null);
         fileInput.current.value = null; // Limpiar el input de archivo
     };

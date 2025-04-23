@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Cookies from 'js-cookie';
 import { Outlet, useLocation, Navigate } from 'react-router-dom'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
@@ -23,7 +24,7 @@ const Dashboard = () => {
     const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
     const isDark = tema === THEMES.DARK;
-    const access_token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null;
+    const csrf_access_token = Cookies.get('csrf_access_token');
 
     useEffect(() => {
         setCurrentPath(pathname);
@@ -35,7 +36,7 @@ const Dashboard = () => {
             await profile();
         }
         
-        if (access_token) loadProfile();
+        if (csrf_access_token) loadProfile();
     }, []);
 
     return (
@@ -102,7 +103,7 @@ const Dashboard = () => {
                 ${isDark ? 'border-gray-600' : 'border-gray-300 shadow-md'} transition-all duration-300`}
             >
                 {notificacion && <Notification {...notificacion} />}
-                {access_token ? <Outlet/> : <Navigate to="/login" />}
+                {<Outlet />}
             </div>
         </div>
     )

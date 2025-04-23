@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useMemo, useEffect } from 'react';
+import { createContext, useContext, useState, useMemo } from 'react';
+import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 import { useApp } from './AppProvider';
@@ -25,8 +26,6 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (response) {
-            localStorage.setItem('access_token', response.access_token);
-            localStorage.setItem('refresh_token', response.refresh_token);
             //handleNotificacion('success', response.msg, 5000);
             navigate('/dashboard/');
         }
@@ -42,9 +41,13 @@ export const AuthProvider = ({ children }) => {
             }
         });
 
+        if (response) {
+            handleNotificacion('success', response.msg, 5000);
+        }
+        // Eliminar los tokens de las cookies
+        Cookies.remove('csrf_access_token');
+        Cookies.remove('csrf_refresh_token');
         setUser(null);
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
         navigate('/login');
     };
 
@@ -76,8 +79,6 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (response) {
-            localStorage.setItem('access_token', response.access_token);
-            localStorage.setItem('refresh_token', response.refresh_token);
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
         } else {
             // Si el refresh falla, probablemente sea necesario cerrar sesión

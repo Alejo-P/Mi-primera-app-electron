@@ -64,7 +64,7 @@ export const FilesProvider = ({ children }) => {
             handleNotificacion('error', 'No se ha seleccionado ningún archivo', 5000);
             return;
         }
-
+        console.log('uploadFile', data);
         const response = await request({
             method: 'post',
             url: '/upload',

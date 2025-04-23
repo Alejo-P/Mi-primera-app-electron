@@ -12,6 +12,7 @@ import { useApp } from '../contexts/AppProvider';
 import NavActions from '../components/NavActions';
 
 const ViewFilesModal = ({ fileInfo, handleModal }) => {
+    console.log("fileInfo", fileInfo);
     const { fileTypes, setVisibleNav, setVisibleToolbar, visibleNav, tema } = useApp();
     const isDark = tema === THEMES.DARK;
 

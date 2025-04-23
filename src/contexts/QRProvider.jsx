@@ -11,7 +11,6 @@ export const QRProvider = ({ children }) => {
     const { request } = useAxios(); // ¡aquí la magia!
     const [qrList, setQRList] = useState([]);
     const [loadingQRs, setLoadingQRs] = useState(false);
-    const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
 
     // Obtener un QR por su nombre
     const getQR = async (name) => {
