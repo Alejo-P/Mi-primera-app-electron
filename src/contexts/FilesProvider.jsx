@@ -26,7 +26,6 @@ export const FilesProvider = ({ children }) => {
         });
         
         if (response) {
-            console.log('getFile', response);
             return response;
         }
         return null;
@@ -52,7 +51,6 @@ export const FilesProvider = ({ children }) => {
                     return { ...fileData };
                 })
             );
-            console.log('getFiles', data);
             setFileList(data);
         }
         setLoadingFiles(false);

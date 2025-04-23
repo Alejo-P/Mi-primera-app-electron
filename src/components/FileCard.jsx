@@ -18,9 +18,7 @@ import { useQR } from '../contexts/QRProvider';
 import FileInfoModal from '../modals/FileInfoModal';
 
 const FileCard = ({ file, showModal }) => {
-    console.log("FileCard ->",file);
     const { user } = useAuth();
-    console.log("User ->",user);
     const { downloadFile, deleteFile } = useFiles();
     const { fileTypes, setSelectedFile, setVisibleNav, setVisibleToolbar, tema } = useApp();
     const { getQR, createQRFile } = useQR();
