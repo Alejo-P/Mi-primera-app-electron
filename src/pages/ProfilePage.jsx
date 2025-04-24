@@ -14,7 +14,7 @@ import RolesField from '../components/RolesField';
 
 const ProfilePage = () => {
     const { user, removeRole } = useAuth();
-    const { tema, handleNotificacion } = useApp();
+    const { tema, handleNotificacion, setNavActionsItems } = useApp();
     const isDark = tema === THEMES.DARK;
 
     const initialProfileInfo = {
@@ -71,6 +71,11 @@ const ProfilePage = () => {
             roles: user?.roles || "N/A"
         });
     }, [user]);
+
+    useEffect(() => {
+        // Cambia el tema de la barra de navegación
+        setNavActionsItems([]);
+    }, []);
 
     return (
         <div className={`w-full p-6 shadow-lg rounded-xl 

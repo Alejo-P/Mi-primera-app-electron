@@ -17,6 +17,7 @@ import { useApp } from '../contexts/AppProvider'
 import HeaderNav from '../components/HeaderNav'
 import Notification from '../components/Notification'
 import NavButton from '../components/NavButton';
+import NavActions from '../components/NavActions';
 import TitleBar from '../components/TitleBar';
 
 const Dashboard = () => {
@@ -104,6 +105,7 @@ const Dashboard = () => {
             >
                 {notificacion && <Notification {...notificacion} />}
                 {<Outlet />}
+                {<NavActions />}
             </div>
         </div>
     )

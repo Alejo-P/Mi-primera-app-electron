@@ -18,8 +18,8 @@ import CreateQRModal from '../modals/CreateQRModal';
 import NavActions from '../components/NavActions';
 
 const QRPage = () => {
-    const { tema, setVisibleNav } = useApp();
-    const { qrList, getQRs, getQR, deleteAllQRs, loadingQRs } = useQR();
+    const { tema, setVisibleNav, setNavActionsItems } = useApp();
+    const { qrList, getQRs, getQR, deleteAllQRs, loadingQRs} = useQR();
     const [showModal, setShowModal] = useState(false);
     const [QRInfo, setQRInfo] = useState([]);
     const isDark = tema === THEMES.DARK;
@@ -45,6 +45,49 @@ const QRPage = () => {
             await getQR();
         }
     };
+
+    useEffect(() => {
+        if (!showModal) {
+            const acciones = [
+                {
+                    key: 'crear',
+                    element: (
+                        <button
+                            onClick={handleModal}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Crear un QR a partir de texto"
+                            data-tooltip-id="QRLabel"
+                            data-tooltip-content="Crear un código QR a partir de un texto"
+                        >
+                            <IoMdAdd className="text-2xl" />
+                        </button>
+                    )
+                },
+                {
+                    key: 'refrescar',
+                    element: (
+                        <button
+                            onClick={handleRefresh}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title="Actualizar lista"
+                            data-tooltip-id="RefreshLabel"
+                            data-tooltip-content="Actualizar la lista de archivos"
+                        >
+                            <HiOutlineRefresh className="text-2xl" />
+                        </button>
+                    )
+                }
+            ];
+            setNavActionsItems(acciones);
+        } else {
+            // Si el modal está abierto, vaciamos las acciones para ocultarlas
+            setNavActionsItems([]);
+        }
+    }, [showModal, isDark]); // Se ejecuta cuando cambia el estado del modal o el tema    
 
     useEffect(() => {
         if (qrList.length === 0) {
@@ -101,40 +144,6 @@ const QRPage = () => {
                 }
             </div>
             { showModal && <CreateQRModal handleModal={handleModal} />}
-            {
-                !showModal && (
-                    <NavActions>
-                        <button
-                            onClick={handleModal}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Crear un QR a partir de texto"
-                            data-tooltip-id="QRLabel"
-                            data-tooltip-content="Crear un código QR a partir de un texto"
-                        >
-                            <span className="text-3xl">
-                                <IoMdAdd className="text-2xl"/>
-                            </span>
-                        </button>
-                        <button
-                            onClick={handleRefresh}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Actualizar lista"
-                            data-tooltip-id="RefreshLabel"
-                            data-tooltip-content="Actualizar la lista de archivos"
-                        >
-                            <span className="text-3xl">
-                                <HiOutlineRefresh className='text-2xl' />
-                            </span>
-                        </button>
-                        <ReactTooltip id="QRLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                        <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                    </NavActions>
-                )
-            } 
         </>
     )
 }

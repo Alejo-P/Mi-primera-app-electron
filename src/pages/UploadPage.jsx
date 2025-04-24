@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaUpload } from "react-icons/fa6";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
@@ -13,7 +13,7 @@ import { useFiles } from '../contexts/FilesProvider';
 import CustomInput from '../components/CustomInput';
 
 const UploadPage = () => {
-    const { extensiones, maxSize, convertUnit, handleNotificacion, tema } = useApp();
+    const { extensiones, maxSize, convertUnit, handleNotificacion, tema, setNavActionsItems } = useApp();
     const { uploadFile } = useFiles();
     const fileInput = useRef(null);
     const [file, setFile] = useState(null);
@@ -60,6 +60,10 @@ const UploadPage = () => {
         setFile(null);
         fileInput.current.value = null; // Limpiar el input de archivo
     };
+
+    useEffect(() => {
+        setNavActionsItems([]);
+    }, []);
 
     return (
         <div className={`overflow-x-auto shadow-lg p-3 sm:rounded-lg w-full transition-all duration-300 

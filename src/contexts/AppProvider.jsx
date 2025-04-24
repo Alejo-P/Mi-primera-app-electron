@@ -14,6 +14,7 @@ export const AppProvider = ({ children }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [currentPath, setCurrentPath] = useState(null);
     const [visibleNav, setVisibleNav] = useState(true);
+    const [navActionsItems, setNavActionsItems] = useState([]);
     const [visibleToolbar, setVisibleToolbar] = useState(true);
     const [showOptions, setShowOptions] = useState(false);
     const [showLogsModal, setShowLogsModal] = useState(false);
@@ -80,6 +81,8 @@ export const AppProvider = ({ children }) => {
         showLogsModal,
         visibleToolbar,
         isElectron,
+        navActionsItems,
+        setNavActionsItems,
         setVisibleToolbar,
         setShowLogsModal,
         setIsMaximized,
@@ -90,7 +93,7 @@ export const AppProvider = ({ children }) => {
         handleNotificacion,
         convertUnit,
         handleTheme,
-    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions, isMaximized, showLogsModal, visibleToolbar, isElectron]);
+    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions, isMaximized, showLogsModal, visibleToolbar, isElectron, navActionsItems]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

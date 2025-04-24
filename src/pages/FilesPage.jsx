@@ -24,7 +24,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 
 const FilesPage = () => {
     const { user } = useAuth();
-    const { selectedFile, tema, setVisibleNav, setVisibleToolbar, visibleToolbar } = useApp();
+    const { selectedFile, tema, setVisibleNav, setVisibleToolbar, visibleToolbar, setNavActionsItems } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const [showModal, setShowModal] = useState(false);
     const [inputSearch, setFileInput] = useState({
@@ -66,6 +66,53 @@ const FilesPage = () => {
             [name]: value
         });
     };
+
+    useEffect(() => {
+        const acciones = [
+            // {
+            //     key: 'crear',
+            //     element: (
+            //         <button
+            //             onClick={handleModal}
+            //             className={`p-2 rounded-lg transition-all duration-300
+            //                 ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+            //                 hover:scale-95 shadow-lg hover:shadow-xl`}
+            //             title="Crear un QR a partir de texto"
+            //             data-tooltip-id="createQRLabel"
+            //             data-tooltip-content="Crear un QR a partir de texto"
+            //         >
+            //             <span className="text-3xl">
+            //                 <MdAdd className='text-2xl'/>
+            //             </span>
+            //         </button>
+            //     )
+            // },
+            {
+                key: 'refrescar',
+                element: (
+                    <button
+                        onClick={handleRefresh}
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Actualizar lista"
+                        data-tooltip-id="refreshLabel"
+                        data-tooltip-content="Actualizar la lista de archivos"
+                    >
+                        <span className="text-3xl">
+                            <HiOutlineRefresh className='text-2xl'/>
+                        </span>
+                    </button>
+                )
+            }
+        ];
+    
+        if (!showModal) {
+            setNavActionsItems(acciones);
+        } else {
+            setNavActionsItems([]); // Oculta si está el modal abierto
+        }
+    }, [showModal, isDark]); // Se actualiza cuando cambia el tema o el modal    
 
     useEffect(() => {
         if (fileList.length === 0) {
@@ -118,26 +165,6 @@ const FilesPage = () => {
             </div>
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} handleModal={handleModal} />
-            }
-            {
-                !showModal && (
-                    <NavActions>
-                        <button
-                            onClick={handleRefresh}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Actualizar lista"
-                            data-tooltip-id="RefreshLabel"
-                            data-tooltip-content="Actualizar la lista de archivos"
-                        >
-                            <span className="text-3xl">
-                                <HiOutlineRefresh className='text-2xl'/>
-                            </span>
-                        </button>
-                        <ReactTooltip id="RefreshLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                    </NavActions>
-                )
             }
             {
                 (visibleToolbar && user?.roles.includes(ROLES.ADMIN)) && (
