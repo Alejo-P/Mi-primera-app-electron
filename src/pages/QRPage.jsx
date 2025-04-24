@@ -15,7 +15,6 @@ import { useQR } from '../contexts/QRProvider';
 import QRCard from '../components/QRCard';
 import LoadingCard from '../components/LoadingCard';
 import CreateQRModal from '../modals/CreateQRModal';
-import NavActions from '../components/NavActions';
 
 const QRPage = () => {
     const { tema, setVisibleNav, setNavActionsItems } = useApp();
