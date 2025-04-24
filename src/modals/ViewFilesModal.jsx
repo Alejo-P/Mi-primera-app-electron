@@ -8,30 +8,39 @@ import { THEMES } from '../constants/temas';
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 
-// Importamos los componentes
-import NavActions from '../components/NavActions';
-
 const ViewFilesModal = ({ fileInfo, handleModal }) => {
-    console.log("fileInfo", fileInfo);
-    const { fileTypes, setVisibleNav, setVisibleToolbar, visibleNav, tema } = useApp();
+    const { fileTypes, tema, setNavActionsItems } = useApp();
     const isDark = tema === THEMES.DARK;
 
-    const ReloadNav = () => {
-        setVisibleNav(false);
-        setTimeout(() => {
-            setVisibleNav(true);
-        }, 250);
-    };
-
     const handleClose = async () => {
-        ReloadNav();
         setTimeout(() => {
             handleModal();
         }, 250);
     };
 
     useEffect(() => {
-        ReloadNav();
+        const acciones = [
+            {
+                key: 'cerrar',
+                element: (
+                    <button
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Cerrar"
+                        data-tooltip-id="closeLabel"
+                        data-tooltip-content="Cerrar ventana de información del archivo"
+                        onClick={handleClose}
+                    >
+                        <IoClose className="text-2xl" />
+                    </button>
+                )
+            }
+        ];
+        setNavActionsItems(acciones);
+        return () => {
+            setNavActionsItems([]);
+        }
     }, []);
 
     return (
@@ -43,7 +52,6 @@ const ViewFilesModal = ({ fileInfo, handleModal }) => {
                 <h2 className="text-xl md:text-2xl text-center font-bold w-full overflow-hidden whitespace-nowrap overflow-ellipsis">
                     {fileInfo.filename}
                 </h2>
-
                 {
                     fileTypes.documents.includes(fileInfo.filename.split('.').pop()) ? (
                         <iframe
@@ -64,25 +72,6 @@ const ViewFilesModal = ({ fileInfo, handleModal }) => {
                     )
                 }
             </div>
-            {
-                visibleNav && (
-                    <NavActions>
-                        <button
-                            onClick={handleClose}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            data-tooltip-id='closeLabel'
-                            data-tooltip-content='Cerrar el modal'
-                        >
-                            <span className="text-3xl">
-                                <IoClose className='text-2xl'/>
-                            </span>
-                        </button>
-                        <ReactTooltip id='closeLabel' place="top" effect="solid" className='text-white bg-white text-sm' />
-                    </NavActions>
-                )
-            }
         </div>
     )
 }

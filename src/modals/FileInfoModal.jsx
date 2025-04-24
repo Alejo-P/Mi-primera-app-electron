@@ -10,19 +10,41 @@ import { ROLES } from '../constants/roles';
 import { useApp } from '../contexts/AppProvider';
 import { useAuth } from '../contexts/AuthProvider';
 
-// Importamos los componentes
-import NavActions from '../components/NavActions';
-
 const FileInfoModal = ({ file, handleModal }) => {
-    const { setVisibleNav, setVisibleToolbar, visibleNav, convertUnit, tema } = useApp();
+    const {convertUnit, tema, setNavActionsItems } = useApp();
     const { user } = useAuth();
     const isDark = tema === THEMES.DARK;
 
-    const handleClose = () => {
-        setVisibleNav(false);
-        setVisibleToolbar(false);
-        handleModal();
-    }
+    const handleClose = async () => {
+        setTimeout(() => {
+            handleModal();
+        }, 200);
+    };
+
+    useEffect(() => {
+        const acciones = [
+            {
+                key: 'cerrar',
+                element: (
+                    <button
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Cerrar"
+                        data-tooltip-id="closeLabel"
+                        data-tooltip-content="Cerrar ventana de información del archivo"
+                        onClick={handleClose}
+                    >
+                        <IoClose className="text-2xl" />
+                    </button>
+                )
+            }
+        ];
+        setNavActionsItems(acciones);
+        return () => {
+            setNavActionsItems([]);
+        }
+    }, []);
 
     return (
         <div className={`fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn`}>
@@ -61,28 +83,6 @@ const FileInfoModal = ({ file, handleModal }) => {
                     </span>
                 </p>
             </div>
-            {
-                visibleNav && (
-                    <NavActions>
-                        <button
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Cerrar"
-                            data-tooltip-id="closeLabel"
-                            data-tooltip-content="Cerrar ventana de información del archivo"
-                            onClick={handleClose}
-                        >
-                            <IoClose className="text-2xl" />
-                        </button>
-                        <ReactTooltip id="closeLabel" place="top" effect="solid"
-                            className={`p-2 rounded-lg shadow-lg
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'}
-                            `}
-                        />
-                    </NavActions>
-                )
-            }
         </div>
     )
 }

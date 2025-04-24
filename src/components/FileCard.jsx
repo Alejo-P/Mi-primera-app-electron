@@ -14,21 +14,16 @@ import { useFiles } from '../contexts/FilesProvider';
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
 
-// Importar los componentes
-import FileInfoModal from '../modals/FileInfoModal';
-
-const FileCard = ({ file, showModal }) => {
+const FileCard = ({ file, showModal, showFileInfo }) => {
     const { user } = useAuth();
     const { downloadFile, deleteFile } = useFiles();
-    const { fileTypes, setSelectedFile, setVisibleNav, setVisibleToolbar, tema } = useApp();
+    const { fileTypes, setSelectedFile, tema } = useApp();
     const { getQR, createQRFile } = useQR();
     const isDark = tema === THEMES.DARK;
-    const [showFileInfo, setShowFileInfo] = useState(false);
 
     const handleFileInfoModal = () => {
-        setShowFileInfo(!showFileInfo);
-        setVisibleNav(!showFileInfo);
-        setVisibleToolbar(!showFileInfo);
+        setSelectedFile(file);
+        showFileInfo(!showFileInfo);
     };
 
     const handleDownload = async () => {
@@ -47,15 +42,8 @@ const FileCard = ({ file, showModal }) => {
     };
 
     const handleClick = async () => {
-        setVisibleNav(false);
-        setVisibleToolbar(false);
-        setSelectedFile({
-            filename: file.filename,
-            url: file.url
-        });
-        setTimeout(() => {
-            showModal();
-        }, 250);
+        setSelectedFile(file);
+        showModal();
     };
 
     const handleCreateQR = async () => {
@@ -157,14 +145,6 @@ const FileCard = ({ file, showModal }) => {
                     </span>
                 </button>
             </div>
-            {
-                showFileInfo && (
-                    <FileInfoModal
-                        file={file}
-                        handleModal={handleFileInfoModal}
-                    />
-                )
-            }
             <ReactTooltip id='viewLabel' place='top' />
             <ReactTooltip id='createQRLabel' place='top' />
             <ReactTooltip id='downloadLabel' place='top' />

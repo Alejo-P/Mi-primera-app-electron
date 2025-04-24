@@ -94,32 +94,32 @@ const ProfilePage = () => {
                         { placeholder: "Tu nombre de usuario", name: "name", disabled: false, type: "username" },
                         { placeholder: "Tu correo electronico", name: "email", disabled: false, type: "email" },
                         { placeholder: "Tus roles", name: "roles", disabled: true, type: "security" },
-                    ].map((field, index) => (
-                        <>
-                            {
-                                field.name !== "roles" ? (
-                                    <CustomInput
-                                        key={index}
-                                        Itype={field.type}
-                                        Iname={field.name}
-                                        Ivalue={profileInfo[field.name]}
-                                        IonChange={(e) => setProfileInfo({ ...profileInfo, [field.name]: e.target.value })}
-                                        Iplaceholder={field.placeholder}
-                                        Idisabled={field.disabled}
-                                    />
-                                ) : (
-                                    <RolesField
-                                        key={index}
-                                        field={field}
-                                        profileInfo={profileInfo}
-                                        isDark={isDark}
-                                        user={user}
-                                        onDeleteRole={handleDeleteRole}
-                                    />
-                                )
-                            }
-                        </>
-                    ))}
+                    ].map((field, index) => {
+                        if (field.name !== "roles") {
+                            return (
+                                <CustomInput
+                                    key={field.name}
+                                    Itype={field.type}
+                                    Iname={field.name}
+                                    Ivalue={profileInfo[field.name]}
+                                    IonChange={(e) => setProfileInfo({ ...profileInfo, [field.name]: e.target.value })}
+                                    Iplaceholder={field.placeholder}
+                                    Idisabled={field.disabled}
+                                />
+                            );
+                        } else {
+                            return (
+                                <RolesField
+                                    key={field.name}
+                                    field={field}
+                                    profileInfo={profileInfo}
+                                    isDark={isDark}
+                                    user={user}
+                                    onDeleteRole={handleDeleteRole}
+                                />
+                            );
+                        }
+                    })}
                     <button
                         type="submit"
                         className={`mt-4 px-4 py-2 rounded-lg text-white font-bold

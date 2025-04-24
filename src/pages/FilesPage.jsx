@@ -18,15 +18,14 @@ import FileCard from '../components/FileCard';
 import ViewFilesModal from '../modals/ViewFilesModal';
 import FileInfoModal from '../modals/FileInfoModal';
 import LoadingCard from '../components/LoadingCard';
-import NavActions from '../components/NavActions';
-import NavTools from '../components/NavTools';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 const FilesPage = () => {
     const { user } = useAuth();
-    const { selectedFile, tema, setVisibleNav, setVisibleToolbar, visibleToolbar, setNavActionsItems } = useApp();
+    const { selectedFile, tema, setVisibleNav, visibleToolbar, setNavActionsItems } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const [showModal, setShowModal] = useState(false);
+    const [showFileInfo, setShowFileInfo] = useState(false);
     const [inputSearch, setFileInput] = useState({
         fileSearch: '',
         userSearch: ''
@@ -36,15 +35,16 @@ const FilesPage = () => {
 
     const handleModal = () => {
         setShowModal(!showModal);
-        setVisibleToolbar(!visibleToolbar);
+    };
+
+    const handleFileInfoModal = () => {
+        setShowFileInfo(!showFileInfo);
     };
 
     const handleFetchFiles = async () => {
         setVisibleNav(false);
-        setVisibleToolbar(false);
         await getFiles();
         setVisibleNav(true);
-        setVisibleToolbar(true);
     };
 
     const handleRefresh = async () => {
@@ -112,7 +112,7 @@ const FilesPage = () => {
         } else {
             setNavActionsItems([]); // Oculta si está el modal abierto
         }
-    }, [showModal, isDark]); // Se actualiza cuando cambia el tema o el modal    
+    }, [showModal, showFileInfo, isDark]); // Se actualiza cuando cambia el tema o el modal    
 
     useEffect(() => {
         if (fileList.length === 0) {
@@ -135,7 +135,7 @@ const FilesPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                             {
                                 fileList.map((file, index) => (
-                                    <FileCard key={index} file={file} showModal={handleModal}/>
+                                    <FileCard key={index} file={file} showModal={handleModal} showFileInfo={handleFileInfoModal} />
                                 ))
                             }
                         </div>
@@ -165,6 +165,14 @@ const FilesPage = () => {
             </div>
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} handleModal={handleModal} />
+            }
+            {
+                showFileInfo && (
+                    <FileInfoModal
+                        file={selectedFile}
+                        handleModal={handleFileInfoModal}
+                    />
+                )
             }
             {
                 (visibleToolbar && user?.roles.includes(ROLES.ADMIN)) && (

@@ -11,11 +11,10 @@ import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
 
 // Importamos los componentes
-import NavActions from '../components/NavActions';
 import CustomInput from '../components/CustomInput';
 
 const CreateQRModal = ({ handleModal }) => {
-    const { visibleNav, setVisibleNav, tema } = useApp();
+    const { tema, setNavActionsItems } = useApp();
     const { createQR } = useQR();
     const isDark = tema === THEMES.DARK;
 
@@ -33,15 +32,7 @@ const CreateQRModal = ({ handleModal }) => {
         }));
     };
 
-    const ReloadNav = () => {
-        setVisibleNav(false);
-        setTimeout(() => {
-            setVisibleNav(true);
-        }, 200);
-    };
-
     const handleClose = async () => {
-        ReloadNav();
         setTimeout(() => {
             handleModal();
         }, 200);
@@ -61,7 +52,42 @@ const CreateQRModal = ({ handleModal }) => {
     };
 
     useEffect(() => {
-        ReloadNav();
+        const acciones = [
+            {
+                key: 'crear',
+                element: (
+                    <button
+                        onClick={handleCreateQR}
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-green-600 text-white' : 'bg-green-400 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        data-tooltip-id='createQRLabel'
+                        data-tooltip-content='Crear QR'
+                    >
+                        <FaCheck className='text-2xl' />
+                    </button>
+                )
+            },
+            {
+                key: 'cerrar',
+                element: (
+                    <button
+                        onClick={handleClose}
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        data-tooltip-id='closeLabel'
+                        data-tooltip-content='Cerrar'
+                    >
+                        <IoClose className='text-2xl' />
+                    </button>
+                )
+            }
+        ];
+        setNavActionsItems(acciones);
+        return () => {
+            setNavActionsItems([]);
+        };
     }, []);
 
     return (
@@ -99,34 +125,6 @@ const CreateQRModal = ({ handleModal }) => {
                     ))}
                 </div>
             </div>
-            {
-                visibleNav && (
-                    <NavActions>
-                        <button
-                            onClick={handleCreateQR}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-green-600 text-white' : 'bg-green-400 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            data-tooltip-id='createQRLabel'
-                            data-tooltip-content='Crear QR'
-                        >
-                            <FaCheck className='text-2xl' />
-                        </button>
-                        <button
-                            onClick={handleClose}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            data-tooltip-id='closeLabel'
-                            data-tooltip-content='Cerrar'
-                        >
-                            <IoClose className='text-2xl' />
-                        </button>
-                        <ReactToolTip id="createQRLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                        <ReactToolTip id="closeLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
-                    </NavActions>
-                )
-            }
         </div>
     );
 };
