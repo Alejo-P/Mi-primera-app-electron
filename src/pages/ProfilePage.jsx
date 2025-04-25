@@ -20,7 +20,8 @@ const ProfilePage = () => {
     const initialProfileInfo = {
         name: user?.name || "N/A",
         email: user?.email || "N/A",
-        roles: user?.roles || "N/A"
+        roles: user?.roles || "N/A",
+        id: user?.id || "N/A"
     };
 
     const initialPasswordForm = {
@@ -30,10 +31,14 @@ const ProfilePage = () => {
 
     const [profileInfo, setProfileInfo] = useState(initialProfileInfo);
     const [passwordForm, setPasswordForm] = useState(initialPasswordForm);
-    const [isFormDirty, setIsFormDirty] = useState(false);
+    const [disabledProfileButton, setDisabledProfileButton] = useState(false);
+    const [disabledPasswordButton, setDisabledPasswordButton] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleDeleteRole = async (role, userId) => {
+        console.log(role, userId);
+        // Verificar si el rol a eliminar es "Administrador" y si el usuario tiene más de un rol
         if (user?.roles?.includes("Administrador") && user?.roles?.length > 1) {
             setIsLoading(true);
             await removeRole(role, userId);
@@ -43,34 +48,71 @@ const ProfilePage = () => {
         }
     };
 
-    // Detectar si hubo cambios en los formularios
-    useEffect(() => {
-        const isProfileChanged = JSON.stringify(profileInfo) !== JSON.stringify(initialProfileInfo);
-        const isPasswordChanged = JSON.stringify(passwordForm) !== JSON.stringify(initialPasswordForm);
-        setIsFormDirty(isProfileChanged || isPasswordChanged);
-    }, [profileInfo, passwordForm]);
+    const handleSaveProfile = async () => {
+        setIsLoading(true);
+        // Aquí iría la lógica para guardar los cambios en el perfil
+        // Simulando una llamada a la API
+        setTimeout(() => {
+            setIsLoading(false);
+            handleNotificacion('success', 'Perfil actualizado correctamente', 5000);
+            
+        }, 2000);
+    };
 
+    const handleSavePassword = async () => {
+        setIsLoading(true);
+        // Aquí iría la lógica para guardar los cambios en la contraseña
+        // Simulando una llamada a la API
+        setTimeout(() => {
+            setIsLoading(false);
+            handleNotificacion('success', 'Contraseña actualizada correctamente', 5000);    
+        }, 2000);
+    };
+
+        
     // Manejar el evento beforeunload para advertir al usuario
     useEffect(() => {
         const handleBeforeUnload = (event) => {
-            if (isFormDirty) {
+            if (!disabledProfileButton || !disabledPasswordButton) {
                 event.preventDefault();
                 event.returnValue = ""; // Muestra la advertencia del navegador
             }
         };
-
+        
         window.addEventListener("beforeunload", handleBeforeUnload);
         return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-    }, [isFormDirty]);
-
+    }, [disabledProfileButton, disabledPasswordButton]);
+    
     useEffect(() => {
         // Aqui actualizar el valor de los inputs con la info del usuario
         setProfileInfo({
             name: user?.name || "N/A",
             email: user?.email || "N/A",
-            roles: user?.roles || "N/A"
+            roles: user?.roles || "N/A",
+            id: user?.id || "N/A"
         });
     }, [user]);
+        
+    // Detectar si hubo cambios en los formularios
+    useEffect(() => {
+        const isProfileChanged = JSON.stringify(profileInfo) !== JSON.stringify(initialProfileInfo);
+    
+        const { password, confirmPassword } = passwordForm;
+        const isPasswordFilled = password.trim() !== '' && confirmPassword.trim() !== '';
+    
+        if (!isPasswordFilled) {
+            setPasswordError('');
+            setDisabledPasswordButton(false);
+        } else if (password !== confirmPassword) {
+            setPasswordError('Las contraseñas no coinciden');
+            setDisabledPasswordButton(false);
+        } else {
+            setPasswordError('');
+            setDisabledPasswordButton(true);
+        }
+    
+        setDisabledProfileButton(isProfileChanged);
+    }, [profileInfo, passwordForm]);    
 
     useEffect(() => {
         // Cambia el tema de la barra de navegación
@@ -78,9 +120,7 @@ const ProfilePage = () => {
     }, []);
 
     return (
-        <div className={`w-full p-6 shadow-lg rounded-xl 
-            ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} transition-all duration-300
-        `}>
+        <div className={`w-full p-3 transition-all duration-300`}>
             <h2 className="text-2xl text-center font-bold mb-6">Info del perfil</h2>
 
             <div className="flex items-center justify-center mb-4">
@@ -94,7 +134,7 @@ const ProfilePage = () => {
                         { placeholder: "Tu nombre de usuario", name: "name", disabled: false, type: "username" },
                         { placeholder: "Tu correo electronico", name: "email", disabled: false, type: "email" },
                         { placeholder: "Tus roles", name: "roles", disabled: true, type: "security" },
-                    ].map((field, index) => {
+                    ].map((field) => {
                         if (field.name !== "roles") {
                             return (
                                 <CustomInput
@@ -122,12 +162,16 @@ const ProfilePage = () => {
                     })}
                     <button
                         type="submit"
-                        className={`mt-4 px-4 py-2 rounded-lg text-white font-bold
+                        className={`px-4 py-2 mb-3 rounded-lg font-bold
                             ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'}
+                            ${isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed' : ''}
+                            ${disabledProfileButton ? 'opacity-100' : 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'}
                         `}
-                        onClick={() => setIsFormDirty(false)} // Resetear el estado después de guardar
+                        onClick={handleSaveProfile} // Resetear el estado después de guardar
+                        disabled={disabledProfileButton || isLoading}
+                        title={isLoading ? "Actualizando..." : "Guardar cambios"}
                     >
-                        Guardar
+                        Actualizar
                     </button>
                 </form>
 
@@ -147,12 +191,19 @@ const ProfilePage = () => {
                             Idisabled={field.disabled}
                         />
                     ))}
+                    {passwordError && (
+                        <span className="text-red-500 text-sm font-medium -mt-2">{passwordError}</span>
+                    )}
                     <button
                         type="submit"
-                        className={`mt-4 px-4 py-2 rounded-lg text-white font-bold
+                        className={`px-4 py-2 mb-3 rounded-lg font-bold w-full transition-all duration-300
                             ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'}
+                            ${isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed' : ''}
+                            ${disabledPasswordButton ? 'opacity-100' : 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'}
                         `}
-                        onClick={() => setIsFormDirty(false)} // Resetear el estado después de guardar
+                        onClick={handleSavePassword} // Resetear el estado después de guardar
+                        disabled={disabledPasswordButton || isLoading}
+                        title={isLoading ? "Actualizando..." : "Cambiar contraseña"}
                     >
                         Cambiar contraseña
                     </button>

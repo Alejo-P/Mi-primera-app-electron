@@ -36,8 +36,20 @@ export const AppProvider = ({ children }) => {
 
     // Muestra una notificación temporalmente
     const handleNotificacion = (type, content, timeout = 3000) => {
-        console.log(content, typeof content);
-        const message = content?.response?.data?.msg || content?.response?.data?.error || content?.message || content;
+        if (!content) return;
+        let message = content?.response?.data?.msg 
+           ?? content?.response?.data?.error 
+           ?? content?.message 
+           ?? content;
+
+        // Si el mensaje es un objeto, lo convierte a string
+        if (typeof message === "object") {
+            try {
+                message = JSON.stringify(message);
+            } catch (error) {
+                console.error("Error al convertir el mensaje a string:", error);
+            }
+        }
 
         setNotificacion({ 
             type,

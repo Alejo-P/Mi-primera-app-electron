@@ -101,7 +101,7 @@ const Dashboard = () => {
 
             {/* 🔴 Contenedor de Contenido */}
             <div className={`flex flex-row m-4 border rounded-lg flex-1 shadow-lg overflow-y-auto
-                ${isDark ? 'border-gray-600' : 'border-gray-300 shadow-md'} transition-all duration-300`}
+                ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} transition-all duration-300`}
             >
                 {notificacion && <Notification {...notificacion} />}
                 {<Outlet />}

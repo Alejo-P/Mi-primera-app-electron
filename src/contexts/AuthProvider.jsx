@@ -103,6 +103,12 @@ export const AuthProvider = ({ children }) => {
 
         if (response) {
             handleNotificacion('success', 'Rol añadido correctamente', 5000);
+            const updatedUser = { ...user };
+            if (!updatedUser.roles) {
+                updatedUser.roles = [];
+            }
+            updatedUser.roles.push(role);
+            setUser(updatedUser);
         }
     }
 
@@ -122,6 +128,9 @@ export const AuthProvider = ({ children }) => {
 
         if (response) {
             handleNotificacion('success', 'Rol eliminado correctamente', 5000);
+            const updatedUser = { ...user };
+            updatedUser.roles = updatedUser.roles.filter(r => r !== role);
+            setUser(updatedUser);
         }
     }
 

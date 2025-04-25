@@ -581,6 +581,9 @@
   .m-4 {
     margin: calc(var(--spacing) * 4);
   }
+  .-mt-2 {
+    margin-top: calc(var(--spacing) * -2);
+  }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
@@ -595,6 +598,9 @@
   }
   .mb-1 {
     margin-bottom: calc(var(--spacing) * 1);
+  }
+  .mb-3 {
+    margin-bottom: calc(var(--spacing) * 3);
   }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
@@ -1358,6 +1364,12 @@
     @media (width >= 80rem) {
       max-width: var(--breakpoint-xl);
     }
+  }
+}
+@layer base {
+  * {
+    scrollbar-color: initial;
+    scrollbar-width: initial;
   }
 }
 @keyframes spin {
