@@ -226,6 +226,7 @@ export const FilesProvider = ({ children }) => {
     // Memoriza el valor del contexto para evitar renders innecesarios
     const contextValue = useMemo(() => ({
         fileList,
+        setFileList,
         uploadFile,
         getFiles,
         getFile,

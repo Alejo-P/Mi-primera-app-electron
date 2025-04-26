@@ -61,7 +61,7 @@ export const QRProvider = ({ children }) => {
     const deleteQR = async (name) => {
         if (!name) {
             handleNotificacion('error', 'No se ha seleccionado ningún QR', 5000);
-            return;
+            return false;
         }
         const response = await request({
             method: 'delete',
@@ -77,20 +77,9 @@ export const QRProvider = ({ children }) => {
             setQRList((prev) => prev.filter((qr) => qr.filename !== name));
             handleNotificacion('success', response.msg, 5000);
         }
-        // try {
-        //     const response = await axios.delete(`${URL_BACKEND}/qr/${name}`, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-        //     });
-        //     console.log(response);
-        //     setQRList((prev) => prev.filter((qr) => qr.filename !== name));
-        //     handleNotificacion('success', response.data.msg, 5000);
-        // } catch (error) {
-        //     console.error(error);
-        // } finally {
-        //     setLoadingQRs(false);
-        // }
+
+        const status = response ? true : false;
+        return status;
     };
 
     // Eliminar todos los QRs
@@ -184,7 +173,7 @@ export const QRProvider = ({ children }) => {
     const createQRFile = async (fileName) => {
         if (!fileName) {
             handleNotificacion('error', 'No se ha seleccionado ningún archivo', 5000);
-            return;
+            return false;
         }
         setLoadingQRs(true);
         const response = await request({
@@ -201,22 +190,8 @@ export const QRProvider = ({ children }) => {
             getQRs();
         }
         setLoadingQRs(false);
-
-        // try {
-        //     const response = await axios.post(`${URL_BACKEND}/qr/file/${fileName}`, null, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-        //     });
-        //     handleNotificacion('success', response.data.msg, 5000);
-        //     getQRs();
-            
-        // } catch (error) {
-        //     console.error(error);
-        //     handleNotificacion('error',  error, 5000);
-        // } finally {
-        //     setLoadingQRs(false);
-        // }
+        const status = response ? true : false;
+        return status;
     };
 
     const downloadQR = async (name) => {

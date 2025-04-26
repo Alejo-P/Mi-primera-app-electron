@@ -16,10 +16,11 @@ import { useQR } from '../contexts/QRProvider';
 
 const FileCard = ({ file, showModal, showFileInfo }) => {
     const { user } = useAuth();
-    const { downloadFile, deleteFile } = useFiles();
+    const { downloadFile, deleteFile, setFileList } = useFiles();
     const { fileTypes, setSelectedFile, tema } = useApp();
     const { getQR, createQRFile } = useQR();
     const isDark = tema === THEMES.DARK;
+    console.log(file);
 
     const handleFileInfoModal = () => {
         setSelectedFile(file);
@@ -49,7 +50,15 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
     const handleCreateQR = async () => {
         const confirm = window.confirm(`¿Crear QR para ${file.filename}?`);
         if (confirm) {
-            await createQRFile(file.filename);
+            const success = await createQRFile(file.filename);
+            if (success) {
+                setFileList((prev) => prev.map((f) => {
+                    if (f.filename === file.filename) {
+                        return { ...f, qr_code: true };
+                    }
+                    return f;
+                }));
+            }
         }
     };
 

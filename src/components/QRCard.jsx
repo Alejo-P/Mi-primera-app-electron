@@ -6,10 +6,13 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 // Importar el contexto
 import { useAuth } from '../contexts/AuthProvider';
 import { useQR } from '../contexts/QRProvider';
+import { useFiles } from '../contexts/FilesProvider';
 
 const QRCard = ({ QRInfo }) => {
     const { user } = useAuth();
     const { downloadQR , deleteQR } = useQR();
+    const { setFileList } = useFiles();
+    const isDark = user?.theme === 'dark';
     
     const handleDownload = async () => {
         const confirm = window.confirm(`¿Descargar ${QRInfo.filename}?`);
@@ -21,7 +24,10 @@ const QRCard = ({ QRInfo }) => {
     const handleDelete = async () => {
         const confirm = window.confirm(`¿Eliminar ${QRInfo.filename}?`);
         if (confirm) {
-            await deleteQR(QRInfo.filename);
+            const success = await deleteQR(QRInfo.filename);
+            if (success) {
+                setFileList((prev) => prev.filter((file) => file.filename !== QRInfo.filename));
+            }
         }
     };
 

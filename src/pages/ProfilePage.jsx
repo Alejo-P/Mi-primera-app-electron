@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider';
 import { FaUserCircle } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
-import { IoMdCloseCircle } from "react-icons/io";
+import { IoIosSave } from "react-icons/io";
 
 // Importamos las constantes
 import { THEMES } from '../constants/temas';
@@ -171,6 +171,7 @@ const ProfilePage = () => {
                         disabled={disabledProfileButton || isLoading}
                         title={isLoading ? "Actualizando..." : "Guardar cambios"}
                     >
+                        <IoIosSave className="inline-block mr-2 text-2xl" />
                         Actualizar
                     </button>
                 </form>
@@ -205,6 +206,7 @@ const ProfilePage = () => {
                         disabled={disabledPasswordButton || isLoading}
                         title={isLoading ? "Actualizando..." : "Cambiar contraseña"}
                     >
+                        <IoIosSave className="inline-block mr-2 text-2xl" />
                         Cambiar contraseña
                     </button>
                 </form>
