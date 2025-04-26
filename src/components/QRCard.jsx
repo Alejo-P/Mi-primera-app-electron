@@ -26,7 +26,12 @@ const QRCard = ({ QRInfo }) => {
         if (confirm) {
             const success = await deleteQR(QRInfo.filename);
             if (success) {
-                setFileList((prev) => prev.filter((file) => file.filename !== QRInfo.filename));
+                setFileList((prev) => prev.map((f) => {
+                    if (f.filename === QRInfo.attached_file?.filename) {
+                        return { ...f, qr_code: null };
+                    }
+                    return f;
+                }));
             }
         }
     };

@@ -20,7 +20,6 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
     const { fileTypes, setSelectedFile, tema } = useApp();
     const { getQR, createQRFile } = useQR();
     const isDark = tema === THEMES.DARK;
-    console.log(file);
 
     const handleFileInfoModal = () => {
         setSelectedFile(file);
