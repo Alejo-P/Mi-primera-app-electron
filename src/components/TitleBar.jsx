@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Avatar from "react-avatar";
 import { FaWindowMinimize, FaWindowMaximize } from "react-icons/fa";
 import { FaWindowRestore } from "react-icons/fa6";
 import { SlOptions } from "react-icons/sl";
 import { IoClose } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { useApp } from '../contexts/AppProvider';
-import { FaUserShield } from "react-icons/fa6";
-import { FaUserCheck } from "react-icons/fa6";
-import { FaUserXmark } from "react-icons/fa6";
+import { THEMES } from '../constants/temas';
 import { ImSpinner9 } from "react-icons/im";
 
 // Importamos los componentes
@@ -21,8 +21,22 @@ const TitleBar = () => {
         handleOptions,
         isMaximized,
         setIsMaximized,
-        isElectron
+        isElectron,
+        tema
     } = useApp();
+    const navigate = useNavigate();
+    const { pathname } = useLocation(); // Obtenemos la ruta actual
+    const [isProfilePage, setIsProfilePage] = useState(false); // Estado para verificar si estamos en la página de perfil
+    const isDark = tema === THEMES.DARK; // Verificamos si el tema es oscuro
+
+    useEffect(() => {
+        // Verificamos si estamos en la página de perfil
+        if (pathname === '/dashboard/profile') {
+            setIsProfilePage(true);
+        } else {
+            setIsProfilePage(false);
+        }
+    }, [pathname]); // Se ejecuta cuando cambia la ruta
 
     useEffect(() => {
         const { electronAPI } = window;
@@ -48,15 +62,43 @@ const TitleBar = () => {
                 <div className='flex items-center space-x-2 font-bold' style={{ WebkitAppRegion: 'no-drag' }}>
                     <p>DocTools</p>
                 </div>
-                <div className='flex items-end space-x-2' style={{ WebkitAppRegion: 'no-drag' }}>
+                <div
+                    className={`flex items-center justify-center space-x-2 rounded-lg
+                        ${isDark ? 'text-gray-200' : 'text-gray-900'}
+                        ${loading ? 'animate-pulse cursor-not-allowed'
+                            : isProfilePage ? 'cursor-default' : 'cursor-pointer hover:text-gray-400'
+                        }
+                        transition-all duration-300
+                    `}
+                    style={{ WebkitAppRegion: 'no-drag' }}
+                    onClick={() => {
+                        if (!loading) {
+                            navigate('/dashboard/profile');
+                        }
+                    }}
+                >
                     {
                         loading ? <ImSpinner9 className='animate-spin text-xl' />
                         :
-                        user?.role === 'admin' ? <FaUserShield className='text-xl' />
-                        : 
-                        user?.role === 'user' ? <FaUserCheck className='text-xl' />
-                        :
-                        <FaUserXmark className='text-xl' />
+                        <div
+                            className={`flex items-center justify-center w-7 h-7 p-0 rounded-full overflow-hidden border-2
+                                ${isDark ? 'border-gray-600' : 'border-gray-300'} transition-all duration-300`}
+                            style={{ WebkitAppRegion: 'no-drag' }}>
+                            {/* Avatar del usuario con fondo y texto según el tema */}
+                            <Avatar
+                                src={user?.avatar.url || ''}
+                                name={user?.name || "N/A"}
+                                round={true}
+                                size="30"
+                                maxInitials={2}
+                                color={isDark ? '#2D3748' : '#F7FAFC'} // Fondo más oscuro en tema oscuro, más claro en tema claro
+                                fgColor={isDark ? '#fff' : '#2D3748'} // Texto blanco en tema oscuro, texto oscuro en tema claro
+                                className={`transition-all duration-300 font-bold text-lg`}
+                                style={{
+                                    padding: 0,
+                                }}
+                            />
+                        </div>
                     }
                     <span
                         className='text-sm font-semibold'

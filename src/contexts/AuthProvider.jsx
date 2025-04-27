@@ -52,6 +52,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const profile = async () => {
+        setLoading(true);
         const response = await request({
             method: 'get',
             url: '/profile',
@@ -61,6 +62,7 @@ export const AuthProvider = ({ children }) => {
             }
         });
 
+        setLoading(false);
         if (response) {
             setUser(response);
         } else {

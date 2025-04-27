@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Cookies from 'js-cookie';
-import { Outlet, useLocation, Navigate } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
 import { FaQrcode } from 'react-icons/fa6';

@@ -1,4 +1,5 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
+import { ConfigProvider } from 'react-avatar';
 import './App.css'
 
 // Importamos el contexto
@@ -26,29 +27,31 @@ function App() {
     <HashRouter>
       <AppProvider>
         <AuthProvider>
-          <QRProvider>
-            <FilesProvider>
-              <Routes>
-                {/* Rutas públicas */}
-                <Route path="/" element={<Auth />}>
-                  <Route index element={<LandingPage />} />
-                  <Route path="login" element={<LoginPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-
-                {/* Rutas protegidas */}
-                <Route path="/dashboard" element={<PrivateRoute />}>
-                  <Route element={<Dashboard />}>
-                    <Route index element={<UploadPage />} />
-                    <Route path="qr" element={<QRPage />} />
-                    <Route path="files" element={<FilesPage />} />
-                    <Route path="profile" element={<ProfilePage />} />
+          <ConfigProvider>
+            <QRProvider>
+              <FilesProvider>
+                <Routes>
+                  {/* Rutas públicas */}
+                  <Route path="/" element={<Auth />}>
+                    <Route index element={<LandingPage />} />
+                    <Route path="login" element={<LoginPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Route>
-                </Route>
-              </Routes>
-            </FilesProvider>
-          </QRProvider>
+
+                  {/* Rutas protegidas */}
+                  <Route path="/dashboard" element={<PrivateRoute />}>
+                    <Route element={<Dashboard />}>
+                      <Route index element={<UploadPage />} />
+                      <Route path="qr" element={<QRPage />} />
+                      <Route path="files" element={<FilesPage />} />
+                      <Route path="profile" element={<ProfilePage />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Route>
+                  </Route>
+                </Routes>
+              </FilesProvider>
+            </QRProvider>
+          </ConfigProvider>
         </AuthProvider>
       </AppProvider>
     </HashRouter>
