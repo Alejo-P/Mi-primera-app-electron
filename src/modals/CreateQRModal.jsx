@@ -25,11 +25,11 @@ const CreateQRModal = ({ handleModal }) => {
     });
 
     const handleChanges = (e) => {
-        const { id, value, files } = e.target;
-        setQRForm((prev) => ({
-            ...prev,
-            [id]: files ? files[0] : value  // Guardamos el archivo correctamente
-        }));
+        const { name, value, files } = e.target;
+        setQRForm({
+            ...QRForm,
+            [name]: name === "QRicon" ? files[0] : value  // Guardamos el archivo correctamente
+        });
     };
 
     const handleClose = async () => {
@@ -38,18 +38,32 @@ const CreateQRModal = ({ handleModal }) => {
         }, 200);
     };
 
-    const handleCreateQR = async () => {
+    const handleCreateQR = async (e) => {
+        e.preventDefault(); // Evitamos el recargar de página o comportamientos no deseados
+        console.log("Form data al enviar", QRForm);
+    
         if (!QRForm.QRtext.trim()) {
             alert("El campo de texto es obligatorio para generar un QR.");
             return;
         }
-
+    
         const confirm = window.confirm(`¿Crear QR para "${QRForm.QRtext}"?`);
         if (confirm) {
             await createQR(QRForm);
+            // Reiniciar el formulario después de crear el QR
+            setQRForm({
+                QRname: '',
+                QRtext: '',
+                QRicon: null
+            });
+            // Cerrar el modal después de crear el QR
             handleModal();
         }
     };
+
+    useEffect(() => {
+        console.log("QRForm", QRForm);
+    }, [QRForm])
 
     useEffect(() => {
         const acciones = [
@@ -57,7 +71,8 @@ const CreateQRModal = ({ handleModal }) => {
                 key: 'crear',
                 element: (
                     <button
-                        onClick={handleCreateQR}
+                        type="submit"
+                        form="createQRForm"
                         className={`p-2 rounded-lg transition-all duration-300
                             ${isDark ? 'bg-green-600 text-white' : 'bg-green-400 text-gray-900 hover:bg-gray-400'} 
                             hover:scale-95 shadow-lg hover:shadow-xl`}
@@ -97,7 +112,7 @@ const CreateQRModal = ({ handleModal }) => {
                 relative flex flex-col items-center max-h-screen overflow-auto`
             }>
                 <h2 className="text-2xl text-center font-bold">Crear un QR</h2>
-                <div className="mt-4 w-full flex flex-col gap-4">
+                <form className="mt-4 w-full flex flex-col gap-4" onSubmit={handleCreateQR} id="createQRForm">
                     {[
                         { placeholder: "Nombre del archivo QR", name: "QRname", disabled: false, type: "text", optional:true },
                         { placeholder: "Texto del QR", name: "QRtext", disabled: false, type: "text", optional:false },
@@ -105,7 +120,6 @@ const CreateQRModal = ({ handleModal }) => {
                     ].map((field, index) => (
                         <div key={index} className="w-full">
                             <CustomInput
-                                key={index}
                                 Itype={field.type}
                                 Iname={field.name}
                                 Ivalue={field.name === "QRicon" ? undefined : QRForm[field.name]}
@@ -123,7 +137,7 @@ const CreateQRModal = ({ handleModal }) => {
                             </p>
                         </div>
                     ))}
-                </div>
+                </form>
             </div>
         </div>
     );

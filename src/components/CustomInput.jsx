@@ -49,7 +49,7 @@ const CustomInput = ({
                     }
                     id={Iname}
                     name={Iname}
-                    value={Ivalue}
+                    {...(Itype !== "file" ? { value: Ivalue } : {})}
                     onChange={IonChange}
                     ref={Iref}
                     maxLength={ImaxLength}

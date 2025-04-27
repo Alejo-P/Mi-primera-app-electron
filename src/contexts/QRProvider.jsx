@@ -43,7 +43,7 @@ export const QRProvider = ({ children }) => {
         if (response) {
             let data = [];
             if (response.files.length === 0) {
-                handleNotificacion('info', 'No hay QRs generados', 5000);
+                handleNotificacion('info', response.msg, 5000);
             } else {
                 data = await Promise.all(
                     response.files.map(async (qr) => {
@@ -101,21 +101,6 @@ export const QRProvider = ({ children }) => {
             setQRList([]);
             handleNotificacion('success', response.msg, 5000);
         }
-
-        // try {
-        //     const response = await axios.delete(`${URL_BACKEND}/qrs`, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-        //     });
-        //     console.log(response);
-        //     setQRList([]);
-        //     handleNotificacion('success', response.data.msg, 5000);
-        // } catch (error) {
-        //     console.error(error);
-        // } finally {
-        //     setLoadingQRs(false);
-        // }
     };
 
     // Crear un QR a partir de un texto
@@ -125,10 +110,25 @@ export const QRProvider = ({ children }) => {
             return;
         }
         setLoadingQRs(true);
+        
+        const dataForm = new FormData();
+        dataForm.append('text', data.QRtext);
+        if (data?.QRname) {
+            dataForm.append('name', data.QRname);
+        }
+        if (data?.QRicon) {
+            dataForm.append('icon', data.QRicon);
+        }
+
         const response = await request({
             method: 'post',
             url: '/qr',
-            payload: data,
+            payload: dataForm,
+            config: {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            },
             notify: {
                 success: false,
                 error: true
@@ -141,32 +141,6 @@ export const QRProvider = ({ children }) => {
             getQRs();
         }
         setLoadingQRs(false);
-
-        // try {
-        //     const formData = new FormData();
-        //     formData.append('text', data.QRtext);
-
-        //     if (data?.QRname) {
-        //         formData.append('name', data.QRname);
-        //     }
-
-        //     if (data?.QRicon) {
-        //         formData.append('icon', data.QRicon);
-        //     }
-
-        //     const response = await axios.post(`${URL_BACKEND}/qr`, formData, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-        //     });
-        //     handleNotificacion('success', response.data.msg, 5000);
-        //     getQRs();
-        // } catch (error) {
-        //     console.error(error);
-        //     handleNotificacion('error', error, 5000);
-        // } finally {
-        //     setLoadingQRs(false);
-        // }
     };
 
     // Crear un QR a partir de un archivo

@@ -45,13 +45,18 @@ export const FilesProvider = ({ children }) => {
         });
         if (response) {
             let data = [];
-            data = await Promise.all(
-                response.files.map(async (file) => {
-                    const { file:fileData } = await getFile(file);
-                    return { ...fileData };
-                })
-            );
-            setFileList(data);
+            if (response.files.length === 0) {
+                handleNotificacion('info', response.msg, 5000);
+            } else {
+                // Si hay archivos, obtenemos su contenido
+                data = await Promise.all(
+                    response.files.map(async (file) => {
+                        const { file:fileData } = await getFile(file);
+                        return { ...fileData };
+                    })
+                );
+                setFileList(data);
+            }
         }
         setLoadingFiles(false);
     };
@@ -78,20 +83,6 @@ export const FilesProvider = ({ children }) => {
             //setFileList((prev) => [...prev, response.file]);
             getFiles();
         }
-
-        // try {
-        //     const response = await axios.post(`${URL_BACKEND}/upload`, data, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        //         },
-        //     });
-        //     handleNotificacion('success', response.data.msg, 5000);
-        //     getFiles();
-        // } catch (error) {
-        //     console.error(error);
-        //     handleNotificacion('error',  error, 5000);
-        // }
     }
 
     // Descargar un archivo por su nombre
@@ -166,22 +157,6 @@ export const FilesProvider = ({ children }) => {
             handleNotificacion('success', response.msg, 5000);
             getFiles();
         }
-        // try {
-        //     const response = await axios.delete(`${URL_BACKEND}/delete/file/${name}`, {
-        //         headers: {
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        //         },
-        //     });
-        //     setFileList((prev) => prev.filter((file) => file.filename !== name));
-        //     setQRList((prev) => prev.filter((qr) => qr.filename !== name));
-        //     handleNotificacion('success', response.data.msg, 5000);
-        //     setTimeout(() => {
-        //         getQRs();
-        //     }, 2000);
-        // } catch (error) {
-        //     console.error(error);
-        //     handleNotificacion('error',  error, 5000);
-        // }
     };
 
     // Eliminar todos los archivos
@@ -205,22 +180,6 @@ export const FilesProvider = ({ children }) => {
                 getQRs();
             }, 2000);
         }
-
-        // try {
-        //     const response = await axios.delete(`${URL_BACKEND}/delete/all`, {
-        //         headers: {
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        //         },
-        //     });
-        //     setFileList([]);
-        //     handleNotificacion('success', response.data.msg, 5000);
-        //     setTimeout(() => {
-        //         getQRs();
-        //     }, 2000);
-        // } catch (error) {
-        //     console.error(error);
-        //     handleNotificacion('error', error, 5000);
-        // }
     };
 
     // Memoriza el valor del contexto para evitar renders innecesarios
