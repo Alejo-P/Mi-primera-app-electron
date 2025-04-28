@@ -66,8 +66,8 @@ const UploadAvatarModal = ({ handleModal }) => {
         if (!confirm) return; // Si el usuario cancela, no hacemos nada
 
         const formData = new FormData();
-        formData.append('avatar', avatar); // Agrega el archivo al FormData
-        formData.append('userId', user.id); // Agrega el ID del usuario al FormData
+        formData.append('file', avatar); // Agrega el archivo al FormData
+        formData.append('user_id', user.id); // Agrega el ID del usuario al FormData
 
         await uploadAvatar(formData); // Llama a la función para subir el avatar
         setAvatar(null); // Restablece el estado del archivo
