@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
 
     const uploadAvatar = async (formData) => {
         const response = await request({
-            method: 'post',
+            method: 'put',
             url: '/profile/upload_avatar',
             payload: formData,
             config: {

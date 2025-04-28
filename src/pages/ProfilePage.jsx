@@ -134,7 +134,7 @@ const ProfilePage = () => {
                     onClick={handleAvatarModal}
                 >
                     <Avatar
-                        src={user?.avatar.url || ''}
+                        src={user?.avatar?.url || ''}
                         name={user?.name || "N/A"}
                         round={true}
                         alt={`Perfil de ${user?.name || "N/A"}`}

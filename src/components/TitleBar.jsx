@@ -89,7 +89,7 @@ const TitleBar = () => {
                             style={{ WebkitAppRegion: 'no-drag' }}>
                             {/* Avatar del usuario con fondo y texto según el tema */}
                             <Avatar
-                                src={user?.avatar.url || ''}
+                                src={user?.avatar?.url || ''}
                                 name={user?.name || "N/A"}
                                 round={true}
                                 size="30"
