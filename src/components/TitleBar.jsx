@@ -66,13 +66,16 @@ const TitleBar = () => {
                     className={`flex items-center justify-center space-x-2 rounded-lg
                         ${isDark ? 'text-gray-200' : 'text-gray-900'}
                         ${loading ? 'animate-pulse cursor-not-allowed'
-                            : isProfilePage ? 'cursor-default' : 'cursor-pointer hover:text-gray-400'
+                            : isProfilePage ? 'cursor-default' : 'cursor-pointer hover:text-gray-400 hover:scale-95'
                         }
                         transition-all duration-300
                     `}
+                    data-tooltip-id='profile'
+                    data-tooltip-content={`${loading ? 'Cargando...' : isProfilePage ? 'Tu perfil' : 'Ir a tu perfil'}`}
                     style={{ WebkitAppRegion: 'no-drag' }}
                     onClick={() => {
-                        if (!loading) {
+                        if (!loading && !isProfilePage) {
+                            // Si no estamos en la página de perfil, navegamos a ella
                             navigate('/dashboard/profile');
                         }
                     }}
@@ -155,6 +158,7 @@ const TitleBar = () => {
                 <ReactTooltip id='maximize' place='top' />
                 <ReactTooltip id='close' place='top' />
                 <ReactTooltip id='options' place='top' />
+                <ReactTooltip id='profile' place='top' />
             </div>
             {showOptions && <OptionsCard />}
         </>

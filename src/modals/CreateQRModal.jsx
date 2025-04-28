@@ -40,7 +40,6 @@ const CreateQRModal = ({ handleModal }) => {
 
     const handleCreateQR = async (e) => {
         e.preventDefault(); // Evitamos el recargar de página o comportamientos no deseados
-        console.log("Form data al enviar", QRForm);
     
         if (!QRForm.QRtext.trim()) {
             alert("El campo de texto es obligatorio para generar un QR.");
@@ -62,10 +61,6 @@ const CreateQRModal = ({ handleModal }) => {
     };
 
     useEffect(() => {
-        console.log("QRForm", QRForm);
-    }, [QRForm])
-
-    useEffect(() => {
         const acciones = [
             {
                 key: 'crear',
@@ -74,10 +69,14 @@ const CreateQRModal = ({ handleModal }) => {
                         type="submit"
                         form="createQRForm"
                         className={`p-2 rounded-lg transition-all duration-300
-                            ${isDark ? 'bg-green-600 text-white' : 'bg-green-400 text-gray-900 hover:bg-gray-400'} 
+                            ${!QRForm.QRtext.trim() ? 'cursor-not-allowed bg-gray-300 text-gray-500'
+                                : isDark ? 'bg-green-600 text-white'
+                                : 'bg-green-400 text-gray-900 hover:bg-gray-400'
+                            }
                             hover:scale-95 shadow-lg hover:shadow-xl`}
                         data-tooltip-id='createQRLabel'
-                        data-tooltip-content='Crear QR'
+                        data-tooltip-content={`${QRForm.QRtext.trim() ? 'Crear QR' : 'El campo de texto es obligatorio para crear un QR'}`}
+                        disabled={!QRForm.QRtext.trim()}
                     >
                         <FaCheck className='text-2xl' />
                     </button>
@@ -103,7 +102,7 @@ const CreateQRModal = ({ handleModal }) => {
         return () => {
             setNavActionsItems([]);
         };
-    }, []);
+    }, [QRForm, isDark]);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">

@@ -74,7 +74,7 @@ const QRPage = () => {
                                 hover:scale-95 shadow-lg hover:shadow-xl`}
                             title="Actualizar lista"
                             data-tooltip-id="RefreshLabel"
-                            data-tooltip-content="Actualizar la lista de archivos"
+                            data-tooltip-content="Actualizar la lista de QRs"
                         >
                             <HiOutlineRefresh className="text-2xl" />
                         </button>

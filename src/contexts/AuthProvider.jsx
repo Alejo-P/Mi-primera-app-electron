@@ -70,6 +70,28 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const uploadAvatar = async (formData) => {
+        const response = await request({
+            method: 'post',
+            url: '/profile/upload_avatar',
+            payload: formData,
+            config: {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            },
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', 'Avatar actualizado correctamente', 5000);
+            setUser({ ...user, avatar: response.avatar });
+        }
+    };
+
     const refreshToken = async () => {
         const response = await request({
             method: 'post',
@@ -142,6 +164,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         profile,
+        uploadAvatar,
         refreshToken,
         addRole,
         removeRole,

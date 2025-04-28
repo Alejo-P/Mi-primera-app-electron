@@ -3,6 +3,8 @@ import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider';
 import Avatar from "react-avatar";
 import { IoIosSave } from "react-icons/io";
+import { FaPen } from "react-icons/fa";
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos las constantes
 import { THEMES } from '../constants/temas';
@@ -10,6 +12,7 @@ import { THEMES } from '../constants/temas';
 // Importamos los componentes
 import CustomInput from '../components/CustomInput';
 import RolesField from '../components/RolesField';
+import UploadAvatarModal from '../modals/UploadAvatarModal';
 
 const ProfilePage = () => {
     const { user, removeRole } = useAuth();
@@ -34,6 +37,11 @@ const ProfilePage = () => {
     const [disabledPasswordButton, setDisabledPasswordButton] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showUploadAvatarModal, setShowUploadAvatarModal] = useState(false);
+
+    const handleAvatarModal = () => {
+        setShowUploadAvatarModal(!showUploadAvatarModal);
+    };
 
     const handleDeleteRole = async (role, userId) => {
         console.log(role, userId);
@@ -103,7 +111,7 @@ const ProfilePage = () => {
 
     useEffect(() => {
         setNavActionsItems([]);
-    }, []);
+    }, [showUploadAvatarModal]);
 
     return (
         <div className={`w-full p-3 transition-all duration-300`}>
@@ -111,21 +119,50 @@ const ProfilePage = () => {
 
             <div className="flex items-center justify-center mb-4">
                 <div
-                    className={`p-2 rounded-full border-4 flex items-center justify-center ${isDark ? 'bg-gray-800' : 'bg-gray-200'}`}
-                    style={{
-                        boxShadow: isDark ? '0 4px 6px rgba(0, 0, 0, 0.3)' : '0 4px 6px rgba(0, 0, 0, 0.1)', // Sombra suave
-                        borderColor: isDark ? '#4A5568' : '#E2E8F0', // Borde ajustado al tema
-                    }}
+                    className={`
+                        p-2 rounded-full border-2 flex items-center justify-center relative group
+                        ${isDark ? 'bg-gray-800' : 'bg-gray-100'}
+                        hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer
+                        ${isDark 
+                            ? 'border-gray-600 shadow-md shadow-black/40' 
+                            : 'border-gray-300 shadow-md shadow-gray-400/50'
+                        }
+                        ${isLoading ? 'animate-pulse cursor-not-allowed' : ''}
+                    `}
+                    data-tooltip-id="profile"
+                    data-tooltip-content={`${isLoading ? 'Cargando...' : `Perfil de ${user?.name || "N/A"}`}`}
+                    onClick={handleAvatarModal}
                 >
                     <Avatar
+                        src={user?.avatar.url || ''}
                         name={user?.name || "N/A"}
                         round={true}
+                        alt={`Perfil de ${user?.name || "N/A"}`}
+                        title={`Perfil de ${user?.name || "N/A"}`}
                         size="50"
                         maxInitials={2}
-                        color={isDark ? '#2D3748' : '#F7FAFC'} // Fondo más oscuro en tema oscuro, más claro en tema claro
-                        fgColor={isDark ? '#fff' : '#2D3748'} // Texto blanco en tema oscuro, texto oscuro en tema claro
-                        className={`font-bold text-lg transition-all duration-300`}
+                        color={isDark ? '#2D3748' : '#F7FAFC'}
+                        fgColor={isDark ? '#fff' : '#2D3748'}
+                        className="font-bold text-lg transition-all duration-300"
+                        style={{ padding: 0 }}
                     />
+
+                    <div className={`
+                        absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 flex items-center justify-center
+                        ${isDark 
+                            ? 'bg-gray-700 border-gray-500 shadow-md shadow-black/30 text-white' 
+                            : 'bg-white border-gray-300 shadow-md shadow-gray-400/30 text-gray-700'
+                        }
+                        transition-all duration-300 ease-in-out
+                        ring-1 ring-offset-1 ${isDark ? 'ring-white/20' : 'ring-black/10'}
+                        ${isLoading ? 'animate-pulse cursor-not-allowed' : ''}
+                    `}>
+                        <FaPen className={`
+                            text-[10px]
+                            transition-transform duration-300 ease-in-out
+                            group-hover:rotate-15
+                        `}/>
+                    </div>
                 </div>
             </div>
 
@@ -201,6 +238,12 @@ const ProfilePage = () => {
                     </button>
                 </form>
             </div>
+            <ReactTooltip id="profile" place="top" effect="solid" />
+            {showUploadAvatarModal && (
+                <UploadAvatarModal
+                    handleModal={handleAvatarModal}
+                />
+            )}
         </div>
     );
 };

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos las constantes
 import { THEMES } from '../constants/temas';
@@ -10,6 +11,16 @@ import { useApp } from '../contexts/AppProvider';
 const NavActions = () => {
     const { tema, visibleNav, navActionsItems } = useApp();
     const isDark = tema === THEMES.DARK;
+    const [tooitips, setTooitips] = useState([]);
+
+    useEffect(() => {
+        // Verificamos si hay tooltips en los elementos de navActionsItems (si no hay, no se renderiza el tooltip)
+        const tooltipsElements = navActionsItems.map(({ key, element }) => {
+            const tooltip = element.props['data-tooltip-id'];
+            return tooltip ? { key, tooltip } : null;
+        });
+        setTooitips(tooltipsElements.filter(Boolean)); // Filtramos los elementos nulos
+    }, [navActionsItems]);
 
     return (
         <AnimatePresence>
@@ -47,6 +58,15 @@ const NavActions = () => {
                             ))}
                         </AnimatePresence>
                     </div>
+                    {tooitips.map(({ key, tooltip }) => (
+                        <ReactTooltip
+                            key={key}
+                            id={tooltip}
+                            place="top"
+                            effect="solid"
+                            className={`text-xs font-semibold ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                        />
+                    ))}
                 </motion.div>
             )}
         </AnimatePresence>
