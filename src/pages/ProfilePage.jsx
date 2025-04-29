@@ -15,7 +15,7 @@ import RolesField from '../components/RolesField';
 import UploadAvatarModal from '../modals/UploadAvatarModal';
 
 const ProfilePage = () => {
-    const { user, removeRole } = useAuth();
+    const { user, removeRole, updateProfile } = useAuth();
     const { tema, handleNotificacion, setNavActionsItems } = useApp();
     const isDark = tema === THEMES.DARK;
 
@@ -28,6 +28,7 @@ const ProfilePage = () => {
 
     const initialPasswordForm = {
         password: '',
+        newPassword: '',
         confirmPassword: ''
     };
 
@@ -55,11 +56,7 @@ const ProfilePage = () => {
     };
 
     const handleSaveProfile = async () => {
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            handleNotificacion('success', 'Perfil actualizado correctamente', 5000);
-        }, 2000);
+        await updateProfile(profileInfo);
     };
 
     const handleSavePassword = async () => {
@@ -92,17 +89,13 @@ const ProfilePage = () => {
 
     useEffect(() => {
         const isProfileChanged = JSON.stringify(profileInfo) !== JSON.stringify(initialProfileInfo);
-        const { password, confirmPassword } = passwordForm;
-        const isPasswordFilled = password.trim() !== '' && confirmPassword.trim() !== '';
-
-        console.log("isProfileChanged", isProfileChanged, "isPasswordFilled", isPasswordFilled,
-            "Perfil", profileInfo, "Inicial", initialProfileInfo
-        );
+        const { password, newPassword, confirmPassword } = passwordForm;
+        const isPasswordFilled = password.trim() !== '' && newPassword.trim() !== '' && confirmPassword.trim() !== '';
 
         if (!isPasswordFilled) {
             setPasswordError('');
             setDisabledPasswordButton(true);
-        } else if (password !== confirmPassword) {
+        } else if (newPassword !== confirmPassword) {
             setPasswordError('Las contraseñas no coinciden');
             setDisabledPasswordButton(true);
         } else {
@@ -220,8 +213,11 @@ const ProfilePage = () => {
 
                 {/* Formulario de Contraseña */}
                 <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-                    {[{ placeholder: "Ingresa la nueva contraseña", name: "password", disabled: false, type: "password" },
-                      { placeholder: "Ingresa nuevamente la contraseña", name: "confirmPassword", disabled: false, type: "password" }].map((field, index) => (
+                    {[
+                        { placeholder: "Ingresa tu contraseña actual", name: "password", disabled: false, type: "password" },
+                        { placeholder: "Ingresa la nueva contraseña", name: "newPassword", disabled: false, type: "password" },
+                        { placeholder: "Ingresa nuevamente la contraseña", name: "confirmPassword", disabled: false, type: "password" }
+                    ].map((field, index) => (
                         <CustomInput
                             key={index}
                             Itype={field.type}

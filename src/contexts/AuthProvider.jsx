@@ -73,6 +73,25 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateProfile = async (data) => {
+        setLoading(true);
+        const response = await request({
+            method: 'put',
+            url: '/profile',
+            payload: data,
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', response.msg, 5000);
+            setUser(response.user);
+        }
+        setLoading(false);
+    };
+
     const uploadAvatar = async (formData) => {
         setLoading(true);
         const response = await request({
@@ -169,6 +188,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         profile,
+        updateProfile,
         uploadAvatar,
         refreshToken,
         addRole,

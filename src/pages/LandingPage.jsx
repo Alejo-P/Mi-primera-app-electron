@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IoLogIn } from "react-icons/io5";
 import { BiSolidDashboard } from "react-icons/bi";
@@ -14,7 +14,7 @@ import { THEMES } from '../constants/temas'
 import LoginModal from '../modals/LoginModal';
 
 const LandingPage = () => {
-    const { tema } = useApp();
+    const { tema, setNavActionsItems } = useApp();
     const { user } = useAuth(); // Obtenemos el usuario del contexto de autenticación
     const { pathname } = useLocation(); // Obtenemos la ruta actual
     const navigate = useNavigate(); // Obtenemos la función de navegación
@@ -35,6 +35,9 @@ const LandingPage = () => {
         setShowLoginModal(!showLoginModal); // Cambia el estado del modal de inicio de sesión
     }
 
+    useEffect(()=>{
+        setNavActionsItems([]); // Limpiamos las acciones del navbar al cargar la página
+    }, [])
 
     return (
         <div className={`flex flex-col m-4 border rounded-lg flex-1 shadow-lg overflow-y-auto
