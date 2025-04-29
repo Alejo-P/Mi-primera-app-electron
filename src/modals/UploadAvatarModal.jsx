@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { IoClose } from "react-icons/io5";
 import { FaUpload } from "react-icons/fa6";
+import { ImSpinner9 } from "react-icons/im";
 
 // Importamos las constantes
 import { THEMES } from '../constants/temas';
@@ -14,7 +15,7 @@ import CustomInput from '../components/CustomInput';
 
 const UploadAvatarModal = ({ handleModal }) => {
     const { tema, setNavActionsItems, handleNotificacion } = useApp();
-    const { user, uploadAvatar } = useAuth();
+    const { user, uploadAvatar, loading } = useAuth();
     const [avatar, setAvatar] = useState(null); // Estado para almacenar el archivo de imagen
     const [preview, setPreview] = useState(null); // Estado para almacenar la vista previa de la imagen
     const isDark = tema === THEMES.DARK;
@@ -86,7 +87,7 @@ const UploadAvatarModal = ({ handleModal }) => {
                         type="submit"
                         form="uploadAvatarForm"
                         className={`p-2 rounded-lg transition-all duration-300
-                            ${!avatar ? 'cursor-not-allowed bg-gray-300 text-gray-500' 
+                            ${(!avatar || loading) ? 'cursor-not-allowed bg-gray-300 text-gray-500' 
                                 :  isDark ? 'bg-blue-600 text-white' 
                                 : 'bg-blue-400 text-gray-900 hover:bg-gray-400'
                             }
@@ -94,9 +95,9 @@ const UploadAvatarModal = ({ handleModal }) => {
                         title="Subir"
                         data-tooltip-id="uploadLabel"
                         data-tooltip-content={`${avatar ? 'Subir avatar' : 'Selecciona un archivo primero'}`}
-                        disabled={!avatar} // Deshabilitar el botón si no hay archivo seleccionado
+                        disabled={!avatar || loading} // Deshabilitar el botón si no hay archivo seleccionado
                     >
-                        <FaUpload className="text-2xl" />
+                        {loading ? <ImSpinner9 className="animate-spin text-2xl" /> : <FaUpload className="text-2xl" />}
                     </button>
                 )
             },
@@ -121,7 +122,7 @@ const UploadAvatarModal = ({ handleModal }) => {
         return () => {
             setNavActionsItems([]);
         }
-    }, [avatar, isDark]); // Se ejecuta cuando cambia el estado del avatar o el tema
+    }, [avatar, isDark, loading]); // Se ejecuta cuando cambia el estado del avatar o el tema
 
     return (
         <div className={`fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn`}>

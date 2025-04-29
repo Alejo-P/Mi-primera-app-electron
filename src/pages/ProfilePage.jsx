@@ -95,18 +95,22 @@ const ProfilePage = () => {
         const { password, confirmPassword } = passwordForm;
         const isPasswordFilled = password.trim() !== '' && confirmPassword.trim() !== '';
 
+        console.log("isProfileChanged", isProfileChanged, "isPasswordFilled", isPasswordFilled,
+            "Perfil", profileInfo, "Inicial", initialProfileInfo
+        );
+
         if (!isPasswordFilled) {
             setPasswordError('');
-            setDisabledPasswordButton(false);
+            setDisabledPasswordButton(true);
         } else if (password !== confirmPassword) {
             setPasswordError('Las contraseñas no coinciden');
-            setDisabledPasswordButton(false);
+            setDisabledPasswordButton(true);
         } else {
             setPasswordError('');
-            setDisabledPasswordButton(true);
+            setDisabledPasswordButton(false);
         }
 
-        setDisabledProfileButton(isProfileChanged);
+        setDisabledProfileButton(!isProfileChanged);
     }, [profileInfo, passwordForm]);
 
     useEffect(() => {
@@ -199,7 +203,12 @@ const ProfilePage = () => {
                     })}
                     <button
                         type="submit"
-                        className={`px-4 py-2 mb-3 rounded-lg font-bold ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'} ${isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed' : ''} ${disabledProfileButton ? 'opacity-100' : 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'}`}
+                        className={`px-4 py-2 mb-3 rounded-lg font-bold transition-all duration-300
+                            ${disabledProfileButton || isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                                : isDark ? 'bg-blue-500 hover:bg-blue-600'
+                                : 'bg-blue-600 hover:bg-blue-700'
+                            }
+                        `}
                         onClick={handleSaveProfile}
                         disabled={disabledProfileButton || isLoading}
                         title={isLoading ? "Actualizando..." : "Guardar cambios"}
@@ -228,7 +237,12 @@ const ProfilePage = () => {
                     )}
                     <button
                         type="submit"
-                        className={`px-4 py-2 mb-3 rounded-lg font-bold w-full transition-all duration-300 ${isDark ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'} ${isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed' : ''} ${disabledPasswordButton ? 'opacity-100' : 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'}`}
+                        className={`px-4 py-2 mb-3 rounded-lg font-bold transition-all duration-300
+                            ${disabledPasswordButton || isLoading ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                                : isDark ? 'bg-blue-500 hover:bg-blue-600'
+                                : 'bg-blue-600 hover:bg-blue-700'
+                            }
+                        `}
                         onClick={handleSavePassword}
                         disabled={disabledPasswordButton || isLoading}
                         title={isLoading ? "Actualizando..." : "Cambiar contraseña"}

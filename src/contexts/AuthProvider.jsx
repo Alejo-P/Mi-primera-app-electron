@@ -15,6 +15,8 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const login = async (data) => {
+        setLoading(true);
+        // Enviar la solicitud de inicio de sesión
         const response = await request({
             method: 'post',
             url: '/login',
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }) => {
             //handleNotificacion('success', response.msg, 5000);
             navigate('/dashboard/');
         }
+        setLoading(false);
     };
 
     const logout = async () => {
@@ -48,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         Cookies.remove('csrf_access_token');
         Cookies.remove('csrf_refresh_token');
         setUser(null);
-        navigate('/login');
+        navigate('/');
     };
 
     const profile = async () => {
@@ -71,6 +74,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const uploadAvatar = async (formData) => {
+        setLoading(true);
         const response = await request({
             method: 'put',
             url: '/profile/upload_avatar',
@@ -90,6 +94,7 @@ export const AuthProvider = ({ children }) => {
             handleNotificacion('success', 'Avatar actualizado correctamente', 5000);
             setUser({ ...user, avatar: response.avatar });
         }
+        setLoading(false);
     };
 
     const refreshToken = async () => {

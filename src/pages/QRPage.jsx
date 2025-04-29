@@ -10,6 +10,7 @@ import { THEMES } from '../constants/temas';
 // Importamos el contexto
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
+import { useFiles } from '../contexts/FilesProvider';
 
 // Importamos los componentes
 import QRCard from '../components/QRCard';
@@ -18,7 +19,8 @@ import CreateQRModal from '../modals/CreateQRModal';
 
 const QRPage = () => {
     const { tema, setVisibleNav, setNavActionsItems } = useApp();
-    const { qrList, getQRs, getQR, deleteAllQRs, loadingQRs} = useQR();
+    const { qrList, getQRs, deleteAllQRs, loadingQRs} = useQR();
+    const { setFileList } = useFiles();
     const [showModal, setShowModal] = useState(false);
     const [QRInfo, setQRInfo] = useState([]);
     const isDark = tema === THEMES.DARK;
@@ -40,8 +42,15 @@ const QRPage = () => {
     const handleDeleteAll = async () => {
         const confirm = window.confirm(`¿Eliminar todos los QRs?`);
         if (confirm) {
-            await deleteAllQRs();
-            await getQR();
+            const success = await deleteAllQRs();
+            await getQRs();
+            if (success) {
+                setFileList((prev) => {
+                    return prev.map((f) => {
+                        return { ...f, qr_code: null };
+                    });
+                })
+            }
         }
     };
 

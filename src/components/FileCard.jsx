@@ -18,7 +18,7 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
     const { user } = useAuth();
     const { downloadFile, deleteFile, setFileList } = useFiles();
     const { fileTypes, setSelectedFile, tema } = useApp();
-    const { getQR, createQRFile } = useQR();
+    const { getQR, createQRFile, loadingQRs } = useQR();
     const isDark = tema === THEMES.DARK;
 
     const handleFileInfoModal = () => {
@@ -106,11 +106,18 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
             </p>
             <div className='flex justify-center mt-4 space-x-4 gap-3'>
                 <button
-                    className={`flex text-white p-2 rounded-lg transition duration-300 cursor-pointer ${file.qr_code ? 'hidden' : 'bg-blue-500 hover:bg-blue-600'}`}
+                    className={`flex text-white p-2 rounded-lg transition duration-300
+                        ${file.qr_code ? 'hidden'
+                            : loadingQRs ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                            : isDark ? 'bg-green-600 hover:bg-green-700 hover:scale-95'
+                            : 'bg-green-400 hover:bg-green-500 hover:scale-95'
+                        }
+                    `}
                     title={`Crear QR para ${file.filename}`}
                     data-tooltip-id='createQRLabel'
                     data-tooltip-content={`${file.qr_code ? `QR ya creado para ${file.filename}` : `Crear QR para ${file.filename}`}`}
                     onClick={handleCreateQR}
+                    disabled={loadingQRs || file.qr_code}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
                         <QrCode className='text-xl' />
@@ -118,11 +125,17 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
                 </button>
 
                 <button
-                    className="flex bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
+                    className={`flex text-white p-2 rounded-lg transition duration-300
+                        ${loadingQRs ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                            : isDark ? 'bg-blue-600 hover:bg-blue-700 hover:scale-95'
+                            : 'bg-blue-400 hover:bg-blue-500 hover:scale-95'
+                        }
+                    `}
                     title={`Descargar ${file.filename}`}
                     data-tooltip-id='downloadLabel'
                     data-tooltip-content={`Descargar ${file.filename}`}
                     onClick={handleDownload}
+                    disabled={loadingQRs}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
                         <FaDownload className='text-xl' />
@@ -130,11 +143,17 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
                 </button>
 
                 <button
-                    className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition duration-300 cursor-pointer"
+                    className={`flex text-white p-2 rounded-lg transition duration-300
+                        ${loadingQRs ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                            : isDark ? 'bg-red-600 hover:bg-red-700 hover:scale-95'
+                            : 'bg-red-400 hover:bg-red-500 hover:scale-95'
+                        }
+                    `}
                     title={`Eliminar ${file.filename}`}
                     data-tooltip-id='deleteLabel'
                     data-tooltip-content={`Eliminar ${file.filename}`}
                     onClick={handleDelete}
+                    disabled={loadingQRs}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
                         <MdDeleteForever className='text-xl' />
@@ -142,11 +161,17 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
                 </button>
 
                 <button
-                    className="flex bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600 transition duration-300 cursor-pointer"
+                    className={`flex text-white p-2 rounded-lg transition duration-300
+                        ${loadingQRs ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                            : isDark ? 'bg-gray-600 hover:bg-gray-700 hover:scale-95'
+                            : 'bg-gray-400 hover:bg-gray-500 hover:scale-95'
+                        }
+                    `}
                     title={`Ver información de ${file.filename}`}
                     data-tooltip-id='infoFileLabel'
                     data-tooltip-content={`Ver información de ${file.filename}`}
                     onClick={handleFileInfoModal}
+                    disabled={loadingQRs}
                 >
                     <span className="text-white flex text-center items-center space-x-2">
                         <FaInfo className='text-xl' />

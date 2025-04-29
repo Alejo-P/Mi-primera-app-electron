@@ -101,6 +101,9 @@ export const QRProvider = ({ children }) => {
             setQRList([]);
             handleNotificacion('success', response.msg, 5000);
         }
+
+        const status = response ? true : false;
+        return status;
     };
 
     // Crear un QR a partir de un texto

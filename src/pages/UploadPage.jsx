@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaUpload } from "react-icons/fa6";
+import { ImSpinner9 } from "react-icons/im";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos las constantes
@@ -14,7 +15,7 @@ import CustomInput from '../components/CustomInput';
 
 const UploadPage = () => {
     const { extensiones, maxSize, convertUnit, handleNotificacion, tema, setNavActionsItems } = useApp();
-    const { uploadFile } = useFiles();
+    const { uploadFile, loadingFiles } = useFiles();
     const fileInput = useRef(null);
     const [file, setFile] = useState(null);
     const isDark = tema === THEMES.DARK;
@@ -86,13 +87,30 @@ const UploadPage = () => {
                 <button
                     type="submit"
                     className={`block text-center font-bold p-2 m-2 rounded-lg w-full transition-all duration-300
-                        ${file ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'}`}
+                        ${(!file || loadingFiles) ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
+                            : isDark ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-95'
+                            : 'bg-blue-400 text-gray-900 hover:bg-gray-500 hover:scale-95'
+                        }
+                        shadow-lg hover:shadow-xl
+                    `}
                     data-tooltip-id="uploadLabel"
-                    data-tooltip-content="Cargar un archivo al servidor"
-                    disabled={!file}
+                    data-tooltip-content={file ? 'Cargar un archivo al servidor' : 'Selecciona un archivo primero'}
+                    disabled={!file || loadingFiles} // Deshabilitar el botón si no hay archivo seleccionado o si está cargando
+                    title={file ? 'Cargar un archivo al servidor' : 'Selecciona un archivo primero'}
                 >
-                    <FaUpload className="inline-block mr-2"/>
-                    Cargar archivo
+                    {
+                        loadingFiles ? (
+                            <>
+                                <ImSpinner9 className="inline-block mr-2 animate-spin" />
+                                <span>Subiendo archivo</span>
+                            </>
+                        ) : (
+                            <>
+                                <FaUpload className="inline-block mr-2" />
+                                Cargar archivo
+                            </>
+                        )
+                    }
                 </button>
             </form>
             <ReactTooltip id="uploadLabel" place="top" effect="solid" />

@@ -9,14 +9,14 @@ import { QRProvider } from './contexts/QRProvider'
 import { FilesProvider } from './contexts/FilesProvider'
 
 // Importamos las páginas
-import LoginPage from './pages/LoginPage'
+import Mainboard from './layouts/Mainboard'
+import Dashboard from './layouts/Dashboard'
 import UploadPage from './pages/UploadPage'
 import QRPage from './pages/QRPage'
 import FilesPage from './pages/FilesPage'
 import NotFound from './pages/NotFound'
 import ProfilePage from './pages/ProfilePage'
 import LandingPage from './pages/LandingPage'
-import Dashboard from './layouts/Dashboard'
 
 // Rutas para la autenticación
 import Auth from './layouts/Auth'
@@ -32,9 +32,8 @@ function App() {
               <FilesProvider>
                 <Routes>
                   {/* Rutas públicas */}
-                  <Route path="/" element={<Auth />}>
+                  <Route path="/" element={<Mainboard />} >
                     <Route index element={<LandingPage />} />
-                    <Route path="login" element={<LoginPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Route>
 

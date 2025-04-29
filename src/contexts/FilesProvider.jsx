@@ -67,7 +67,7 @@ export const FilesProvider = ({ children }) => {
             handleNotificacion('error', 'No se ha seleccionado ningún archivo', 5000);
             return;
         }
-        console.log('uploadFile', data);
+        setLoadingFiles(true);
         const response = await request({
             method: 'post',
             url: '/upload',
@@ -83,6 +83,7 @@ export const FilesProvider = ({ children }) => {
             //setFileList((prev) => [...prev, response.file]);
             getFiles();
         }
+        setLoadingFiles(false);
     }
 
     // Descargar un archivo por su nombre

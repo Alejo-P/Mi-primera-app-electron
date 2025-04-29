@@ -62,53 +62,57 @@ const TitleBar = () => {
                 <div className='flex items-center space-x-2 font-bold' style={{ WebkitAppRegion: 'no-drag' }}>
                     <p>DocTools</p>
                 </div>
-                <div
-                    className={`flex items-center justify-center space-x-2 rounded-lg
-                        ${isDark ? 'text-gray-200' : 'text-gray-900'}
-                        ${loading ? 'animate-pulse cursor-not-allowed'
-                            : isProfilePage ? 'cursor-default' : 'cursor-pointer hover:text-gray-400 hover:scale-95'
-                        }
-                        transition-all duration-300
-                    `}
-                    data-tooltip-id='profile'
-                    data-tooltip-content={`${loading ? 'Cargando...' : isProfilePage ? 'Tu perfil' : 'Ir a tu perfil'}`}
-                    style={{ WebkitAppRegion: 'no-drag' }}
-                    onClick={() => {
-                        if (!loading && !isProfilePage) {
-                            // Si no estamos en la página de perfil, navegamos a ella
-                            navigate('/dashboard/profile');
-                        }
-                    }}
-                >
-                    {
-                        loading ? <ImSpinner9 className='animate-spin text-xl' />
-                        :
+                {
+                    pathname.includes("/dashboard") && (
                         <div
-                            className={`flex items-center justify-center w-7 h-7 p-0 rounded-full overflow-hidden border-2
-                                ${isDark ? 'border-gray-600' : 'border-gray-300'} transition-all duration-300`}
-                            style={{ WebkitAppRegion: 'no-drag' }}>
-                            {/* Avatar del usuario con fondo y texto según el tema */}
-                            <Avatar
-                                src={user?.avatar?.url || ''}
-                                name={user?.name || "N/A"}
-                                round={true}
-                                size="30"
-                                maxInitials={2}
-                                color={isDark ? '#2D3748' : '#F7FAFC'} // Fondo más oscuro en tema oscuro, más claro en tema claro
-                                fgColor={isDark ? '#fff' : '#2D3748'} // Texto blanco en tema oscuro, texto oscuro en tema claro
-                                className={`transition-all duration-300 font-bold text-lg`}
-                                style={{
-                                    padding: 0,
-                                }}
-                            />
+                            className={`flex items-center justify-center space-x-2 rounded-lg
+                                ${isDark ? 'text-gray-200' : 'text-gray-900'}
+                                ${loading ? 'animate-pulse cursor-not-allowed'
+                                    : isProfilePage ? 'cursor-default' : 'cursor-pointer hover:text-gray-400 hover:scale-95'
+                                }
+                                transition-all duration-300
+                            `}
+                            data-tooltip-id='profile'
+                            data-tooltip-content={`${loading ? 'Cargando...' : isProfilePage ? 'Tu perfil' : 'Ir a tu perfil'}`}
+                            style={{ WebkitAppRegion: 'no-drag' }}
+                            onClick={() => {
+                                if (!loading && !isProfilePage) {
+                                    // Si no estamos en la página de perfil, navegamos a ella
+                                    navigate('/dashboard/profile');
+                                }
+                            }}
+                        >
+                            {
+                                loading ? <ImSpinner9 className='animate-spin text-xl' />
+                                :
+                                <div
+                                    className={`flex items-center justify-center w-7 h-7 p-0 rounded-full overflow-hidden border-2
+                                        ${isDark ? 'border-gray-600' : 'border-gray-300'} transition-all duration-300`}
+                                    style={{ WebkitAppRegion: 'no-drag' }}>
+                                    {/* Avatar del usuario con fondo y texto según el tema */}
+                                    <Avatar
+                                        src={user?.avatar?.url || ''}
+                                        name={user?.name || "N/A"}
+                                        round={true}
+                                        size="30"
+                                        maxInitials={2}
+                                        color={isDark ? '#2D3748' : '#F7FAFC'} // Fondo más oscuro en tema oscuro, más claro en tema claro
+                                        fgColor={isDark ? '#fff' : '#2D3748'} // Texto blanco en tema oscuro, texto oscuro en tema claro
+                                        className={`transition-all duration-300 font-bold text-lg`}
+                                        style={{
+                                            padding: 0,
+                                        }}
+                                    />
+                                </div>
+                            }
+                            <span
+                                className='text-sm font-semibold'
+                            >
+                                {loading ? 'Cargando...' : user?.name || 'Invitado'}
+                            </span>
                         </div>
-                    }
-                    <span
-                        className='text-sm font-semibold'
-                    >
-                        {loading ? 'Cargando...' : user?.name || 'Invitado'}
-                    </span>
-                </div>
+                    )
+                }
                 <div className='flex space-x-2 h-full items-center' style={{ WebkitAppRegion: 'no-drag' }}>
                     <button
                         id='options'

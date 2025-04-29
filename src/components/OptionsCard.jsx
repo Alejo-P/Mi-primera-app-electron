@@ -14,7 +14,7 @@ import { useAuth } from '../contexts/AuthProvider';
 import { useApp } from '../contexts/AppProvider'
 
 const OptionsCard = () => {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const {
         tema,
         handleTheme,
@@ -88,22 +88,28 @@ const OptionsCard = () => {
                             ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                         `}
                     /> */}
-                    <button
-                        className={`p-2 rounded-lg transition-all duration-300 hover:bg-red-400
-                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'} 
-                            hover:scale-95 shadow-lg hover:shadow-xl`}
-                        title="Cerrar sesión"
-                        data-tooltip-id="logoutLabel"
-                        data-tooltip-content="Cerrar la sesión actual"
-                        onClick={handleLogout}
-                    >
-                        <IoLogOut className="text-2xl"/>
-                    </button>
-                    <ReactTooltip id="logoutLabel" place="top" effect="solid"
-                        className={`p-2 rounded-lg shadow-lg
-                            ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
-                        `}  
-                    />
+                    {
+                        user && (
+                            <>
+                                <button
+                                    className={`p-2 rounded-lg transition-all duration-300 hover:bg-red-400
+                                        ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'} 
+                                        hover:scale-95 shadow-lg hover:shadow-xl`}
+                                    title="Cerrar sesión"
+                                    data-tooltip-id="logoutLabel"
+                                    data-tooltip-content="Cerrar la sesión actual"
+                                    onClick={handleLogout}
+                                >
+                                    <IoLogOut className="text-2xl"/>
+                                </button>
+                                <ReactTooltip id="logoutLabel" place="top" effect="solid"
+                                    className={`p-2 rounded-lg shadow-lg
+                                        ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
+                                    `}  
+                                />
+                            </>
+                        )
+                    }
                 </motion.div>
             )}
         </AnimatePresence>

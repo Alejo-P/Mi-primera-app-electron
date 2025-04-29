@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Tooltip as ReactToolTip } from 'react-tooltip';
 import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
+import { ImSpinner9 } from "react-icons/im";
 
 // Importamos las constantes
 import { THEMES } from '../constants/temas';
@@ -15,7 +16,7 @@ import CustomInput from '../components/CustomInput';
 
 const CreateQRModal = ({ handleModal }) => {
     const { tema, setNavActionsItems } = useApp();
-    const { createQR } = useQR();
+    const { createQR, loadingQRs } = useQR();
     const isDark = tema === THEMES.DARK;
 
     const [QRForm, setQRForm] = useState({
@@ -69,16 +70,16 @@ const CreateQRModal = ({ handleModal }) => {
                         type="submit"
                         form="createQRForm"
                         className={`p-2 rounded-lg transition-all duration-300
-                            ${!QRForm.QRtext.trim() ? 'cursor-not-allowed bg-gray-300 text-gray-500'
+                            ${(!QRForm.QRtext.trim() || loadingQRs)? 'cursor-not-allowed bg-gray-300 text-gray-500'
                                 : isDark ? 'bg-green-600 text-white'
                                 : 'bg-green-400 text-gray-900 hover:bg-gray-400'
                             }
                             hover:scale-95 shadow-lg hover:shadow-xl`}
                         data-tooltip-id='createQRLabel'
                         data-tooltip-content={`${QRForm.QRtext.trim() ? 'Crear QR' : 'El campo de texto es obligatorio para crear un QR'}`}
-                        disabled={!QRForm.QRtext.trim()}
+                        disabled={!QRForm.QRtext.trim() || loadingQRs} // Deshabilitar el botón si no hay texto o si está cargando
                     >
-                        <FaCheck className='text-2xl' />
+                        {loadingQRs ? <ImSpinner9 className='animate-spin text-2xl' /> : <FaCheck className='text-2xl' />}
                     </button>
                 )
             },
@@ -102,7 +103,7 @@ const CreateQRModal = ({ handleModal }) => {
         return () => {
             setNavActionsItems([]);
         };
-    }, [QRForm, isDark]);
+    }, [QRForm, isDark, loadingQRs]); // Se ejecuta cuando cambia el estado del formulario o el tema
 
     return (
         <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
