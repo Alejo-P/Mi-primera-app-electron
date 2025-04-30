@@ -15,7 +15,7 @@ import RolesField from '../components/RolesField';
 import UploadAvatarModal from '../modals/UploadAvatarModal';
 
 const ProfilePage = () => {
-    const { user, removeRole, updateProfile } = useAuth();
+    const { user, removeRole, updateProfile, updatePassword } = useAuth();
     const { tema, handleNotificacion, setNavActionsItems } = useApp();
     const isDark = tema === THEMES.DARK;
 
@@ -55,16 +55,23 @@ const ProfilePage = () => {
         }
     };
 
-    const handleSaveProfile = async () => {
+    const handleSaveProfile = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
         await updateProfile(profileInfo);
+        setIsLoading(false);
     };
 
-    const handleSavePassword = async () => {
+    const handleSavePassword = async (e) => {
+        e.preventDefault();
         setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            handleNotificacion('success', 'Contraseña actualizada correctamente', 5000);    
-        }, 2000);
+        const data = {
+            current_password: passwordForm.password,
+            new_password: passwordForm.newPassword,
+            confirm_password: passwordForm.confirmPassword
+        };
+        await updatePassword(data);
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -97,6 +104,16 @@ const ProfilePage = () => {
             setDisabledPasswordButton(true);
         } else if (newPassword !== confirmPassword) {
             setPasswordError('Las contraseñas no coinciden');
+            setDisabledPasswordButton(true);
+        } else if (newPassword === password) {
+            setPasswordError('La nueva contraseña no puede ser igual a la actual');
+            setDisabledPasswordButton(true);
+        }
+        else if (newPassword.length > 20 || password.length > 20) {
+            setPasswordError('La contraseña no puede tener más de 20 caracteres');
+            setDisabledPasswordButton(true);
+        } else if (newPassword.length < 8 || password.length < 8) {
+            setPasswordError('La contraseña debe tener al menos 8 caracteres');
             setDisabledPasswordButton(true);
         } else {
             setPasswordError('');
@@ -165,7 +182,7 @@ const ProfilePage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Formulario de Información */}
-                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col gap-4" onSubmit={handleSaveProfile} autoComplete='off'>
                     {[{ placeholder: "Tu nombre de usuario", name: "name", disabled: false, type: "username" },
                       { placeholder: "Tu correo electronico", name: "email", disabled: false, type: "email" },
                       { placeholder: "Tus roles", name: "roles", disabled: true, type: "security" }].map((field) => {
@@ -202,7 +219,6 @@ const ProfilePage = () => {
                                 : 'bg-blue-600 hover:bg-blue-700'
                             }
                         `}
-                        onClick={handleSaveProfile}
                         disabled={disabledProfileButton || isLoading}
                         title={isLoading ? "Actualizando..." : "Guardar cambios"}
                     >
@@ -212,7 +228,7 @@ const ProfilePage = () => {
                 </form>
 
                 {/* Formulario de Contraseña */}
-                <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col gap-4" onSubmit={handleSavePassword} autoComplete='off'>
                     {[
                         { placeholder: "Ingresa tu contraseña actual", name: "password", disabled: false, type: "password" },
                         { placeholder: "Ingresa la nueva contraseña", name: "newPassword", disabled: false, type: "password" },
@@ -239,7 +255,6 @@ const ProfilePage = () => {
                                 : 'bg-blue-600 hover:bg-blue-700'
                             }
                         `}
-                        onClick={handleSavePassword}
                         disabled={disabledPasswordButton || isLoading}
                         title={isLoading ? "Actualizando..." : "Cambiar contraseña"}
                     >

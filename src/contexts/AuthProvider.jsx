@@ -92,6 +92,24 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
+    const updatePassword = async (data) => {
+        setLoading(true);
+        const response = await request({
+            method: 'put',
+            url: '/profile/update_password',
+            payload: data,
+            notify: {
+                success: false,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', response.msg, 5000);
+        }
+        setLoading(false);
+    };
+
     const uploadAvatar = async (formData) => {
         setLoading(true);
         const response = await request({
@@ -189,6 +207,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         profile,
         updateProfile,
+        updatePassword,
         uploadAvatar,
         refreshToken,
         addRole,

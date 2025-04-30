@@ -30,8 +30,6 @@ axiosInstance.interceptors.response.use(
     response => response,
     async error => {
         const originalRequest = error.config;
-        console.log('axiosInstance.js: error', error); // Log the error response
-        console.log('axiosInstance.js: originalRequest', originalRequest); // Log the original request
         // Copiar los errores en el portapapeles
         navigator.clipboard.writeText(JSON.stringify(error.response?.data, null, 2)).then(() => {
             console.log('Error copiado al portapapeles');
@@ -40,7 +38,7 @@ axiosInstance.interceptors.response.use(
         });
 
         // Si ya intentamos refrescar, no lo volvemos a hacer
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if ((error.response?.detail === "Token faltante" || error.response?.detail === "Token inválido o expirado") && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const csrf_refresh_token = Cookies.get('csrf_refresh_token');
@@ -60,7 +58,7 @@ axiosInstance.interceptors.response.use(
                 // Aquí puedes limpiar las cookies si es necesario
                 Cookies.remove('csrf_access_token');
                 Cookies.remove('csrf_refresh_token');
-                window.location.href = '/login'; // o usar navigate si estás dentro de React
+                window.location.href = '/'; // o usar navigate si estás dentro de React
                 return Promise.reject(refreshError);
             }
         }

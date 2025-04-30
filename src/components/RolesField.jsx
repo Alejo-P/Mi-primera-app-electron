@@ -13,7 +13,7 @@ const RolesField = ({ field, profileInfo, isDark, user, onDeleteRole }) => {
 
     return (
         <div className="flex flex-col">
-            <label htmlFor={field.name} className="font-bold title flex justify-between items-center mb-1">
+            <label htmlFor={field.name} className="font-bold title flex justify-between items-center">
                 {field.placeholder}:
             </label>
 
@@ -25,8 +25,11 @@ const RolesField = ({ field, profileInfo, isDark, user, onDeleteRole }) => {
 
                 {/* Contenedor visual */}
                 <div
-                    className={`border border-gray-300 pl-10 pr-3 py-2 flex flex-wrap gap-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'
-                        }`}
+                    className={`border border-gray-300 pl-10 pr-2 py-2 flex flex-wrap gap-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+                        ${isDark ? 'bg-gray-700 text-white'
+                            : 'bg-gray-300 text-gray-900'
+                        }
+                    transition-all duration-300`}
                 >
                     {Array.isArray(roles) && roles.length > 0 ? (
                         roles.map((role, index) => (
