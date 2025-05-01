@@ -36,7 +36,7 @@ const NavActions = () => {
                         damping: 15,
                         duration: 0.4 // <- más tiempo para que no sea tan brusco
                     }}
-                    className={`fixed bottom-6 right-6 flex flex-col gap-3 p-3 rounded-lg 
+                    className={`fixed bottom-6 right-6 flex flex-col gap-3 p-3 rounded-lg z-100
                         shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300 border
                         ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'}
                     `}

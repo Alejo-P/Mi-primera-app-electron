@@ -4,10 +4,11 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
 import { FaQrcode } from 'react-icons/fa6';
-import { FaRegFileAlt, FaUser, FaBars } from "react-icons/fa";
+import { FaRegFileAlt, FaUser, FaBars, FaUsersCog } from "react-icons/fa";
 
 // Importamos las constantes
 import { THEMES } from '../constants/temas';
+import { ROLES } from '../constants/roles';
 
 // Importamos los contextos
 import { useAuth } from '../contexts/AuthProvider';
@@ -21,11 +22,42 @@ import NavActions from '../components/NavActions';
 import TitleBar from '../components/TitleBar';
 
 const Dashboard = () => {
-    const { profile } = useAuth();
+    const { profile, user } = useAuth();
     const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
     const isDark = tema === THEMES.DARK;
     const csrf_access_token = Cookies.get('csrf_access_token');
+
+    const filterButtons = (userRoles, buttonRoles) => {
+        return buttonRoles.some(rol => userRoles.includes(rol));
+    };
+
+    const buttons = [
+        { path: "/dashboard/", icon: <HiHome className="text-3xl" />, tooltip: "Inicio", accessBy: [ROLES.USER, ROLES.ADMIN] },
+        { path: "/dashboard/qr", icon: <FaQrcode className="text-3xl" />, tooltip: "QRs generados", accessBy: [ROLES.USER, ROLES.ADMIN] },
+        { path: "/dashboard/files", icon: <FaRegFileAlt className="text-3xl" />, tooltip: "Archivos cargados", accessBy: [ROLES.USER, ROLES.ADMIN] },
+        { path: "/dashboard/profile", icon: <FaUser className="text-3xl" />, tooltip: "Perfil de usuario", accessBy: [ROLES.USER, ROLES.ADMIN] },
+        { path: "/dashboard/admin/users", icon: <FaUsersCog className="text-3xl" />, tooltip: "Administrar usuarios", accessBy: [ROLES.ADMIN] },
+    ];
+
+    // Filtrar botones según los roles del usuario
+    const userRoles = user?.roles ?? [];
+    const filteredItems = buttons.filter(item => filterButtons(userRoles, item.accessBy));
+
+    // Agrupar los botones por rol (USER y ADMIN), manteniendo el orden
+    const groupedItems = {
+        [ROLES.USER]: [],
+        [ROLES.ADMIN]: []
+    };
+
+    filteredItems.forEach(item => {
+        // Si el botón es accesible por admin, lo mandamos ahí. Si no, va a user
+        if (item.accessBy.includes(ROLES.USER)) {
+            groupedItems[ROLES.USER].push(item);
+        } else {
+            groupedItems[ROLES.ADMIN].push(item);
+        }
+    });
 
     useEffect(() => {
         setCurrentPath(pathname);
@@ -41,11 +73,15 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <div className={`grid grid-cols-[20%_80%] grid-rows-[40px_50px_1fr] h-screen transition-all duration-300 min-w-[525px]
-            ${isDark ? 'bg-gray-900 text-white' : 'bg-slate-200 text-gray-900'}`}
+        <div className={`grid grid-cols-[20%_80%] grid-rows-[40px_50px_1fr] h-screen transition-all duration-300 min-w-[525px] scrollbar-track-transparent
+            ${isDark ? 'bg-gray-900 text-white scrollbar-thumb-gray-300'
+                : 'bg-slate-200 text-gray-900 scrollbar-thumb-gray-700'
+
+            }
+        `}
         >
             {/* 🟢 Barra de título personalizada */}
-            <div className={`w-full col-span-full h-10 bg-opacity-90
+            <div className={`w-full col-span-full h-10 bg-opacity-90 z-60
                 ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900 shadow-md'} transition-all duration-300
             `}>
                 <TitleBar />
@@ -59,6 +95,7 @@ const Dashboard = () => {
                         pathname === '/dashboard/files' ? "Lista de archivos" :
                         pathname === '/dashboard/qr' ? "Lista de códigos QR" :
                         pathname === '/dashboard/profile' ? "Perfil de usuario" : 
+                        pathname === '/dashboard/admin/users' ? "Administrar usuarios" :
                         "Inicio"
                     }
                     isDark={isDark}
@@ -66,41 +103,46 @@ const Dashboard = () => {
             </div>
 
             {/* 🟡 Sidebar de navegación (Viejo Sidebar) */}
-            <div className={`flex flex-col m-2 w-full justify-evenly gap-2 p-2 rounded-lg border
+            <div className={`flex flex-col m-2 w-full justify-evenly gap-2 p-2 rounded-lg border overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar
                 ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300 shadow-md'} transition-all duration-300`}
             >
-                <NavButton
-                    to="/dashboard/" 
-                    active={pathname === "/dashboard/"} 
-                    icon={<HiHome className="text-3xl" />} 
-                    tooltip="Inicio" 
-                    isDark={isDark}
-                />
-                <NavButton
-                    to="/dashboard/qr" 
-                    active={pathname === "/dashboard/qr"} 
-                    icon={<FaQrcode className="text-3xl" />} 
-                    tooltip="QRs generados" 
-                    isDark={isDark}
-                />
-                <NavButton
-                    to="/dashboard/files" 
-                    active={pathname === "/dashboard/files"} 
-                    icon={<FaRegFileAlt className="text-3xl" />} 
-                    tooltip="Archivos cargados" 
-                    isDark={isDark}
-                />
-                <NavButton
-                    to="/dashboard/profile" 
-                    active={pathname === "/dashboard/profile"} 
-                    icon={<FaUser className="text-3xl" />} 
-                    tooltip="Perfil de usuario" 
-                    isDark={isDark}
-                />
+                {
+                    // Agrupamos los botones por rol (USER y ADMIN), manteniendo el orden
+                    Object.entries(groupedItems).map(([role, items]) => {
+                        if (items.length === 0) return null;
+                        return (
+                            <React.Fragment key={role}>
+                                {/* 🔴 Separador de botones (Mostrar solo a los administradores) */}
+                                {
+                                    user?.roles.includes(ROLES.ADMIN) && (
+                                        <div className="relative my-2 flex items-center justify-center">
+                                            <hr className="absolute w-full h-[1px] bg-gray-400 dark:bg-gray-600" />
+                                            <span className={`relative z-10 px-2 text-xs font-semibold uppercase tracking-wide rounded-full
+                                                ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-700'} shadow`}>
+                                                Acceso para {role === ROLES.ADMIN ? 'administradores' : 'usuarios'}
+                                            </span>
+                                        </div>
+                                    )
+                                }
+                                {items.map(item => (
+                                    <NavButton
+                                        key={item.path}
+                                        to={item.path}
+                                        active={pathname === item.path}
+                                        icon={item.icon}
+                                        tooltip={item.tooltip}
+                                        isDark={isDark}
+                                    />
+                                ))}
+                            </React.Fragment>
+                        );
+                    })
+                }   
             </div>
 
+
             {/* 🔴 Contenedor de Contenido */}
-            <div className={`flex flex-row m-4 border rounded-lg flex-1 shadow-lg overflow-y-auto
+            <div className={`flex flex-col m-4 p-3 border rounded-lg flex-1 shadow-lg overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar
                 ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} transition-all duration-300`}
             >
                 {notificacion && <Notification {...notificacion} />}

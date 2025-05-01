@@ -124,7 +124,9 @@ const ProfilePage = () => {
     }, [profileInfo, passwordForm]);
 
     useEffect(() => {
-        setNavActionsItems([]);
+        if (!showUploadAvatarModal) {
+            setNavActionsItems([]);
+        } 
     }, [showUploadAvatarModal]);
 
     return (

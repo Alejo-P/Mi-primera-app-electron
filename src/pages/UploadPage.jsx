@@ -67,8 +67,7 @@ const UploadPage = () => {
     }, []);
 
     return (
-        <div className={`overflow-x-auto shadow-lg p-3 sm:rounded-lg w-full transition-all duration-300 
-            ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+        <>
             <h2 className="text-2xl text-center font-bold">Selecciona un archivo para subir</h2>
 
             <form className="flex flex-col md:flex-row items-center justify-center w-full p-4" encType="multipart/form-data" onSubmit={handleSubmit}>
@@ -119,7 +118,7 @@ const UploadPage = () => {
                 <small>Máximo tamaño permitido: <span>{convertUnit(maxSize)}</span></small> <br/>
                 <small>Las extensiones de archivos permitidas son <span>{extensiones.join(', ')}</span></small>
             </p>
-        </div>
+        </>
     );
 };
 

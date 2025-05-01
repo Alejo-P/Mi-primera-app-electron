@@ -22,7 +22,7 @@ const Mainboard = () => {
             ${isDark ? 'bg-gray-900 text-white' : 'bg-slate-200 text-gray-900'}`}
         >
             {/* 🟢 Barra de título personalizada */}
-            <div className={`w-full col-span-full h-10 bg-opacity-90
+            <div className={`w-full col-span-full h-10 bg-opacity-90 z-60
                 ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900 shadow-md'} transition-all duration-300
             `}>
                 <TitleBar />

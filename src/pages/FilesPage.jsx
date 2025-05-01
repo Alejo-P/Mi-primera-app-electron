@@ -107,10 +107,9 @@ const FilesPage = () => {
             }
         ];
     
-        if (!showModal) {
+        if (!showModal && !showFileInfo) {
+            // Solo muestra las acciones si no hay modales abiertos
             setNavActionsItems(acciones);
-        } else {
-            setNavActionsItems([]); // Oculta si está el modal abierto
         }
     }, [showModal, showFileInfo, isDark]); // Se actualiza cuando cambia el tema o el modal    
 
@@ -122,52 +121,48 @@ const FilesPage = () => {
 
     return (
         <>
-            <div className={`overflow-x-auto shadow-lg p-3 sm:rounded-lg w-full
-                ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} transition-all duration-300
-            `}>
-                <h2 className="text-2xl text-center font-bold">
-                    Archivos subidos
-                </h2>
-                {
-                    loadingFiles ? (
-                        <LoadingCard />
-                    ) : fileList.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                            {
-                                fileList.map((file, index) => (
-                                    <FileCard
-                                        key={index}
-                                        file={file}
-                                        showModal={handleModal}
-                                        showFileInfo={handleFileInfoModal}
-                                    />
-                                ))
-                            }
-                        </div>
-                    ) : (
-                        <div className={`grid items-center justify-center flex-1 text-gray-400 transition-all duration-300`}>
-                            <p className="text-center font-bold italic">No hay archivos subidos</p>
-                        </div>
-                    )
-                }
-                {
-                    (fileList.length > 0 && !loadingFiles) && (
-                        <div className="flex justify-center">
-                            <button
-                                className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-                                title="Eliminar todos"
-                                onClick={handleDeleteAll}
-                                data-tooltip-id="deleteAllLabel"
-                                data-tooltip-content="Eliminar todos los archivos"
-                            >
-                                <MdDeleteSweep className="text-2xl" />
-                                <p className="font-bold">Eliminar todos</p>
-                            </button>
-                            <ReactTooltip id="deleteAllLabel" place="top" effect="solid" />
-                        </div>
-                    )
-                }
-            </div>
+            <h2 className="text-2xl text-center font-bold">
+                Archivos subidos
+            </h2>
+            {
+                loadingFiles ? (
+                    <LoadingCard />
+                ) : fileList.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                        {
+                            fileList.map((file, index) => (
+                                <FileCard
+                                    key={index}
+                                    file={file}
+                                    showModal={handleModal}
+                                    showFileInfo={handleFileInfoModal}
+                                />
+                            ))
+                        }
+                    </div>
+                ) : (
+                    <div className={`grid items-center justify-center flex-1 text-gray-400 transition-all duration-300`}>
+                        <p className="text-center font-bold italic">No hay archivos subidos</p>
+                    </div>
+                )
+            }
+            {
+                (fileList.length > 0 && !loadingFiles) && (
+                    <div className="flex justify-center">
+                        <button
+                            className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+                            title="Eliminar todos"
+                            onClick={handleDeleteAll}
+                            data-tooltip-id="deleteAllLabel"
+                            data-tooltip-content="Eliminar todos los archivos"
+                        >
+                            <MdDeleteSweep className="text-2xl" />
+                            <p className="font-bold">Eliminar todos</p>
+                        </button>
+                        <ReactTooltip id="deleteAllLabel" place="top" effect="solid" />
+                    </div>
+                )
+            }
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} handleModal={handleModal} />
             }

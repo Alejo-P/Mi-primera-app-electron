@@ -27,8 +27,7 @@ const LogModal = () => {
     }, [showLogsModal]);
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
-            
+        <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn z-40">
             <NavActions>
                 <button
                     className={`p-2 rounded-lg transition-all duration-300

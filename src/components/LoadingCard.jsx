@@ -12,7 +12,7 @@ const LoadingCard = () => {
     const isDark = tema === THEMES.DARK; // Verificamos si el tema es oscuro
 
     return (
-        <div className={`fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn`}>
+        <div className={`fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn z-40`}>
             {/* Contenedor de la tarjeta de carga */}
             <div className={`rounded-lg shadow-lg p-6 flex flex-col items-center justify-center space-y-4
                 ${isDark ? 'text-white bg-gray-800' : 'text-gray-900 bg-white'}

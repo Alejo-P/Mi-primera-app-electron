@@ -17,10 +17,12 @@ import FilesPage from './pages/FilesPage'
 import NotFound from './pages/NotFound'
 import ProfilePage from './pages/ProfilePage'
 import LandingPage from './pages/LandingPage'
+import AdminUsersPage from './pages/AdminUsersPage';
 
 // Rutas para la autenticación
 import Auth from './layouts/Auth'
 import PrivateRoute from './routes/PrivateRoute';
+import PrivateAdminRoutes from './routes/PrivateAdminRoutes';
 
 function App() {
   return (
@@ -44,6 +46,13 @@ function App() {
                       <Route path="qr" element={<QRPage />} />
                       <Route path="files" element={<FilesPage />} />
                       <Route path="profile" element={<ProfilePage />} />
+
+                      {/* Rutas para los administradores */}
+                      <Route path='admin' element={<PrivateAdminRoutes />}>
+                        <Route path="users" element={<AdminUsersPage />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Route>
+                      
                       <Route path="*" element={<NotFound />} />
                     </Route>
                   </Route>

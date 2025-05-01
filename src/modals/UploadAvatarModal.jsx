@@ -125,7 +125,7 @@ const UploadAvatarModal = ({ handleModal }) => {
     }, [avatar, isDark, loading]); // Se ejecuta cuando cambia el estado del avatar o el tema
 
     return (
-        <div className={`fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn`}>
+        <div className={`fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn z-40`}>
             <div className={`p-6 rounded-lg shadow-lg w-3/5 min-w-[525px] max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl
                 ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                 relative flex flex-col items-center max-h-screen overflow-auto`
@@ -145,7 +145,7 @@ const UploadAvatarModal = ({ handleModal }) => {
                     />
                 </form>
                 <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
-                    Selecciona una imagen para tu avatar
+                    Selecciona una imagen para tu avatar (la imagen debe ser cuadrada)
                 </p>
                 <div className="mt-4 w-full flex justify-center items-center">
                     {preview ? (
@@ -155,7 +155,7 @@ const UploadAvatarModal = ({ handleModal }) => {
                             className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
                         />
                     ) : (
-                        <p className="text-gray-500 font-semibold">Vista previa del avatar</p>
+                        <p className="text-gray-500 font-semibold">Selecciona una imagen para obtener una vista previa del avatar</p>
                     )}
                 </div>
             </div>
