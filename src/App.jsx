@@ -5,6 +5,7 @@ import './App.css'
 // Importamos el contexto
 import { AppProvider } from './contexts/AppProvider'
 import { AuthProvider } from './contexts/AuthProvider'
+import { AdminProvider } from './contexts/AdminProvider'
 import { QRProvider } from './contexts/QRProvider'
 import { FilesProvider } from './contexts/FilesProvider'
 
@@ -30,35 +31,37 @@ function App() {
       <AppProvider>
         <AuthProvider>
           <ConfigProvider>
-            <QRProvider>
-              <FilesProvider>
-                <Routes>
-                  {/* Rutas públicas */}
-                  <Route path="/" element={<Mainboard />} >
-                    <Route index element={<LandingPage />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Route>
-
-                  {/* Rutas protegidas */}
-                  <Route path="/dashboard" element={<PrivateRoute />}>
-                    <Route element={<Dashboard />}>
-                      <Route index element={<UploadPage />} />
-                      <Route path="qr" element={<QRPage />} />
-                      <Route path="files" element={<FilesPage />} />
-                      <Route path="profile" element={<ProfilePage />} />
-
-                      {/* Rutas para los administradores */}
-                      <Route path='admin' element={<PrivateAdminRoutes />}>
-                        <Route path="users" element={<AdminUsersPage />} />
-                        <Route path="*" element={<NotFound />} />
-                      </Route>
-                      
+            <AdminProvider>
+              <QRProvider>
+                <FilesProvider>
+                  <Routes>
+                    {/* Rutas públicas */}
+                    <Route path="/" element={<Mainboard />} >
+                      <Route index element={<LandingPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Route>
-                  </Route>
-                </Routes>
-              </FilesProvider>
-            </QRProvider>
+
+                    {/* Rutas protegidas */}
+                    <Route path="/dashboard" element={<PrivateRoute />}>
+                      <Route element={<Dashboard />}>
+                        <Route index element={<UploadPage />} />
+                        <Route path="qr" element={<QRPage />} />
+                        <Route path="files" element={<FilesPage />} />
+                        <Route path="profile" element={<ProfilePage />} />
+
+                        {/* Rutas para los administradores */}
+                        <Route path='admin' element={<PrivateAdminRoutes />}>
+                          <Route path="users" element={<AdminUsersPage />} />
+                          <Route path="*" element={<NotFound />} />
+                        </Route>
+                        
+                        <Route path="*" element={<NotFound />} />
+                      </Route>
+                    </Route>
+                  </Routes>
+                </FilesProvider>
+              </QRProvider>
+            </AdminProvider>
           </ConfigProvider>
         </AuthProvider>
       </AppProvider>

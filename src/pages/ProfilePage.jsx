@@ -13,10 +13,11 @@ import { THEMES } from '../constants/temas';
 import CustomInput from '../components/CustomInput';
 import RolesField from '../components/RolesField';
 import UploadAvatarModal from '../modals/UploadAvatarModal';
+import UserAvatar from '../components/UserAvatar';
 
 const ProfilePage = () => {
-    const { user, removeRole, updateProfile, updatePassword } = useAuth();
-    const { tema, handleNotificacion, setNavActionsItems } = useApp();
+    const { user, updateProfile, updatePassword } = useAuth();
+    const { tema, setNavActionsItems } = useApp();
     const isDark = tema === THEMES.DARK;
 
     const initialProfileInfo = {
@@ -42,17 +43,6 @@ const ProfilePage = () => {
 
     const handleAvatarModal = () => {
         setShowUploadAvatarModal(!showUploadAvatarModal);
-    };
-
-    const handleDeleteRole = async (role, userId) => {
-        console.log(role, userId);
-        if (user?.roles?.includes("Administrador") && user?.roles?.length > 1) {
-            setIsLoading(true);
-            await removeRole(role, userId);
-            setIsLoading(false);
-        } else {
-            handleNotificacion('error', 'No puedes eliminar tu rol de Administrador', 5000);
-        }
     };
 
     const handleSaveProfile = async (e) => {
@@ -134,52 +124,13 @@ const ProfilePage = () => {
             <h2 className="text-2xl text-center font-bold mb-6">Info del perfil</h2>
 
             <div className="flex items-center justify-center mb-4">
-                <div
-                    className={`
-                        p-2 rounded-full border-2 flex items-center justify-center relative group
-                        ${isDark ? 'bg-gray-800' : 'bg-gray-100'}
-                        hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer
-                        ${isDark 
-                            ? 'border-gray-600 shadow-md shadow-black/40' 
-                            : 'border-gray-300 shadow-md shadow-gray-400/50'
-                        }
-                        ${isLoading ? 'animate-pulse cursor-not-allowed' : ''}
-                    `}
-                    data-tooltip-id="profile"
-                    data-tooltip-content={`${isLoading ? 'Cargando...' : `Perfil de ${user?.name || "N/A"}`}`}
+                {/* Avatar del usuario */}
+                <UserAvatar
+                    user={user}
+                    isDark={isDark}
                     onClick={handleAvatarModal}
-                >
-                    <Avatar
-                        src={user?.avatar?.url || ''}
-                        name={user?.name || "N/A"}
-                        round={true}
-                        alt={`Perfil de ${user?.name || "N/A"}`}
-                        title={`Perfil de ${user?.name || "N/A"}`}
-                        size="50"
-                        maxInitials={2}
-                        color={isDark ? '#2D3748' : '#F7FAFC'}
-                        fgColor={isDark ? '#fff' : '#2D3748'}
-                        className="font-bold text-lg transition-all duration-300"
-                        style={{ padding: 0 }}
-                    />
-
-                    <div className={`
-                        absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 flex items-center justify-center
-                        ${isDark 
-                            ? 'bg-gray-700 border-gray-500 shadow-md shadow-black/30 text-white' 
-                            : 'bg-white border-gray-300 shadow-md shadow-gray-400/30 text-gray-700'
-                        }
-                        transition-all duration-300 ease-in-out
-                        ring-1 ring-offset-1 ${isDark ? 'ring-white/20' : 'ring-black/10'}
-                        ${isLoading ? 'animate-pulse cursor-not-allowed' : ''}
-                    `}>
-                        <FaPen className={`
-                            text-[10px]
-                            transition-transform duration-300 ease-in-out
-                            group-hover:rotate-15
-                        `}/>
-                    </div>
-                </div>
+                    isLoading={isLoading}
+                />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -205,10 +156,8 @@ const ProfilePage = () => {
                                 <RolesField
                                     key={field.name}
                                     field={field}
-                                    profileInfo={profileInfo}
                                     isDark={isDark}
                                     user={user}
-                                    onDeleteRole={handleDeleteRole}
                                 />
                             );
                         }
@@ -265,7 +214,6 @@ const ProfilePage = () => {
                     </button>
                 </form>
             </div>
-            <ReactTooltip id="profile" place="top" effect="solid" />
             {showUploadAvatarModal && (
                 <UploadAvatarModal
                     handleModal={handleAvatarModal}

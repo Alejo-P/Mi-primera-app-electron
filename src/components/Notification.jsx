@@ -31,7 +31,7 @@ const Notification = ({ type = "success", content, onClose, duration = 3000 }) =
                     animate={{ y: 20, opacity: 1 }}
                     exit={{ y: -50, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 100 }}
-                    className={`fixed top-4 left-1/2 transform -translate-x-1/2 flex w-auto max-w-xs md:max-w-lg lg:max-w-2xl text-white rounded-lg shadow-lg ${bg} ${border}`}
+                    className={`fixed top-4 z-100 left-1/2 transform -translate-x-1/2 flex w-auto max-w-xs md:max-w-lg lg:max-w-2xl text-white rounded-lg shadow-lg ${bg} ${border}`}
                 >
                     <div className={`flex items-center justify-center px-4 ${iconBg} rounded-l-lg`}>
                         <span className="text-3xl">

@@ -2,21 +2,27 @@
 import { FiShield } from "react-icons/fi";
 import { IoMdCloseCircle } from "react-icons/io";
 
-const RolesField = ({ field, profileInfo, isDark, user, onDeleteRole }) => {
-    const roles = profileInfo[field.name] || [];
+const RolesField = ({ field, isDark, user, onDeleteRole }) => {
+    const roles = user?.roles || [];
 
     const handleDeleteRole = (role) => {
-        if (user?.roles?.includes("Administrador") && user?.roles?.length > 1) {
-            onDeleteRole(role, profileInfo.id);
+        if (user?.roles?.includes("Administrador") && user?.roles?.length > 1 && onDeleteRole) {
+            // Llama a la función onDeleteRole si está definida y el usuario tiene permisos
+            onDeleteRole(role, user.id);
         }
     }
 
     return (
         <div className="flex flex-col">
-            <label htmlFor={field.name} className="font-bold title flex justify-between items-center">
-                {field.placeholder}:
-            </label>
-
+            {/* Etiqueta del campo */}
+            {
+                field?.placeholder && (
+                    <label htmlFor={field.name} className="font-bold title flex justify-between items-center">
+                        {field.placeholder}:
+                    </label>
+                )
+            }
+            {/* Contenedor del campo de roles */}
             <div className="relative">
                 {/* Ícono a la izquierda */}
                 <div className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -42,7 +48,7 @@ const RolesField = ({ field, profileInfo, isDark, user, onDeleteRole }) => {
                                     {role}
                                 </span>
 
-                                {(user?.roles?.includes("Administrador") && user?.roles?.length > 1)&& (
+                                {(user?.roles?.includes("Administrador") && user?.roles?.length > 1 && onDeleteRole) && (
                                     <button
                                         type="button"
                                         className={`ml-1 transition-colors duration-200

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { IoClose } from "react-icons/io5";
 import { FaUpload } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
@@ -18,6 +18,7 @@ const UploadAvatarModal = ({ handleModal }) => {
     const { user, uploadAvatar, loading } = useAuth();
     const [avatar, setAvatar] = useState(null); // Estado para almacenar el archivo de imagen
     const [preview, setPreview] = useState(null); // Estado para almacenar la vista previa de la imagen
+    const fileInput = useRef(null); // Referencia al input de archivo
     const isDark = tema === THEMES.DARK;
 
     const handleClose = async () => {
@@ -40,6 +41,8 @@ const UploadAvatarModal = ({ handleModal }) => {
                     handleNotificacion('error', 'La imagen debe ser cuadrada', 5000);
                     setAvatar(null); // Restablece el estado del archivo si no es cuadrada
                     setPreview(null); // Restablece la vista previa si no es cuadrada
+                    fileInput.current.value = null; // Limpia el input de archivo
+                    return;
                 }
                 // Si la imagen es cuadrada, se establece la vista previa
                 else {
@@ -142,6 +145,8 @@ const UploadAvatarModal = ({ handleModal }) => {
                         Irequired
                         IonChange={handleFileChange}
                         Iaccept="image/*"
+                        Idisabled={loading} // Deshabilitar el input si está cargando
+                        Iref={fileInput} // Asignar la referencia al input de archivo
                     />
                 </form>
                 <p className="mt-2 w-full text-sm text-center text-gray-500 font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
