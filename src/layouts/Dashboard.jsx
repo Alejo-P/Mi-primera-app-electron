@@ -20,9 +20,10 @@ import Notification from '../components/Notification'
 import NavButton from '../components/NavButton';
 import NavActions from '../components/NavActions';
 import TitleBar from '../components/TitleBar';
+import NavButtonSqueleton from '../components/NavButtonSqueleton';
 
 const Dashboard = () => {
-    const { profile, user } = useAuth();
+    const { profile, user, loading } = useAuth();
     const { notificacion, tema, setCurrentPath } = useApp();
     const { pathname } = useLocation();
     const isDark = tema === THEMES.DARK;
@@ -107,39 +108,48 @@ const Dashboard = () => {
                 ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300 shadow-md'} transition-all duration-300`}
             >
                 {
-                    // Agrupamos los botones por rol (USER y ADMIN), manteniendo el orden
-                    Object.entries(groupedItems).map(([role, items]) => {
-                        if (items.length === 0) return null;
-                        return (
-                            <React.Fragment key={role}>
-                                {/* 🔴 Separador de botones (Mostrar solo a los administradores) */}
-                                {
-                                    user?.roles.includes(ROLES.ADMIN) && (
-                                        <div className="relative my-2 flex items-center justify-center">
-                                            <hr className="absolute w-full h-[1px] bg-gray-400 dark:bg-gray-600" />
-                                            <span className={`relative z-10 px-2 text-xs font-semibold uppercase tracking-wide rounded-full
-                                                ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-700'} shadow`}>
-                                                Acceso para {role === ROLES.ADMIN ? 'administradores' : 'usuarios'}
-                                            </span>
-                                        </div>
-                                    )
-                                }
-                                {items.map(item => (
-                                    <NavButton
-                                        key={item.path}
-                                        to={item.path}
-                                        active={pathname === item.path}
-                                        icon={item.icon}
-                                        tooltip={item.tooltip}
-                                        isDark={isDark}
-                                    />
-                                ))}
-                            </React.Fragment>
-                        );
-                    })
-                }   
+                    // Si está cargando, mostramos un esqueleto de carga
+                    loading ? (
+                        // Mostramos varios esqueletos mientras carga
+                        <>
+                            {[...Array(4)].map((_, i) => (
+                                <NavButtonSqueleton key={i} isDark={isDark} />
+                            ))}
+                        </>
+                    ) : (
+                        // Agrupamos los botones por rol (USER y ADMIN), manteniendo el orden
+                        Object.entries(groupedItems).map(([role, items]) => {
+                            if (items.length === 0) return null;
+                            return (
+                                <React.Fragment key={role}>
+                                    {/* 🔴 Separador de botones (Mostrar solo a los administradores) */}
+                                    {
+                                        user?.roles.includes(ROLES.ADMIN) && (
+                                            <div className="relative my-2 flex items-center justify-center">
+                                                <hr className="absolute w-full h-[1px] bg-gray-400 dark:bg-gray-600" />
+                                                <span className={`relative z-10 px-2 text-xs font-semibold uppercase text-center tracking-wide rounded-full
+                                                    ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-700'} shadow`}>
+                                                    Acceso para {role === ROLES.ADMIN ? 'administradores' : 'usuarios'}
+                                                </span>
+                                            </div>
+                                        )
+                                    }
+                                    {items.map(item => (
+                                        <NavButton
+                                            key={item.path}
+                                            to={item.path}
+                                            active={pathname === item.path}
+                                            icon={item.icon}
+                                            tooltip={item.tooltip}
+                                            isDark={isDark}
+                                        />
+                                    ))}
+                                </React.Fragment>
+                            );
+                        })
+                    )  
+                }
             </div>
-
 
             {/* 🔴 Contenedor de Contenido */}
             <div className={`flex flex-col m-4 p-3 border rounded-lg flex-1 shadow-lg overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar

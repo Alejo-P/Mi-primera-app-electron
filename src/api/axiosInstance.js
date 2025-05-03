@@ -37,6 +37,12 @@ axiosInstance.interceptors.response.use(
             console.error('Error al copiar el error al portapapeles', err);
         });
 
+        if (error.response?.data?.detail === "Usuario inactivo"){
+            // Redirigir a la página de inicio o a la página de login
+            window.location.href = '/'; // o usar navigate si estás dentro de React
+            return Promise.reject(error);
+        }
+
         // Si ya intentamos refrescar, no lo volvemos a hacer
         if ((error.response?.detail === "Token faltante" || error.response?.detail === "Token inválido o expirado") && !originalRequest._retry) {
             originalRequest._retry = true;

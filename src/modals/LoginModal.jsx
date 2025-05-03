@@ -11,11 +11,10 @@ import { useApp } from '../contexts/AppProvider';
 import { useAuth } from '../contexts/AuthProvider';
 
 // Importamos los componentes
-import Notification from '../components/Notification';
 import CustomInput from '../components/CustomInput';
 
 const LoginModal = ({ handleModal }) => {
-    const { tema, notificacion, setNavActionsItems } = useApp();
+    const { tema, setNavActionsItems } = useApp();
     const isDark = tema === THEMES.DARK;
     const { login, loading } = useAuth();
     const [formData, setFormData] = useState({
@@ -87,7 +86,6 @@ const LoginModal = ({ handleModal }) => {
 
     return (
         <div className={`fixed inset-0 flex flex-col w-screen items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity animate-fadeIn z-40`}>
-            {notificacion && <Notification {...notificacion} />}
             <div className={`p-6 rounded-lg shadow-lg w-3/5 min-w-[525px] max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl
                 ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}
                 relative flex flex-col items-center max-h-screen overflow-auto`

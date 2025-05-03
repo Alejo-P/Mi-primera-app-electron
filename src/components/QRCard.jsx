@@ -8,11 +8,10 @@ import { useAuth } from '../contexts/AuthProvider';
 import { useQR } from '../contexts/QRProvider';
 import { useFiles } from '../contexts/FilesProvider';
 
-const QRCard = ({ QRInfo }) => {
+const QRCard = ({ QRInfo, isDark = false }) => {
     const { user } = useAuth();
     const { downloadQR , deleteQR } = useQR();
     const { setFileList } = useFiles();
-    const isDark = user?.theme === 'dark';
     
     const handleDownload = async () => {
         const confirm = window.confirm(`¿Descargar ${QRInfo.filename}?`);
@@ -37,7 +36,10 @@ const QRCard = ({ QRInfo }) => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg bg-gray-100">
+        <div className={`flex flex-col items-center justify-center p-4 border rounded-lg
+            shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300
+            ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'}
+        `}>
             <img 
                 alt='QR Code'
                 className='w-64 h-64 rounded-lg border border-gray-300'

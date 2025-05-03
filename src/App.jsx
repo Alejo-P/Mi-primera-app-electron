@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { ConfigProvider } from 'react-avatar';
 import './App.css'
+import './CustomStyles.css'
 
 // Importamos el contexto
 import { AppProvider } from './contexts/AppProvider'

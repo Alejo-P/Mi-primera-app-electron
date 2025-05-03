@@ -136,6 +136,7 @@ const FilesPage = () => {
                                     file={file}
                                     showModal={handleModal}
                                     showFileInfo={handleFileInfoModal}
+                                    isDark={isDark}
                                 />
                             ))
                         }

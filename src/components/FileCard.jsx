@@ -14,12 +14,10 @@ import { useFiles } from '../contexts/FilesProvider';
 import { useApp } from '../contexts/AppProvider';
 import { useQR } from '../contexts/QRProvider';
 
-const FileCard = ({ file, showModal, showFileInfo }) => {
-    const { user } = useAuth();
+const FileCard = ({ file, showModal, showFileInfo, isDark = false }) => {
     const { downloadFile, deleteFile, setFileList } = useFiles();
-    const { fileTypes, setSelectedFile, tema } = useApp();
+    const { fileTypes, setSelectedFile } = useApp();
     const { getQR, createQRFile, loadingQRs } = useQR();
-    const isDark = tema === THEMES.DARK;
 
     const handleFileInfoModal = () => {
         setSelectedFile(file);
@@ -62,7 +60,10 @@ const FileCard = ({ file, showModal, showFileInfo }) => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center p-4 border border-gray-300 rounded-lg bg-gray-100">
+        <div className={`flex flex-col items-center justify-center p-4 border rounded-lg
+            shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300
+            ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'}
+        `}>
             <div
                 className="w-full h-48 rounded-lg border border-gray-300 hover:scale-95 hover:bg-gray-400 transition-all duration-300 flex items-center justify-center"
                 style={{

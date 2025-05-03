@@ -34,6 +34,25 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
+    const register = async (data) => {
+        setLoading(true);
+        // Enviar la solicitud de registro
+        const response = await request({
+            method: 'post',
+            url: '/register',
+            payload: data,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', response.msg, 5000);
+        }
+        setLoading(false);
+    }
+
     const logout = async () => {
         const response = await request({
             method: 'post',
@@ -65,12 +84,15 @@ export const AuthProvider = ({ children }) => {
             }
         });
 
-        setLoading(false);
         if (response) {
             setUser(response);
         } else {
             await refreshToken();
         }
+
+        // Simular un retraso de 2 segundos para la carga   
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setLoading(false);
     };
 
     const updateProfile = async (data) => {
@@ -153,66 +175,18 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const addRole = async (role, user_id) => {
-        const response = await request({
-            method: 'post',
-            url: '/add_role',
-            payload: {
-                role_name: role,
-                user_id: user_id
-            },
-            notify: {
-                success: false,
-                error: true
-            }
-        });
-
-        if (response) {
-            handleNotificacion('success', 'Rol añadido correctamente', 5000);
-            const updatedUser = { ...user };
-            if (!updatedUser.roles) {
-                updatedUser.roles = [];
-            }
-            updatedUser.roles.push(role);
-            setUser(updatedUser);
-        }
-    }
-
-    const removeRole = async (role, user_id) => {
-        const response = await request({
-            method: 'delete',
-            url: '/remove_role',
-            payload: {
-                role_name: role,
-                user_id: user_id
-            },
-            notify: {
-                success: false,
-                error: true
-            }
-        });
-
-        if (response) {
-            handleNotificacion('success', 'Rol eliminado correctamente', 5000);
-            const updatedUser = { ...user };
-            updatedUser.roles = updatedUser.roles.filter(r => r !== role);
-            setUser(updatedUser);
-        }
-    }
-
     const contextValue = useMemo(() => ({
         user,
         loading,
         setUser,
         login,
+        register,
         logout,
         profile,
         updateProfile,
         updatePassword,
         uploadAvatar,
-        refreshToken,
-        addRole,
-        removeRole,
+        refreshToken
     }), [user, loading]);
 
     return (

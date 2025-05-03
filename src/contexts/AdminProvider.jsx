@@ -33,6 +33,74 @@ export const AdminProvider = ({ children }) => {
         setLoading(false);
     }
 
+    const getUserById = async (userId) => {
+        setLoading(true);
+        const response = await request({
+            method: 'get',
+            url: `/user/${userId}`,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            setUsersList((prev) => prev.map((user) => {
+                if (user.id === userId) {
+                    return { ...user, ...response };
+                }
+                return user;
+            }));
+        }
+        setLoading(false);
+    }
+
+    const enableUser = async (userId) => {
+        setLoading(true);
+        const response = await request({
+            method: 'post',
+            url: `/user/activate/${userId}`,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+    
+        if (response) {
+            setUsersList((prev) => prev.map((user) => {
+                if (user.id === userId){
+                    return { ...user, is_active: true };
+                }
+                return user;
+            }));
+            handleNotificacion('success', response.msg, 5000);
+        }
+        setLoading(false);  
+    }
+
+    const disableUser = async (userId) => {
+        setLoading(true);
+        const response = await request({
+            method: 'post',
+            url: `/user/deactivate/${userId}`,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            setUsersList((prev) => prev.map((user) => {
+                if (user.id === userId){
+                    return { ...user, is_active: false };
+                }
+                return user;
+            }));
+            handleNotificacion('success', response.msg, 5000);
+        }
+        setLoading(false);  
+    }
+
     const addRole = async (role, user_id) => {
         const response = await request({
             method: 'post',
@@ -84,6 +152,9 @@ export const AdminProvider = ({ children }) => {
         loading,
         usersList,
         getAllUsers,
+        getUserById,
+        enableUser,
+        disableUser,
         setLoading,
         addRole,
         removeRole

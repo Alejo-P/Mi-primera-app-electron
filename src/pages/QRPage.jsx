@@ -112,7 +112,7 @@ const QRPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                         {
                             qrList.map((qr, index) => (
-                                <QRCard key={index} QRInfo={qr} />
+                                <QRCard key={index} QRInfo={qr} isDark={isDark} />
                             ))
                         }
                     </div>
