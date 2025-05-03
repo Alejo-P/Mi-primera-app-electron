@@ -90,8 +90,6 @@ export const AuthProvider = ({ children }) => {
             await refreshToken();
         }
 
-        // Simular un retraso de 2 segundos para la carga   
-        await new Promise(resolve => setTimeout(resolve, 2000));
         setLoading(false);
     };
 
