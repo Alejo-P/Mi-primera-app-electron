@@ -49,15 +49,17 @@ const CreateQRModal = ({ handleModal }) => {
     
         const confirm = window.confirm(`¿Crear QR para "${QRForm.QRtext}"?`);
         if (confirm) {
-            await createQR(QRForm);
-            // Reiniciar el formulario después de crear el QR
-            setQRForm({
-                QRname: '',
-                QRtext: '',
-                QRicon: null
-            });
-            // Cerrar el modal después de crear el QR
-            handleModal();
+            const success = await createQR(QRForm);
+            if (success) {
+                // Reiniciar el formulario después de crear el QR
+                setQRForm({
+                    QRname: '',
+                    QRtext: '',
+                    QRicon: null
+                });
+                // Cerrar el modal después de crear el QR
+                handleModal();
+            }
         }
     };
 

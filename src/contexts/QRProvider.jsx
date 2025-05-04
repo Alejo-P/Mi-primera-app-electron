@@ -144,6 +144,9 @@ export const QRProvider = ({ children }) => {
             getQRs();
         }
         setLoadingQRs(false);
+
+        const status = response ? true : false;
+        return status;
     };
 
     // Crear un QR a partir de un archivo
@@ -242,6 +245,7 @@ export const QRProvider = ({ children }) => {
 
     const contextValue = useMemo(() => ({
         qrList,
+        setQRList,
         getQRs,
         getQR,
         deleteQR,

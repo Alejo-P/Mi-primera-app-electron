@@ -151,6 +151,7 @@ export const AdminProvider = ({ children }) => {
     const contextValue = useMemo(() => ({
         loading,
         usersList,
+        setUsersList,
         getAllUsers,
         getUserById,
         enableUser,

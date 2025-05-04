@@ -12,7 +12,10 @@ import { ROLES } from '../constants/roles';
 
 // Importamos los contextos
 import { useAuth } from '../contexts/AuthProvider';
-import { useApp } from '../contexts/AppProvider'
+import { useApp } from '../contexts/AppProvider';
+import { useFiles } from '../contexts/FilesProvider';
+import { useQR } from '../contexts/QRProvider';
+import { useAdmin } from '../contexts/AdminProvider';
 
 // Importamos los componentes
 import HeaderNav from '../components/HeaderNav'
@@ -25,6 +28,9 @@ import NavButtonSqueleton from '../components/NavButtonSqueleton';
 const Dashboard = () => {
     const { profile, user, loading } = useAuth();
     const { notificacion, tema, setCurrentPath } = useApp();
+    const { fileList, setFileList } = useFiles();
+    const { qrList, setQRList } = useQR();
+    const { usersList, setUsersList } = useAdmin();
     const { pathname } = useLocation();
     const isDark = tema === THEMES.DARK;
     const csrf_access_token = Cookies.get('csrf_access_token');
@@ -71,6 +77,12 @@ const Dashboard = () => {
         }
         
         if (csrf_access_token) loadProfile();
+        // Limpiar los datos de los contextos al desmontar el componente
+        return () => {
+            setFileList([]);
+            setQRList([]);
+            setUsersList([]);
+        };
     }, []);
 
     return (

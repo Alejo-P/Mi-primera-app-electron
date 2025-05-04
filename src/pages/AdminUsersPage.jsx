@@ -25,7 +25,7 @@ const AdminUsersPage = () => {
         { title: 'Avatar', key: 'avatar' },
         { title: 'Nombre', key: 'name' },
         { title: 'Roles', key: 'roles' },
-        { title: 'Email', key: 'email' },
+        { title: 'Estado', key: 'statistics' },
         { title: 'Acciones', key: 'actions' }
     ]);
     const navigate = useNavigate();
@@ -157,7 +157,7 @@ const AdminUsersPage = () => {
                                         ${index < (headerList.length - 1) ? 'border-r-2' : ''}
                                         ${element.key === 'name' ? 'hidden sm:block' : ''}
                                         ${element.key === 'roles' ? 'hidden lg:block' : ''}
-                                        ${element.key === 'email' ? 'hidden md:block' : ''}
+                                        ${element.key === 'statistics' ? 'hidden md:block' : ''}
                                         ${isDark ? 'text-gray-300' : 'text-gray-700'}
                                     `}
                                 >

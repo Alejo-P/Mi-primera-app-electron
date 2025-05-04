@@ -17,13 +17,6 @@ const UserBarCard = ({
     handleAddRole,
     handleRemoveRole
 }) => {
-    // const [ headerList ] = useState([
-    //         { title: 'Avatar', key: 'avatar' },
-    //         { title: 'Nombre', key: 'name' },
-    //         { title: 'Roles', key: 'roles' },
-    //         { title: 'Email', key: 'email' },
-    //         { title: 'Acciones', key: 'actions' }
-    //     ]);
     return (
         <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-evenly items-center pt-3 pb-3 mt-3 rounded-lg z-100
             shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300 border hover:scale-98 hover:shadow-xl
@@ -54,8 +47,42 @@ const UserBarCard = ({
                         case 'roles':
                             content = <p className="text-sm font-semibold text-center">{userInfo.roles.join(', ')}</p>;
                         break;
-                        case 'email':
-                            content = <p className="text-sm font-semibold text-center truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[10rem]">{userInfo.email}</p>;
+                        case 'statistics':
+                            content = (
+                                <>
+                                    <div className="flex flex-col gap-3 items-start justify-center">
+                                        <p className={`text-sm font-semibold text-center`}>
+                                            <span
+                                                className={`inline-block w-2 h-2 rounded-full mr-3 ${userInfo.is_active ? 'bg-green-600' : 'bg-red-600'}`}
+                                                data-tooltip-id="statusLabel"
+                                                data-tooltip-content={userInfo.is_active ? 'Usuario activo' : 'Usuario inactivo'}
+                                            ></span>
+                                            {userInfo.is_active ? 'Activo' : 'Inactivo'}
+                                        </p>
+
+                                        <p className={`text-sm font-semibold text-center`}>
+                                            <span
+                                                className={`inline-block w-2 h-2 rounded-full mr-3 ${userInfo.is_verified ? 'bg-green-600' : 'bg-red-600'}`}
+                                                data-tooltip-id="verifiedLabel"
+                                                data-tooltip-content={userInfo.is_verified ? 'Usuario verificado' : 'Usuario no verificado'}
+                                            ></span>
+                                            {userInfo.is_verified ? 'Verificado' : 'No verificado'}
+                                        </p>
+                                    </div>
+                                    <ReactTooltip
+                                        id="statusLabel"
+                                        place="top"
+                                        effect="solid"
+                                        className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                                    />
+                                    <ReactTooltip
+                                        id="verifiedLabel"
+                                        place="top"
+                                        effect="solid"
+                                        className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                                    />
+                                </>
+                            );
                         break;
                         case 'actions':
                             content = (
@@ -129,7 +156,7 @@ const UserBarCard = ({
                                 ${element.key === 'avatar' ? 'flex' : ''}
                                 ${element.key === 'name' ? 'hidden sm:flex' : ''}
                                 ${element.key === 'roles' ? 'hidden lg:flex' : ''}
-                                ${element.key === 'email' ? 'hidden md:flex' : ''}
+                                ${element.key === 'statistics' ? 'hidden md:flex' : ''}
                                 ${element.key === 'actions' ? 'flex' : ''}
                             `}
                         >
