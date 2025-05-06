@@ -3,10 +3,10 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { IoClose } from "react-icons/io5";
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
+import { useApp } from '@contexts/AppProvider';
 
 const ViewFilesModal = ({ fileInfo, handleModal }) => {
     const { fileTypes, tema, setNavActionsItems } = useApp();

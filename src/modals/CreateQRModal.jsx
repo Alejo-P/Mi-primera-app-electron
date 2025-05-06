@@ -5,14 +5,14 @@ import { FaCheck } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
-import { useQR } from '../contexts/QRProvider';
+import { useApp } from '@contexts/AppProvider';
+import { useQR } from '@contexts/QRProvider';
 
 // Importamos los componentes
-import CustomInput from '../components/CustomInput';
+import CustomInput from '@components/CustomInput';
 
 const CreateQRModal = ({ handleModal }) => {
     const { tema, setNavActionsItems } = useApp();

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useApp } from './AppProvider';
 import { useAuth } from './AuthProvider';
-import { useAxios } from '../hooks/useAxios';
+import { useAxios } from '@hooks/useAxios';
 
 const AdminContext = createContext();
 

@@ -3,10 +3,10 @@ import { Outlet, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 // Importamos el contexto
-import { useAuth } from '../contexts/AuthProvider'
+import { useAuth } from '@contexts/AuthProvider'
 
 // Importamos las constantes
-import { ROLES } from '../constants/roles'
+import { ROLES } from '@constants/roles'
 
 const PrivateAdminRoles = () => {
     const { user } = useAuth();

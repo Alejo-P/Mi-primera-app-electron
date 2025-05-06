@@ -2,16 +2,16 @@ import React from 'react'
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 
 // Importamos los contextos
-import { useApp } from '../contexts/AppProvider'
-import { useAuth } from '../contexts/AuthProvider'
+import { useApp } from '@contexts/AppProvider'
+import { useAuth } from '@contexts/AuthProvider'
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas'
+import { THEMES } from '@constants/temas'
 
 // Importamos los componentes
-import TitleBar from '../components/TitleBar'
-import Notification from '../components/Notification'
-import NavActions from '../components/NavActions';
+import TitleBar from '@components/TitleBar'
+import Notification from '@components/Notification'
+import NavActions from '@components/NavActions';
 
 const Mainboard = () => {
     const { tema, notificacion } = useApp();

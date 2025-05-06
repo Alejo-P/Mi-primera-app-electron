@@ -4,14 +4,14 @@ import { IoLogIn } from "react-icons/io5";
 import { BiSolidDashboard } from "react-icons/bi";
 
 // Importamos los contextos
-import { useApp } from '../contexts/AppProvider'
-import { useAuth } from '../contexts/AuthProvider'
+import { useApp } from '@contexts/AppProvider'
+import { useAuth } from '@contexts/AuthProvider'
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas'
+import { THEMES } from '@constants/temas'
 
 // Importamos los componentes
-import LoginModal from '../modals/LoginModal';
+import LoginModal from '@modals/LoginModal';
 
 const LandingPage = () => {
     const { tema, setNavActionsItems } = useApp();

@@ -2,10 +2,10 @@ import React from 'react';
 import { ImSpinner9 } from "react-icons/im"; // Ícono de carga
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
+import { useApp } from '@contexts/AppProvider';
 
 const LoadingCard = () => {
     const { tema } = useApp();

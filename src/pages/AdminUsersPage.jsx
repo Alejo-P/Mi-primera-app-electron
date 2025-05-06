@@ -5,17 +5,17 @@ import { IoPersonAdd } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider'
-import { useAuth } from '../contexts/AuthProvider'
-import { useAdmin } from '../contexts/AdminProvider'
+import { useApp } from '@contexts/AppProvider'
+import { useAuth } from '@contexts/AuthProvider'
+import { useAdmin } from '@contexts/AdminProvider'
 
 // Importamos los componentes
-import LoadingCard from '../components/LoadingCard'
-import UserBarCard from '../components/UserBarCard';
+import LoadingCard from '@components/LoadingCard'
+import UserBarCard from '@components/UserBarCard';
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas'
-import { ROLES } from '../constants/roles'
+import { THEMES } from '@constants/temas'
+import { ROLES } from '@constants/roles'
 
 const AdminUsersPage = () => {
     const { tema, setNavActionsItems, setVisibleNav } = useApp();

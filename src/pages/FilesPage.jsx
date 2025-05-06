@@ -6,27 +6,24 @@ import { LuFileSearch2,LuFileUser } from "react-icons/lu";
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
-import { ROLES } from '../constants/roles';
+import { THEMES } from '@constants/temas';
+import { ROLES } from '@constants/roles';
 
 // Importamos el contexto
-import { useAuth } from '../contexts/AuthProvider';
-import { useApp } from '../contexts/AppProvider';
-import { useFiles } from '../contexts/FilesProvider';
+import { useAuth } from '@contexts/AuthProvider';
+import { useApp } from '@contexts/AppProvider';
+import { useFiles } from '@contexts/FilesProvider';
 
 // Importamos los componentes
-import FileCard from '../components/FileCard';
-import ViewFilesModal from '../modals/ViewFilesModal';
-import FileInfoModal from '../modals/FileInfoModal';
-import LoadingCard from '../components/LoadingCard';
-import FlipCard from '../components/FlipCard';
+import ViewFilesModal from '@modals/ViewFilesModal';
+import LoadingCard from '@components/LoadingCard';
+import FlipCard from '@components/FlipCard';
 
 const FilesPage = () => {
     const { user } = useAuth();
-    const { selectedFile, tema, setVisibleNav, visibleToolbar, setNavActionsItems } = useApp();
+    const { selectedFile, setSelectedFile, tema, setVisibleNav, visibleToolbar, setNavActionsItems } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const [showModal, setShowModal] = useState(false);
-    const [showFileInfo, setShowFileInfo] = useState(false);
     const [inputSearch, setFileInput] = useState({
         fileSearch: '',
         userSearch: ''
@@ -34,13 +31,14 @@ const FilesPage = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const isDark = tema === THEMES.DARK;
 
-    const handleModal = () => {
-        setShowModal(!showModal);
+    const handleClick = (file) => {
+        setSelectedFile(file);
+        handleModal();
     };
 
-    const handleFileInfoModal = () => {
-        setShowFileInfo(!showFileInfo);
-    };
+    const handleModal = () => {
+        setShowModal(!showModal);
+    }
 
     const handleFetchFiles = async () => {
         setVisibleNav(false);
@@ -108,11 +106,11 @@ const FilesPage = () => {
             }
         ];
     
-        if (!showModal && !showFileInfo) {
+        if (!showModal) {
             // Solo muestra las acciones si no hay modales abiertos
             setNavActionsItems(acciones);
         }
-    }, [showModal, showFileInfo, isDark]); // Se actualiza cuando cambia el tema o el modal    
+    }, [showModal, isDark]); // Se actualiza cuando cambia el tema o el modal    
 
     useEffect(() => {
         if (fileList.length === 0) {
@@ -135,8 +133,7 @@ const FilesPage = () => {
                                 <FlipCard
                                     key={index}
                                     file={file}
-                                    showModal={handleModal}
-                                    showFileInfo={handleFileInfoModal}
+                                    handleOnClick={handleClick}
                                     isDark={isDark}
                                 />
                             ))
@@ -167,14 +164,6 @@ const FilesPage = () => {
             }
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} handleModal={handleModal} />
-            }
-            {
-                showFileInfo && (
-                    <FileInfoModal
-                        file={selectedFile}
-                        handleModal={handleFileInfoModal}
-                    />
-                )
             }
             {
                 (visibleToolbar && user?.roles.includes(ROLES.ADMIN)) && (

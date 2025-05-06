@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
+import { useApp } from '@contexts/AppProvider';
 
 const NavActions = () => {
     const { tema, visibleNav, navActionsItems } = useApp();

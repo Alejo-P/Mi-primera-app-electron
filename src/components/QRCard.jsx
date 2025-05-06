@@ -4,9 +4,9 @@ import { MdDeleteForever } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importar el contexto
-import { useAuth } from '../contexts/AuthProvider';
-import { useQR } from '../contexts/QRProvider';
-import { useFiles } from '../contexts/FilesProvider';
+import { useAuth } from '@contexts/AuthProvider';
+import { useQR } from '@contexts/QRProvider';
+import { useFiles } from '@contexts/FilesProvider';
 
 const QRCard = ({ QRInfo, isDark = false }) => {
     const { user } = useAuth();

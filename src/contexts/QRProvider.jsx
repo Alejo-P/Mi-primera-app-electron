@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useMemo } from 'react';
 
 // Importamos el contexto
-import { useAxios } from '../hooks/useAxios';
+import { useAxios } from '@hooks/useAxios';
 import { useApp } from './AppProvider';
 
 const QRContext = createContext();
@@ -47,8 +47,8 @@ export const QRProvider = ({ children }) => {
             } else {
                 data = await Promise.all(
                     response.files.map(async (qr) => {
-                        const source = await getQR(qr);
-                        return { ...source };
+                        const { qr:qrData } = await getQR(qr);
+                        return { ...qrData };
                     })
                 );
             }

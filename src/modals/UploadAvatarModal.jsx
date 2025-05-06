@@ -4,14 +4,14 @@ import { FaUpload } from "react-icons/fa6";
 import { ImSpinner9 } from "react-icons/im";
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
-import { useAuth } from '../contexts/AuthProvider';
+import { useApp } from '@contexts/AppProvider';
+import { useAuth } from '@contexts/AuthProvider';
 
 // Importamos los componentes
-import CustomInput from '../components/CustomInput';
+import CustomInput from '@components/CustomInput';
 
 const UploadAvatarModal = ({ handleModal }) => {
     const { tema, setNavActionsItems, handleNotificacion } = useApp();

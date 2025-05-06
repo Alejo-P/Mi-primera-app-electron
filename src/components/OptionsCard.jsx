@@ -7,11 +7,11 @@ import { IoLogOut } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useAuth } from '../contexts/AuthProvider';
-import { useApp } from '../contexts/AppProvider'
+import { useAuth } from '@contexts/AuthProvider';
+import { useApp } from '@contexts/AppProvider'
 
 const OptionsCard = () => {
     const { user, logout } = useAuth();

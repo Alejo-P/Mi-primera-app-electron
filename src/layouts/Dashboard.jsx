@@ -7,23 +7,23 @@ import { FaQrcode } from 'react-icons/fa6';
 import { FaRegFileAlt, FaUser, FaBars, FaUsersCog } from "react-icons/fa";
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
-import { ROLES } from '../constants/roles';
+import { THEMES } from '@constants/temas';
+import { ROLES } from '@constants/roles';
 
 // Importamos los contextos
-import { useAuth } from '../contexts/AuthProvider';
-import { useApp } from '../contexts/AppProvider';
-import { useFiles } from '../contexts/FilesProvider';
-import { useQR } from '../contexts/QRProvider';
-import { useAdmin } from '../contexts/AdminProvider';
+import { useAuth } from '@contexts/AuthProvider';
+import { useApp } from '@contexts/AppProvider';
+import { useFiles } from '@contexts/FilesProvider';
+import { useQR } from '@contexts/QRProvider';
+import { useAdmin } from '@contexts/AdminProvider';
 
 // Importamos los componentes
-import HeaderNav from '../components/HeaderNav'
-import Notification from '../components/Notification'
-import NavButton from '../components/NavButton';
-import NavActions from '../components/NavActions';
-import TitleBar from '../components/TitleBar';
-import NavButtonSqueleton from '../components/NavButtonSqueleton';
+import HeaderNav from '@components/HeaderNav'
+import Notification from '@components/Notification'
+import NavButton from '@components/NavButton';
+import NavActions from '@components/NavActions';
+import TitleBar from '@components/TitleBar';
+import NavButtonSqueleton from '@components/NavButtonSqueleton';
 
 const Dashboard = () => {
     const { profile, user, loading } = useAuth();

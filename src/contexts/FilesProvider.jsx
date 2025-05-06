@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useMemo } from 'react';
 
 // Importamos el contexto
-import { useAxios } from '../hooks/useAxios';
+import { useAxios } from '@hooks/useAxios';
 import { useApp } from './AppProvider';
 import { useQR } from './QRProvider';
 

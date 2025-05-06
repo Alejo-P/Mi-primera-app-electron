@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 import { useApp } from './AppProvider';
-import { useAxios } from '../hooks/useAxios';
+import { useAxios } from '@hooks/useAxios';
 
 const AuthContext = createContext();
 

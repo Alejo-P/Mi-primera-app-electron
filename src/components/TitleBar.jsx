@@ -6,12 +6,12 @@ import { FaWindowRestore } from "react-icons/fa6";
 import { SlOptions } from "react-icons/sl";
 import { IoClose } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import { useApp } from '../contexts/AppProvider';
-import { THEMES } from '../constants/temas';
+import { useApp } from '@contexts/AppProvider';
+import { THEMES } from '@constants/temas';
 import { ImSpinner9 } from "react-icons/im";
 
 // Importamos los componentes
-import { useAuth } from '../contexts/AuthProvider';
+import { useAuth } from '@contexts/AuthProvider';
 import OptionsCard from './OptionsCard';
 
 const TitleBar = () => {

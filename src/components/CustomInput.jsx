@@ -6,10 +6,10 @@ import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { IoText } from "react-icons/io5";
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
+import { useApp } from '@contexts/AppProvider';
 
 const CustomInput = ({
     Iname,

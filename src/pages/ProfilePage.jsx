@@ -6,19 +6,19 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { ImSpinner9 } from "react-icons/im";
 
 // Importamos los contextos
-import { useAuth } from '../contexts/AuthProvider';
-import { useApp } from '../contexts/AppProvider';
-import { useAdmin } from '../contexts/AdminProvider';
+import { useAuth } from '@contexts/AuthProvider';
+import { useApp } from '@contexts/AppProvider';
+import { useAdmin } from '@contexts/AdminProvider';
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos los componentes
-import CustomInput from '../components/CustomInput';
-import RolesField from '../components/RolesField';
-import UploadAvatarModal from '../modals/UploadAvatarModal';
-import UserAvatar from '../components/UserAvatar';
-import LoadingCard from '../components/LoadingCard';
+import CustomInput from '@components/CustomInput';
+import RolesField from '@components/RolesField';
+import UploadAvatarModal from '@modals/UploadAvatarModal';
+import UserAvatar from '@components/UserAvatar';
+import LoadingCard from '@components/LoadingCard';
 
 const ProfilePage = () => {
     const { user, updateProfile, updatePassword } = useAuth();

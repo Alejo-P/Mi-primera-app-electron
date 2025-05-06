@@ -4,10 +4,10 @@ import { TiInfoLarge } from "react-icons/ti";
 import { useNavigate } from 'react-router-dom';
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
+import { useApp } from '@contexts/AppProvider';
 
 const NotFound = () => {
     const { tema, setNavActionsItems } = useApp();

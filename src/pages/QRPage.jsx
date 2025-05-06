@@ -5,24 +5,23 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiOutlineRefresh } from 'react-icons/hi';
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
+import { THEMES } from '@constants/temas';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
-import { useQR } from '../contexts/QRProvider';
-import { useFiles } from '../contexts/FilesProvider';
+import { useApp } from '@contexts/AppProvider';
+import { useQR } from '@contexts/QRProvider';
+import { useFiles } from '@contexts/FilesProvider';
 
 // Importamos los componentes
-import QRCard from '../components/QRCard';
-import LoadingCard from '../components/LoadingCard';
-import CreateQRModal from '../modals/CreateQRModal';
+import LoadingCard from '@components/LoadingCard';
+import CreateQRModal from '@modals/CreateQRModal';
+import FlipCard from '@/components/FlipCard';
 
 const QRPage = () => {
     const { tema, setVisibleNav, setNavActionsItems } = useApp();
     const { qrList, getQRs, deleteAllQRs, loadingQRs} = useQR();
     const { setFileList } = useFiles();
     const [showModal, setShowModal] = useState(false);
-    const [QRInfo, setQRInfo] = useState([]);
     const isDark = tema === THEMES.DARK;
 
     const handleModal = () => {
@@ -112,7 +111,11 @@ const QRPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                         {
                             qrList.map((qr, index) => (
-                                <QRCard key={index} QRInfo={qr} isDark={isDark} />
+                                <FlipCard
+                                    key={index}
+                                    file={qr}
+                                    isDark={isDark}
+                                />
                             ))
                         }
                     </div>

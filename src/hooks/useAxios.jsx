@@ -1,6 +1,6 @@
 // Este hook personalizado se encarga de realizar peticiones HTTP utilizando axios y maneja la notificación de errores y éxitos a través del contexto de la aplicación.
-import axiosInstance from '../api/axiosInstance';
-import { useApp } from '../contexts/AppProvider';
+import axiosInstance from '@api/axiosInstance';
+import { useApp } from '@contexts/AppProvider';
 
 export const useAxios = () => {
     const { handleNotificacion } = useApp(); // Importa la función de notificación del contexto de la aplicación

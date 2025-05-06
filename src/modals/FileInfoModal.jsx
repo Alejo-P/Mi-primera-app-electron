@@ -3,12 +3,12 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { IoClose } from "react-icons/io5";
 
 // Importamos las constantes
-import { THEMES } from '../constants/temas';
-import { ROLES } from '../constants/roles';
+import { THEMES } from '@constants/temas';
+import { ROLES } from '@constants/roles';
 
 // Importamos el contexto
-import { useApp } from '../contexts/AppProvider';
-import { useAuth } from '../contexts/AuthProvider';
+import { useApp } from '@contexts/AppProvider';
+import { useAuth } from '@contexts/AuthProvider';
 
 const FileInfoModal = ({ file, handleModal }) => {
     const {convertUnit, tema, setNavActionsItems } = useApp();
