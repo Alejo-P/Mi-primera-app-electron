@@ -44,15 +44,8 @@ export const AdminProvider = ({ children }) => {
             }
         });
 
-        if (response) {
-            setUsersList((prev) => prev.map((user) => {
-                if (user.id === userId) {
-                    return { ...user, ...response };
-                }
-                return user;
-            }));
-        }
         setLoading(false);
+        return response;
     }
 
     const enableUser = async (userId) => {
@@ -140,12 +133,7 @@ export const AdminProvider = ({ children }) => {
             }
         });
 
-        if (response) {
-            handleNotificacion('success', 'Rol eliminado correctamente', 5000);
-            const updatedUser = { ...user };
-            updatedUser.roles = updatedUser.roles.filter(r => r !== role);
-            setUser(updatedUser);
-        }
+        return response;
     }
 
     const contextValue = useMemo(() => ({

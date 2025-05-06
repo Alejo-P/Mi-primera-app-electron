@@ -40,11 +40,11 @@ const Dashboard = () => {
     };
 
     const buttons = [
-        { path: "/dashboard/", icon: <HiHome className="text-3xl" />, tooltip: "Inicio", accessBy: [ROLES.USER, ROLES.ADMIN] },
-        { path: "/dashboard/qr", icon: <FaQrcode className="text-3xl" />, tooltip: "QRs generados", accessBy: [ROLES.USER, ROLES.ADMIN] },
-        { path: "/dashboard/files", icon: <FaRegFileAlt className="text-3xl" />, tooltip: "Archivos cargados", accessBy: [ROLES.USER, ROLES.ADMIN] },
-        { path: "/dashboard/profile", icon: <FaUser className="text-3xl" />, tooltip: "Perfil de usuario", accessBy: [ROLES.USER, ROLES.ADMIN] },
-        { path: "/dashboard/admin/users", icon: <FaUsersCog className="text-3xl" />, tooltip: "Administrar usuarios", accessBy: [ROLES.ADMIN] },
+        { path: "/dashboard/", icon: <HiHome className="text-3xl" />, tooltip: "Inicio", accessBy: [ROLES.USER, ROLES.ADMIN], active: pathname === '/dashboard/' },
+        { path: "/dashboard/qr", icon: <FaQrcode className="text-3xl" />, tooltip: "QRs generados", accessBy: [ROLES.USER, ROLES.ADMIN], active: pathname === '/dashboard/qr' },
+        { path: "/dashboard/files", icon: <FaRegFileAlt className="text-3xl" />, tooltip: "Archivos cargados", accessBy: [ROLES.USER, ROLES.ADMIN], active: pathname === '/dashboard/files' },
+        { path: `/dashboard/profile/${user?.id}`, icon: <FaUser className="text-3xl" />, tooltip: "Perfil de usuario", accessBy: [ROLES.USER, ROLES.ADMIN], active: pathname.includes('/dashboard/profile') },
+        { path: "/dashboard/admin/users", icon: <FaUsersCog className="text-3xl" />, tooltip: "Administrar usuarios", accessBy: [ROLES.ADMIN], active: pathname === '/dashboard/admin/users' },
     ];
 
     // Filtrar botones según los roles del usuario
@@ -89,7 +89,6 @@ const Dashboard = () => {
         <div className={`grid grid-cols-[20%_80%] grid-rows-[40px_50px_1fr] h-screen transition-all duration-300 min-w-[525px] scrollbar-track-transparent
             ${isDark ? 'bg-gray-900 text-white scrollbar-thumb-gray-300'
                 : 'bg-slate-200 text-gray-900 scrollbar-thumb-gray-700'
-
             }
         `}
         >
@@ -107,7 +106,7 @@ const Dashboard = () => {
                         pathname === '/dashboard/' ? "Cargar un archivo" : 
                         pathname === '/dashboard/files' ? "Lista de archivos" :
                         pathname === '/dashboard/qr' ? "Lista de códigos QR" :
-                        pathname === '/dashboard/profile' ? "Perfil de usuario" : 
+                        pathname.includes('/dashboard/profile') ? "Perfil de usuario" : 
                         pathname === '/dashboard/admin/users' ? "Administrar usuarios" :
                         "Inicio"
                     }
@@ -150,7 +149,7 @@ const Dashboard = () => {
                                         <NavButton
                                             key={item.path}
                                             to={item.path}
-                                            active={pathname === item.path}
+                                            active={item.active}
                                             icon={item.icon}
                                             tooltip={item.tooltip}
                                             isDark={isDark}

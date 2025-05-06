@@ -3,6 +3,7 @@ import { MdDeleteSweep, MdAdd } from "react-icons/md";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { LuFileSearch2,LuFileUser } from "react-icons/lu";
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 // Importamos las constantes
 import { THEMES } from '../constants/temas';
@@ -18,7 +19,7 @@ import FileCard from '../components/FileCard';
 import ViewFilesModal from '../modals/ViewFilesModal';
 import FileInfoModal from '../modals/FileInfoModal';
 import LoadingCard from '../components/LoadingCard';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import FlipCard from '../components/FlipCard';
 
 const FilesPage = () => {
     const { user } = useAuth();
@@ -131,7 +132,7 @@ const FilesPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                         {
                             fileList.map((file, index) => (
-                                <FileCard
+                                <FlipCard
                                     key={index}
                                     file={file}
                                     showModal={handleModal}

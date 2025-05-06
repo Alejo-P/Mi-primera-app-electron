@@ -18,6 +18,11 @@ const FileCard = ({ file, showModal, showFileInfo, isDark = false }) => {
     const { downloadFile, deleteFile, setFileList } = useFiles();
     const { fileTypes, setSelectedFile } = useApp();
     const { getQR, createQRFile, loadingQRs } = useQR();
+    const [flipped, setFlipped] = useState(false);
+
+    const toggleFlip = () => {
+        setFlipped(!flipped);
+      };
 
     const handleFileInfoModal = () => {
         setSelectedFile(file);

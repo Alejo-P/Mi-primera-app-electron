@@ -37,8 +37,11 @@ function App() {
                 <FilesProvider>
                   <Routes>
                     {/* Rutas públicas */}
-                    <Route path="/" element={<Mainboard />} >
-                      <Route index element={<LandingPage />} />
+                    <Route path="/" element={<Auth />} >
+                      <Route element={<Mainboard />} >
+                        <Route index element={<LandingPage />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Route>
                       <Route path="*" element={<NotFound />} />
                     </Route>
 
@@ -48,7 +51,7 @@ function App() {
                         <Route index element={<UploadPage />} />
                         <Route path="qr" element={<QRPage />} />
                         <Route path="files" element={<FilesPage />} />
-                        <Route path="profile" element={<ProfilePage />} />
+                        <Route path="profile/:userID" element={<ProfilePage />} />
 
                         {/* Rutas para los administradores */}
                         <Route path='admin' element={<PrivateAdminRoutes />}>

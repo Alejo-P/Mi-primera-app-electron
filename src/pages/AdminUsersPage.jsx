@@ -42,12 +42,7 @@ const AdminUsersPage = () => {
     }
 
     const handleEditUser = async (userInfo) => {
-        if (userInfo.id === user.id) {
-            navigate('/dashboard/profile');
-        } else {
-            // Logica para el modal de editar usuario
-            console.log('Editar usuario', userInfo);
-        }
+        navigate(`/dashboard/profile/${userInfo?.id}`);
     }
 
     const handleDeleteRole = async (role, userId) => {

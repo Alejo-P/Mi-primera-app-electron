@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { HiHome } from "react-icons/hi";
 import { TiInfoLarge } from "react-icons/ti";
 import { useNavigate } from 'react-router-dom';
 
@@ -31,7 +32,7 @@ const NotFound = () => {
                         data-tooltip-id='volverLabel'
                         data-tooltip-content={`Volver a la página principal`}
                     >
-                        <TiInfoLarge className="text-xl" />
+                        <HiHome className="text-xl" />
                     </button>
                 )
             }

@@ -31,11 +31,7 @@ const TitleBar = () => {
 
     useEffect(() => {
         // Verificamos si estamos en la página de perfil
-        if (pathname === '/dashboard/profile') {
-            setIsProfilePage(true);
-        } else {
-            setIsProfilePage(false);
-        }
+        setIsProfilePage(pathname === `/dashboard/profile/${user?.id}`);
     }, [pathname]); // Se ejecuta cuando cambia la ruta
 
     useEffect(() => {
@@ -78,7 +74,7 @@ const TitleBar = () => {
                             onClick={() => {
                                 if (!loading && !isProfilePage) {
                                     // Si no estamos en la página de perfil, navegamos a ella
-                                    navigate('/dashboard/profile');
+                                    navigate(`/dashboard/profile/${user?.id}`);
                                 }
                             }}
                         >
