@@ -97,7 +97,6 @@ export const QRProvider = ({ children }) => {
         });
 
         if (response) {
-            console.log('deleteAllQRs', response);
             setQRList([]);
             handleNotificacion('success', response.msg, 5000);
         }
@@ -141,7 +140,7 @@ export const QRProvider = ({ children }) => {
         if (response) {
             console.log('createQR', response);
             handleNotificacion('success', response.msg, 5000);
-            getQRs();
+            setQRList((prev) => [...prev, response.qr]);
         }
         setLoadingQRs(false);
 
@@ -167,7 +166,7 @@ export const QRProvider = ({ children }) => {
         if (response) {
             console.log('createQRFile', response);
             handleNotificacion('success', response.msg, 5000);
-            getQRs();
+            setQRList((prev) => [...prev, response.qr]);
         }
         setLoadingQRs(false);
         const status = response ? true : false;
@@ -213,34 +212,8 @@ export const QRProvider = ({ children }) => {
             window.URL.revokeObjectURL(url);
         }
 
-        // try {
-        //     const response = await axios.get(`${URL_BACKEND}/download/qr/${name}`, {
-        //         headers: {
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,                },
-        //         responseType: 'blob',
-        //     });
-    
-        //     // Crear un objeto URL para el archivo
-        //     const url = window.URL.createObjectURL(new Blob([response.data]));
-            
-        //     // Crear un elemento <a> temporal
-        //     const link = document.createElement('a');
-        //     link.href = url;
-        //     link.setAttribute('download', `${name}`);
-        //     document.body.appendChild(link);
-    
-        //     // Simular clic para descargar
-        //     link.click();
-    
-        //     // Eliminar el <a> del DOM después de la descarga
-        //     document.body.removeChild(link);
-            
-        //     // Revocar el objeto URL para liberar memoria
-        //     window.URL.revokeObjectURL(url);
-        // } catch (error) {
-        //     console.error(error);
-        //     handleNotificacion('error',  error, 5000);
-        // }
+        const status = response ? true : false;
+        return status;
     };    
 
     const contextValue = useMemo(() => ({

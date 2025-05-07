@@ -14,10 +14,14 @@ import { useQR } from '@contexts/QRProvider';
 import { useAuth } from '@contexts/AuthProvider';
 import { ROLES } from '@constants/roles';
 
-const FlipCard = ({ file, handleOnClick, isDark = false }) => {
+const FlipCard = ({
+    file,
+    handleOnClick,
+    isDark = false,
+}) => {
     const { downloadFile, deleteFile, setFileList } = useFiles();
     const { fileTypes, convertUnit } = useApp();
-    const { getQR, createQRFile, loadingQRs } = useQR();
+    const { createQRFile, loadingQRs, downloadQR, deleteQR } = useQR();
     const [flipped, setFlipped] = useState(false);
     const { user } = useAuth();
 
@@ -30,14 +34,46 @@ const FlipCard = ({ file, handleOnClick, isDark = false }) => {
 
     const handleDownload = async () => {
         if (window.confirm(`¿Descargar ${file.filename}?`)) {
-            await downloadFile(file.filename);
+            if (file.file_type === "qr_code") {
+                const success = await downloadQR(file.filename);
+                if (success) {
+                    setFileList((prev) => prev.map((f) => {
+                        if (f.filename === file.attached_file?.filename) {
+                            return { ...f, qr_code: null };
+                        }
+                        return f;
+                    }));
+                }
+            } else {
+                const success = await downloadFile(file.filename);
+                if (success) {
+                    setFileList((prev) => prev.filter((f) => f.filename !== file.filename));
+                }
+            }
         }
     };
 
     const handleDelete = async () => {
         if (window.confirm(`¿Eliminar ${file.filename}?`)) {
-            await deleteFile(file.filename);
-            await getQR();
+            if (file.file_type === "qr_code") {
+                const success = await deleteQR(file.filename);
+                if (success) {
+                    setFileList((prev) => prev.map((f) => {
+                        if (f.filename === file.attached_file?.filename) {
+                            return { ...f, qr_code: null };
+                        }
+                        return f;
+                    }));
+                }
+            } else {
+                const success = await deleteFile(file.filename);
+                if (success) {
+                    setFileList((prev) => prev.filter((f) => f.filename !== file.filename));
+                }
+            }
+
+            // await deleteFile(file.filename);
+            // await getQR();
         }
     };
 

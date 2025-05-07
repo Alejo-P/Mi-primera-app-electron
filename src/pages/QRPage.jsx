@@ -15,17 +15,26 @@ import { useFiles } from '@contexts/FilesProvider';
 // Importamos los componentes
 import LoadingCard from '@components/LoadingCard';
 import CreateQRModal from '@modals/CreateQRModal';
+import ViewFilesModal from '@/modals/ViewFilesModal';
 import FlipCard from '@/components/FlipCard';
 
 const QRPage = () => {
     const { tema, setVisibleNav, setNavActionsItems } = useApp();
-    const { qrList, getQRs, deleteAllQRs, loadingQRs} = useQR();
+    const { qrList, getQRs, deleteAllQRs, loadingQRs, downloadQR, deleteQR } = useQR();
     const { setFileList } = useFiles();
     const [showModal, setShowModal] = useState(false);
+    const [showQRModal, setShowQRModal] = useState(false);
+    const [selectedQR, setSelectedQR] = useState(null);
     const isDark = tema === THEMES.DARK;
 
-    const handleModal = () => {
-        setShowModal(!showModal);
+    const handleClick = (file) => {
+        setSelectedQR(file);
+        handleModal('showQR');
+    };
+
+    const handleModal = (type = 'createQR') => {
+        if (type === 'createQR') setShowModal(!showModal);
+        if (type === 'showQR') setShowQRModal(!showQRModal);
     };
 
     const handleFetchQRs = async () => {
@@ -54,13 +63,13 @@ const QRPage = () => {
     };
 
     useEffect(() => {
-        if (!showModal) {
+        if (!showModal && !showQRModal) {
             const acciones = [
                 {
                     key: 'crear',
                     element: (
                         <button
-                            onClick={handleModal}
+                            onClick={() => handleModal('createQR')}
                             className={`p-2 rounded-lg transition-all duration-300
                                 ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
                                 hover:scale-95 shadow-lg hover:shadow-xl`}
@@ -91,13 +100,12 @@ const QRPage = () => {
             ];
             setNavActionsItems(acciones);
         }
-    }, [showModal, isDark]); // Se ejecuta cuando cambia el estado del modal o el tema    
+    }, [showModal, showQRModal, isDark]); // Se ejecuta cuando cambia el estado del modal o el tema    
 
     useEffect(() => {
         if (qrList.length === 0) {
             handleFetchQRs();
         }
-
     }, []); // Se ejecuta cada vez que qrList cambia
     return (
         <>
@@ -115,6 +123,7 @@ const QRPage = () => {
                                     key={index}
                                     file={qr}
                                     isDark={isDark}
+                                    handleOnClick={handleClick}
                                 />
                             ))
                         }
@@ -148,6 +157,7 @@ const QRPage = () => {
                 )
             }
             { showModal && <CreateQRModal handleModal={handleModal} />}
+            { showQRModal && <ViewFilesModal fileInfo={selectedQR} handleModal={() => handleModal('showQR')} />}
         </>
     )
 }

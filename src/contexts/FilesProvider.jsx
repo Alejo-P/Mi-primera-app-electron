@@ -10,7 +10,7 @@ const FilesContext = createContext();
 export const FilesProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
     const { request } = useAxios(); // ¡aquí la magia!
-    const { getQRs } = useQR();
+    const { setQRList } = useQR();
     const [fileList, setFileList] = useState([]);
     const [loadingFiles, setLoadingFiles] = useState(false);
 
@@ -79,9 +79,7 @@ export const FilesProvider = ({ children }) => {
         });
 
         if (response) {
-            //handleNotificacion('success', response.msg, 5000);
-            //setFileList((prev) => [...prev, response.file]);
-            getFiles();
+            setFileList((prev) => [...prev, response.file]);
         }
         setLoadingFiles(false);
     }
@@ -115,26 +113,6 @@ export const FilesProvider = ({ children }) => {
             link.remove();
             window.URL.revokeObjectURL(url); // Limpiar el objeto URL después de descargar
         }
-
-        // try {
-        //     const response = await axios.get(`${URL_BACKEND}/download/file/${name}`, {
-        //         responseType: 'blob',
-        //         headers: {
-        //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        //         },
-        //     });
-
-        //     const url = window.URL.createObjectURL(new Blob([response.data]));
-        //     const link = document.createElement('a');
-        //     link.href = url;
-        //     link.setAttribute('download', name);
-        //     document.body.appendChild(link);
-        //     link.click();
-        //     link.remove();
-        // } catch (error) {
-        //     console.error(error);
-        //     handleNotificacion('error',  error, 5000);
-        // }
     };
 
     // Eliminar un archivo por su nombre
@@ -154,9 +132,8 @@ export const FilesProvider = ({ children }) => {
 
         if (response) {
             setFileList((prev) => prev.filter((file) => file.filename !== name));
-            setQRList((prev) => prev.filter((qr) => qr.filename !== name));
+            setQRList((prev) => prev.filter((qr) => qr?.attached_file.filename !== name));
             handleNotificacion('success', response.msg, 5000);
-            getFiles();
         }
     };
 
@@ -177,10 +154,10 @@ export const FilesProvider = ({ children }) => {
         if (response) {
             setFileList([]);
             handleNotificacion('success', response.msg, 5000);
-            setTimeout(() => {
-                getQRs();
-            }, 2000);
         }
+
+        const status = response ? true : false;
+        return status;
     };
 
     // Memoriza el valor del contexto para evitar renders innecesarios
