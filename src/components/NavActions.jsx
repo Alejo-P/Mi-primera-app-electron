@@ -24,7 +24,7 @@ const NavActions = () => {
 
     return (
         <AnimatePresence>
-            {visibleNav && navActionsItems.length > 0 && (
+            {(visibleNav && navActionsItems.length > 0) && (
                 <motion.div
                     layout
                     initial={{ y: 100, opacity: 0 }}

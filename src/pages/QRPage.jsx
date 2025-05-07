@@ -63,44 +63,74 @@ const QRPage = () => {
     };
 
     useEffect(() => {
+        const acciones = [
+            {
+                key: 'crear',
+                element: (
+                    <button
+                        onClick={() => handleModal('createQR')}
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Crear un QR a partir de texto"
+                        data-tooltip-id="QRLabel"
+                        data-tooltip-content="Crear un código QR a partir de un texto"
+                    >
+                        <IoMdAdd className="text-2xl" />
+                    </button>
+                )
+            },
+            {
+                key: 'refrescar',
+                element: (
+                    <button
+                        onClick={handleRefresh}
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Actualizar lista"
+                        data-tooltip-id="RefreshLabel"
+                        data-tooltip-content="Actualizar la lista de QRs"
+                    >
+                        <HiOutlineRefresh className="text-2xl" />
+                    </button>
+                )
+            }
+        ];
+    
+        const boton_borrar = {
+            key: 'borrar_todos',
+            element: (
+                <div className="flex justify-center">
+                    <button
+                        className={`flex p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-red-600 text-white hover:bg-red-700' 
+                                : 'bg-red-500 text-gray-900 hover:bg-red-600'
+                            }
+                            hover:scale-95 shadow-lg hover:shadow-xl
+                        `}
+                        title="Eliminar todos"
+                        onClick={handleDeleteAll}
+                        data-tooltip-id="deleteAllLabel"
+                        data-tooltip-content="Eliminar todos los archivos"
+                    >
+                        <MdDeleteSweep className="text-2xl" />
+                    </button>
+                    <ReactTooltip id="deleteAllLabel" place="top" effect="solid" />
+                </div>
+            )
+        }
         if (!showModal && !showQRModal) {
-            const acciones = [
-                {
-                    key: 'crear',
-                    element: (
-                        <button
-                            onClick={() => handleModal('createQR')}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Crear un QR a partir de texto"
-                            data-tooltip-id="QRLabel"
-                            data-tooltip-content="Crear un código QR a partir de un texto"
-                        >
-                            <IoMdAdd className="text-2xl" />
-                        </button>
-                    )
-                },
-                {
-                    key: 'refrescar',
-                    element: (
-                        <button
-                            onClick={handleRefresh}
-                            className={`p-2 rounded-lg transition-all duration-300
-                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-                                hover:scale-95 shadow-lg hover:shadow-xl`}
-                            title="Actualizar lista"
-                            data-tooltip-id="RefreshLabel"
-                            data-tooltip-content="Actualizar la lista de QRs"
-                        >
-                            <HiOutlineRefresh className="text-2xl" />
-                        </button>
-                    )
-                }
-            ];
+            // Solo muestra el boton de eliminar si hay archivos (antes del boton recargar)
+            const refreshIndex = acciones.findIndex(a => a.key === 'refrescar');
+            if (qrList.length > 0 && refreshIndex !== -1) {
+                acciones.splice(refreshIndex, 0, boton_borrar);
+            }
+
+            // Solo muestra las acciones si no hay modales abiertos
             setNavActionsItems(acciones);
         }
-    }, [showModal, showQRModal, isDark]); // Se ejecuta cuando cambia el estado del modal o el tema    
+    }, [showModal, showQRModal, qrList, isDark]); // Se ejecuta cuando cambia el estado del modal o el tema    
 
     useEffect(() => {
         if (qrList.length === 0) {
@@ -129,30 +159,10 @@ const QRPage = () => {
                         }
                     </div>
                 ) : (
-                    <div className="flex items-center justify-center text-gray-400">
+                    <div className="flex items-center justify-center text-gray-400 h-full">
                         <p className="text-center font-bold italic">
                             No hay QRs generados
                         </p>
-                    </div>
-                )
-            }
-            {
-                (qrList.length > 0 && !loadingQRs) && (
-                    <div className="flex justify-center">
-                        <button
-                            className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-                            title="Eliminar todos"
-                            onClick={handleDeleteAll}
-                            data-tooltip-id='deleteAllLabel'
-                            data-tooltip-content='Eliminar todos los QRs generados'
-                        >
-                            <span className="text-white flex text-center items-center space-x-2">
-                                {/* <!-- Imagen con trazos blancos--> */}
-                                <MdDeleteSweep className='text-xl' />
-                                <p className="font-bold">Eliminar todos</p>
-                            </span>
-                        </button>
-                        <ReactTooltip id="deleteAllLabel" place="top" effect="solid" className='text-white bg-white text-sm'/>
                     </div>
                 )
             }

@@ -71,9 +71,6 @@ const FlipCard = ({
                     setFileList((prev) => prev.filter((f) => f.filename !== file.filename));
                 }
             }
-
-            // await deleteFile(file.filename);
-            // await getQR();
         }
     };
 
@@ -89,7 +86,7 @@ const FlipCard = ({
     };
 
     return (
-        <div className={`w-72 h-80 perspective-1000 m-4 `}>
+        <div className="w-full max-w-xs h-80 perspective-1000 mx-auto">
             <motion.div
                 className="relative w-full h-full rounded-lg shadow-[0_6px_15px_rgba(0,0,0,0.7)]"
                 style={{ transformStyle: 'preserve-3d' }}
@@ -197,7 +194,7 @@ const FlipCard = ({
                             className={`flex text-white p-2 rounded-lg transition duration-300
                                 ${loadingQRs ? 'bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed'
                                     : isDark ? 'bg-red-600 hover:bg-red-700 hover:scale-95'
-                                    : 'bg-red-400 hover:bg-red-500 hover:scale-95'
+                                    : 'bg-red-500 hover:bg-red-600 hover:scale-95'
                                 }
                             `}
                             title={`Eliminar ${file.filename}`}
@@ -249,7 +246,7 @@ const FlipCard = ({
                         )
                     }
                     {
-                        file?.uploaded_at || file?.created_at && (
+                        (file?.uploaded_at || file?.created_at) && (
                             <p className="mt-2 w-full text-sm text-center 'font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">
                                 {file?.uploaded_at ? 'Subido el' : 'Creado el'} {new Date(file?.uploaded_at || file?.created_at).toLocaleString()}
                             </p>
@@ -268,7 +265,6 @@ const FlipCard = ({
                                 >
                                     ({
                                         file?.uploaded_by?.roles && (
-
                                             file.uploaded_by?.roles?.map((role, index) => {
                                                 return (
                                                     <span key={index} className="font-semibold italic">
@@ -280,7 +276,6 @@ const FlipCard = ({
                                     }
                                     {
                                         file?.created_by?.roles && (
-
                                             file.created_by?.roles?.map((role, index) => {
                                                 return (
                                                     <span key={index} className="font-semibold italic">

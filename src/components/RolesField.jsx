@@ -37,7 +37,7 @@ const RolesField = ({ field, isDark, user, onDeleteRole }) => {
                         }
                     transition-all duration-300`}
                 >
-                    {Array.isArray(roles) && roles.length > 0 ? (
+                    {(Array.isArray(roles) && roles.length > 0) ? (
                         roles.map((role, index) => (
                             <div
                                 key={index}

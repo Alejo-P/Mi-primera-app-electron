@@ -13,6 +13,7 @@ import { ROLES } from '@constants/roles';
 import { useAuth } from '@contexts/AuthProvider';
 import { useApp } from '@contexts/AppProvider';
 import { useFiles } from '@contexts/FilesProvider';
+import { useQR } from '@contexts/QRProvider';
 
 // Importamos los componentes
 import ViewFilesModal from '@modals/ViewFilesModal';
@@ -23,6 +24,7 @@ const FilesPage = () => {
     const { user } = useAuth();
     const { selectedFile, setSelectedFile, tema, setVisibleNav, visibleToolbar, setNavActionsItems } = useApp();
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
+    const { setQRList } = useQR();
     const [showModal, setShowModal] = useState(false);
     const [inputSearch, setFileInput] = useState({
         fileSearch: '',
@@ -53,8 +55,14 @@ const FilesPage = () => {
     const handleDeleteAll = async () => {
         const confirm = window.confirm(`¿Eliminar todos los archivos?`);
         if (confirm) {
+            // Eliminar de la lista de QR aquellos que dependian de los archivos eliminados
+            setQRList((prev) => prev.map((f) => {
+                if (!f.attached_file) {
+                    return f;
+                }
+            }));
+            
             await deleteAllFiles();
-            await getFiles();
         }
     };
 
@@ -105,12 +113,41 @@ const FilesPage = () => {
                 )
             }
         ];
+
+        const boton_borrar = {
+            key: 'borrar_todos',
+            element: (
+                <div className="flex justify-center">
+                    <button
+                        className={`flex p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-red-600 text-white hover:bg-red-700' 
+                                : 'bg-red-500 text-gray-900 hover:bg-red-600'
+                            }
+                            hover:scale-95 shadow-lg hover:shadow-xl
+                        `}
+                        title="Eliminar todos"
+                        onClick={handleDeleteAll}
+                        data-tooltip-id="deleteAllLabel"
+                        data-tooltip-content="Eliminar todos los archivos"
+                    >
+                        <MdDeleteSweep className="text-2xl" />
+                    </button>
+                    <ReactTooltip id="deleteAllLabel" place="top" effect="solid" />
+                </div>
+            )
+        }
     
         if (!showModal) {
+            // Solo muestra el boton de eliminar si hay archivos (antes del boton recargar)
+            const refreshIndex = acciones.findIndex(a => a.key === 'refrescar');
+            if (fileList.length > 0 && refreshIndex !== -1) {
+                acciones.splice(refreshIndex, 0, boton_borrar);
+            }
+
             // Solo muestra las acciones si no hay modales abiertos
             setNavActionsItems(acciones);
         }
-    }, [showModal, isDark]); // Se actualiza cuando cambia el tema o el modal    
+    }, [showModal, isDark, fileList]); // Se actualiza cuando cambia el tema o el modal    
 
     useEffect(() => {
         if (fileList.length === 0) {
@@ -140,25 +177,10 @@ const FilesPage = () => {
                         }
                     </div>
                 ) : (
-                    <div className={`grid items-center justify-center flex-1 text-gray-400 transition-all duration-300`}>
-                        <p className="text-center font-bold italic">No hay archivos subidos</p>
-                    </div>
-                )
-            }
-            {
-                (fileList.length > 0 && !loadingFiles) && (
-                    <div className="flex justify-center">
-                        <button
-                            className="flex bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
-                            title="Eliminar todos"
-                            onClick={handleDeleteAll}
-                            data-tooltip-id="deleteAllLabel"
-                            data-tooltip-content="Eliminar todos los archivos"
-                        >
-                            <MdDeleteSweep className="text-2xl" />
-                            <p className="font-bold">Eliminar todos</p>
-                        </button>
-                        <ReactTooltip id="deleteAllLabel" place="top" effect="solid" />
+                    <div className="flex items-center justify-center text-gray-400 h-full">
+                        <p className="text-center font-bold italic">
+                            No hay archivos subidos
+                        </p>
                     </div>
                 )
             }
