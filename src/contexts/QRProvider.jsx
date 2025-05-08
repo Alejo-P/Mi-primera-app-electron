@@ -73,7 +73,6 @@ export const QRProvider = ({ children }) => {
         });
         
         if (response) {
-            console.log('deleteQR', response);
             setQRList((prev) => prev.filter((qr) => qr.filename !== name));
             handleNotificacion('success', response.msg, 5000);
         }

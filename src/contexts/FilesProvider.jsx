@@ -153,6 +153,8 @@ export const FilesProvider = ({ children }) => {
 
         if (response) {
             setFileList([]);
+            // Eliminar de la lista de QR aquellos que dependian de los archivos eliminados
+            setQRList((prev) => prev.filter((qr) => !qr.attached_file));
             handleNotificacion('success', response.msg, 5000);
         }
 

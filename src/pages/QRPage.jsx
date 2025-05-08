@@ -20,7 +20,7 @@ import FlipCard from '@/components/FlipCard';
 
 const QRPage = () => {
     const { tema, setVisibleNav, setNavActionsItems } = useApp();
-    const { qrList, getQRs, deleteAllQRs, loadingQRs, downloadQR, deleteQR } = useQR();
+    const { qrList, getQRs, deleteAllQRs, loadingQRs } = useQR();
     const { setFileList } = useFiles();
     const [showModal, setShowModal] = useState(false);
     const [showQRModal, setShowQRModal] = useState(false);
@@ -137,6 +137,7 @@ const QRPage = () => {
             handleFetchQRs();
         }
     }, []); // Se ejecuta cada vez que qrList cambia
+
     return (
         <>
             <h2 className="text-2xl text-center font-bold">

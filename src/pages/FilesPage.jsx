@@ -55,13 +55,6 @@ const FilesPage = () => {
     const handleDeleteAll = async () => {
         const confirm = window.confirm(`¿Eliminar todos los archivos?`);
         if (confirm) {
-            // Eliminar de la lista de QR aquellos que dependian de los archivos eliminados
-            setQRList((prev) => prev.map((f) => {
-                if (!f.attached_file) {
-                    return f;
-                }
-            }));
-            
             await deleteAllFiles();
         }
     };
