@@ -1,9 +1,8 @@
 import React from 'react'
-import { useLocation, useNavigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 // Importamos los contextos
 import { useApp } from '@contexts/AppProvider'
-import { useAuth } from '@contexts/AuthProvider'
 
 // Importamos las constantes
 import { THEMES } from '@constants/temas'
@@ -18,8 +17,8 @@ const Mainboard = () => {
     const isDark = tema === THEMES.DARK // Verificamos si el tema es oscuro
 
     return (
-        <div className={`flex flex-col h-screen transition-all duration-300 min-w-[525px]
-            ${isDark ? 'bg-gray-900 text-white' : 'bg-slate-200 text-gray-900'}`}
+        <div className={`flex flex-col h-screen transition-all duration-300 min-w-[525px] scrollbar-track-transparent
+            ${isDark ? 'bg-gray-900 text-white scrollbar-thumb-gray-300' : 'bg-slate-200 text-gray-900 scrollbar-thumb-gray-700'}`}
         >
             {/* 🟢 Barra de título personalizada */}
             <div className={`w-full col-span-full h-10 bg-opacity-90 z-60

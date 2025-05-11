@@ -11,7 +11,9 @@
       "@routes/*": ["src/routes/*"],
       "@styles/*": ["src/styles/*"],
       "@constants/*": ["src/constants/*"],
-      "@modals/*": ["src/modals/*"]
+      "@modals/*": ["src/modals/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@pages/*": ["src/pages/*"]
     },
     "jsx": "react-jsx" // 🔹 Agregado para soportar JSX
   },

@@ -10,7 +10,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
     const { request } = useAxios(); // ¡aquí la magia!
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (response) {
-            //handleNotificacion('success', response.msg, 5000);
+            setUser(response.user);
             navigate('/dashboard/');
         }
         setLoading(false);
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
         // Eliminar los tokens de las cookies
         Cookies.remove('csrf_access_token');
         Cookies.remove('csrf_refresh_token');
-        setUser(null);
+        setUser({});
         navigate('/');
     };
 
@@ -168,14 +168,17 @@ export const AuthProvider = ({ children }) => {
             handleNotificacion('success', 'Token de acceso actualizado', 5000);
         } else {
             // Si el refresh falla, probablemente sea necesario cerrar sesión
-            setUser(null);
             logout();
         }
     };
 
-    const contextValue = useMemo(() => ({
+    const contextValue = useMemo(() => {
+        const isAuthenticated = Object.keys(user).length !== 0;
+
+        return{
         user,
         loading,
+        isAuthenticated,
         setUser,
         login,
         register,
@@ -185,7 +188,7 @@ export const AuthProvider = ({ children }) => {
         updatePassword,
         uploadAvatar,
         refreshToken
-    }), [user, loading]);
+    }}, [user, loading]);
 
     return (
         <AuthContext.Provider value={contextValue}>

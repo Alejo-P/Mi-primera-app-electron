@@ -21,7 +21,9 @@ export default defineConfig({
       '@routes': path.resolve(__dirname, './src/routes'),
       '@styles': path.resolve(__dirname, './src/styles'),
       '@constants': path.resolve(__dirname, './src/constants'),
-      '@modals': path.resolve(__dirname, './src/modals')
+      '@modals': path.resolve(__dirname, './src/modals'),
+      '@layouts': path.resolve(__dirname, './src/layouts'),
+      '@pages': path.resolve(__dirname, './src/pages')
     }
   }
 })

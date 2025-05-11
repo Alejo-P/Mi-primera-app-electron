@@ -4,27 +4,27 @@ import './App.css'
 import './CustomStyles.css'
 
 // Importamos el contexto
-import { AppProvider } from './contexts/AppProvider'
-import { AuthProvider } from './contexts/AuthProvider'
-import { AdminProvider } from './contexts/AdminProvider'
-import { QRProvider } from './contexts/QRProvider'
-import { FilesProvider } from './contexts/FilesProvider'
+import { AppProvider } from '@contexts/AppProvider'
+import { AuthProvider } from '@contexts/AuthProvider'
+import { AdminProvider } from '@contexts/AdminProvider'
+import { QRProvider } from '@contexts/QRProvider'
+import { FilesProvider } from '@contexts/FilesProvider'
 
 // Importamos las páginas
-import Mainboard from './layouts/Mainboard'
-import Dashboard from './layouts/Dashboard'
-import UploadPage from './pages/UploadPage'
-import QRPage from './pages/QRPage'
-import FilesPage from './pages/FilesPage'
-import NotFound from './pages/NotFound'
-import ProfilePage from './pages/ProfilePage'
-import LandingPage from './pages/LandingPage'
-import AdminUsersPage from './pages/AdminUsersPage';
+import Mainboard from '@layouts/Mainboard'
+import Dashboard from '@layouts/Dashboard'
+import UploadPage from '@pages/UploadPage'
+import QRPage from '@pages/QRPage'
+import FilesPage from '@pages/FilesPage'
+import NotFound from '@pages/NotFound'
+import ProfilePage from '@pages/ProfilePage'
+import LandingPage from '@pages/LandingPage'
+import AdminUsersPage from '@pages/AdminUsersPage';
 
 // Rutas para la autenticación
-import Auth from './layouts/Auth'
-import PrivateRoute from './routes/PrivateRoute';
-import PrivateAdminRoutes from './routes/PrivateAdminRoutes';
+import Auth from '@layouts/Auth'
+import PrivateRoute from '@routes/PrivateRoute';
+import PrivateAdminRoutes from '@routes/PrivateAdminRoutes';
 
 function App() {
   return (

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import Cookies from 'js-cookie';
 import { Outlet, useLocation } from 'react-router-dom'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
@@ -33,7 +32,6 @@ const Dashboard = () => {
     const { setUsersList } = useAdmin();
     const { pathname } = useLocation();
     const isDark = tema === THEMES.DARK;
-    const csrf_access_token = Cookies.get('csrf_access_token');
 
     const filterButtons = (userRoles, buttonRoles) => {
         return buttonRoles.some(rol => userRoles.includes(rol));
@@ -76,7 +74,7 @@ const Dashboard = () => {
             await profile();
         }
         
-        if (csrf_access_token) loadProfile();
+        if (Object.keys(user).length !== 0) loadProfile();
         // Limpiar los datos de los contextos al desmontar el componente
         return () => {
             setFileList([]);

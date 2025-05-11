@@ -1,11 +1,10 @@
-// src/components/PrivateRoute.jsx
 import { Outlet, Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { useAuth } from '@/contexts/AuthProvider';
 
 const PrivateRoute = () => {
-  const csrf_access_token = Cookies.get('csrf_access_token');
+  const { isAuthenticated } = useAuth();
 
-  return csrf_access_token ? <Outlet /> : <Navigate to="/" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default PrivateRoute;

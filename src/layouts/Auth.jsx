@@ -1,14 +1,10 @@
-import { Outlet, Navigate } from 'react-router-dom'
-import Cookies from 'js-cookie';
+import { Outlet, Navigate } from 'react-router-dom';
+import { useAuth } from '@contexts/AuthProvider';
 
 const Auth = () => {
-  const csrf_access_token = Cookies.get('csrf_access_token');
+  const { isAuthenticated } = useAuth();
 
-  return (
-    <>
-      {csrf_access_token ? <Navigate to="/dashboard/" />: <Outlet/>}
-    </>
-  )
-}
+  return isAuthenticated ? <Navigate to="/dashboard/" /> : <Outlet />;
+};
 
-export default Auth
+export default Auth;

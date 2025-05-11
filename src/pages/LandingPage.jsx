@@ -15,14 +15,14 @@ import LoginModal from '@modals/LoginModal';
 
 const LandingPage = () => {
     const { tema, setNavActionsItems } = useApp();
-    const { user } = useAuth(); // Obtenemos el usuario del contexto de autenticación
+    const { user, isAuthenticated } = useAuth(); // Obtenemos el usuario del contexto de autenticación
     const { pathname } = useLocation(); // Obtenemos la ruta actual
     const navigate = useNavigate(); // Obtenemos la función de navegación
     const [showLoginModal, setShowLoginModal] = useState(false); // Estado para mostrar el modal de inicio de sesión
     const isDark = tema === THEMES.DARK // Verificamos si el tema es oscuro
 
     const handleLogin = () => {
-        if (user) {
+        if (user && isAuthenticated) {
             // Si el usuario ya está autenticado, redirigir a la página de inicio
             navigate('/dashboard/');
         } else {
@@ -40,7 +40,7 @@ const LandingPage = () => {
     }, [])
 
     return (
-        <div className={`flex flex-col m-4 border rounded-lg flex-1 shadow-lg overflow-y-auto
+        <div className={`flex flex-col m-4 border rounded-lg flex-1 shadow-lg overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar
             ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} transition-all duration-300`}
         >
             <h1 className="text-4xl font-bold text-center mt-10">
@@ -50,7 +50,7 @@ const LandingPage = () => {
                 Una herramienta para facilitar la gestión de documentos y archivos.
             </p>
             {
-                user && (
+                (user && isAuthenticated) && (
                     <p className="text-lg text-center mt-4">
                         ¡Hola!, de nuevo <span className="font-bold text-orange-700">{user.name}</span>,
                         <br /> ¿Listo para continuar?
@@ -61,7 +61,7 @@ const LandingPage = () => {
                 <button
                     onClick={handleLogin}
                     className={`ml-4 px-4 py-2 rounded font-bold transition-all duration-300
-                        ${user ? 
+                        ${(user && isAuthenticated) ? 
                             isDark ? 'bg-green-700 text-white hover:bg-green-600' :
                             'bg-green-300 text-gray-900 hover:bg-green-400'
                             :
@@ -70,7 +70,7 @@ const LandingPage = () => {
                         }
                     `}
                 >
-                    {user ? (
+                    {(user && isAuthenticated) ? (
                         <span className="flex items-center space-x-2">
                             <BiSolidDashboard className="text-2xl" />
                             <span>Ir al panel de control</span>
