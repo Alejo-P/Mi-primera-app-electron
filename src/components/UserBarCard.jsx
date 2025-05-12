@@ -18,7 +18,7 @@ const UserBarCard = ({
     handleRemoveRole
 }) => {
     return (
-        <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-evenly items-center pt-3 pb-3 mt-3 rounded-lg z-100
+        <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-evenly items-center pt-3 pb-3 mt-3 rounded-lg z-10
             shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300 border hover:scale-98 hover:shadow-xl
             ${isDark ? 'bg-gray-800 text-white border-gray-600'
                 : 'bg-white text-gray-900 border-gray-300'

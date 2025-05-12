@@ -15,8 +15,8 @@ import { useFiles } from '@contexts/FilesProvider';
 // Importamos los componentes
 import LoadingCard from '@components/LoadingCard';
 import CreateQRModal from '@modals/CreateQRModal';
-import ViewFilesModal from '@/modals/ViewFilesModal';
-import FlipCard from '@/components/FlipCard';
+import ViewFilesModal from '@modals/ViewFilesModal';
+import FlipCard from '@components/FlipCard';
 
 const QRPage = () => {
     const { tema, setVisibleNav, setNavActionsItems } = useApp();

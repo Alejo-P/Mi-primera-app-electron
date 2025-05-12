@@ -12,6 +12,7 @@ import { useAdmin } from '@contexts/AdminProvider';
 
 // Importamos las constantes
 import { THEMES } from '@constants/temas';
+import { ROLES } from '@constants/roles';
 
 // Importamos los componentes
 import CustomInput from '@components/CustomInput';
@@ -19,12 +20,14 @@ import RolesField from '@components/RolesField';
 import UploadAvatarModal from '@modals/UploadAvatarModal';
 import UserAvatar from '@components/UserAvatar';
 import LoadingCard from '@components/LoadingCard';
+import RoleActionModal from '@modals/RoleActionModal';
 
 const ProfilePage = () => {
     const { user, updateProfile, updatePassword } = useAuth();
     const { tema, setNavActionsItems } = useApp();
-    const { getUserById, setUsersList, removeRole } = useAdmin();
+    const { getUserById, rolesList, removeRole, addRole, getRolesList } = useAdmin();
     const [loading, setLoading] = useState(false);
+    const [showRolesModal, setShowRolesModal] = useState(false);
     const { userID } = useParams();
     const isDark = tema === THEMES.DARK;
 
@@ -47,6 +50,10 @@ const ProfilePage = () => {
     const handleAvatarModal = () => {
         setShowUploadAvatarModal(!showUploadAvatarModal);
     };
+
+    const handleRolesModal = () => {
+        setShowRolesModal(!showRolesModal);
+    }
 
     const handleSaveProfile = async (e) => {
         e.preventDefault();
@@ -122,10 +129,10 @@ const ProfilePage = () => {
     }, [profileInfo, passwordForm]);
 
     useEffect(() => {
-        if (!showUploadAvatarModal) {
+        if (!showUploadAvatarModal && !showRolesModal) {
             setNavActionsItems([]);
         } 
-    }, [showUploadAvatarModal]);
+    }, [showUploadAvatarModal, showRolesModal]);
 
     // Cargar la información del usuario al cargar la página
     useEffect(()=> {
@@ -133,6 +140,10 @@ const ProfilePage = () => {
             // Si el ID de usuario en la URL es diferente al del usuario actual, actualizamos la información
             setProfileInfo(null);
             setLoading(true);
+
+            // Si el usuario es un admin, cargamos la lista de roles
+            if (Object.keys(user).length && !rolesList.length && user?.roles?.includes(ROLES.ADMIN)) await getRolesList();
+
             if (parseInt(userID) !== user?.id) {
                 const userProfile = await getUserById(userID);
                 if (userProfile) {
@@ -226,7 +237,11 @@ const ProfilePage = () => {
                                             key={field.name}
                                             field={field}
                                             isDark={isDark}
-                                            user={profileInfo}
+                                            userId={profileInfo.id}
+                                            values={profileInfo.roles}
+                                            isAdmin={user?.roles?.includes(ROLES.ADMIN)}
+                                            onClick={() => handleRolesModal()}
+                                            onDeleteRole={(role) => handleDeleteRole(role, profileInfo.id)}
                                         />
                                     );
                                 }
@@ -302,6 +317,15 @@ const ProfilePage = () => {
             {showUploadAvatarModal && (
                 <UploadAvatarModal
                     handleModal={handleAvatarModal}
+                />
+            )}
+            {showRolesModal && (
+                <RoleActionModal
+                    handleModal={handleRolesModal}
+                    userInfo={profileInfo}
+                    isAdmin={user?.roles?.includes(ROLES.ADMIN)}
+                    isDark={isDark}
+                    roleList={rolesList}
                 />
             )}
         </div>

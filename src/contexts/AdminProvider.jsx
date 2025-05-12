@@ -13,6 +13,7 @@ export const AdminProvider = ({ children }) => {
     const { user, setUser } = useAuth();
     const { request } = useAxios(); // ¡aquí la magia!
     const [usersList, setUsersList] = useState([]);
+    const [rolesList, setRolesList] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -136,9 +137,26 @@ export const AdminProvider = ({ children }) => {
         return response;
     }
 
+    const getRolesList = async () => {
+        const response = await request({
+            method: 'get',
+            url: '/roles',
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            setRolesList(response);
+        }
+    }
+
     const contextValue = useMemo(() => ({
         loading,
         usersList,
+        rolesList,
+        setRolesList,
         setUsersList,
         getAllUsers,
         getUserById,
@@ -146,8 +164,9 @@ export const AdminProvider = ({ children }) => {
         disableUser,
         setLoading,
         addRole,
-        removeRole
-    }), [usersList, loading]);
+        removeRole,
+        getRolesList
+    }), [usersList, loading, rolesList]);
     
     return (
         <AdminContext.Provider value={contextValue}>

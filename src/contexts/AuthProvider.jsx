@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
 
         if (response) {
             setUser(response.user);
+            localStorage.setItem('isAuth', "true");
             navigate('/dashboard/');
         }
         setLoading(false);
@@ -69,6 +70,7 @@ export const AuthProvider = ({ children }) => {
         // Eliminar los tokens de las cookies
         Cookies.remove('csrf_access_token');
         Cookies.remove('csrf_refresh_token');
+        localStorage.removeItem('isAuth');
         setUser({});
         navigate('/');
     };
@@ -173,7 +175,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const contextValue = useMemo(() => {
-        const isAuthenticated = Object.keys(user).length !== 0;
+        // Verifica si el usuario está autenticado
+        const isAuthenticated = Object.keys(user).length !== 0 || localStorage.getItem('isAuth') === "true";
 
         return{
         user,

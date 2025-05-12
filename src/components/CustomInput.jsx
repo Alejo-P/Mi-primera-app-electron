@@ -34,7 +34,7 @@ const CustomInput = ({
     return (
         <div className="flex flex-col">
             <label htmlFor={Iname} className="font-bold title flex justify-between items-center">
-                {Iplaceholder}:
+                {Iplaceholder ? Iplaceholder : "Campo"}:
                 {Irequired && <span className="text-red-500 text-sm uppercase">(Requerido)</span>}
             </label>
             <div className="flex flex-col relative">
@@ -53,14 +53,14 @@ const CustomInput = ({
                     onChange={IonChange}
                     ref={Iref}
                     maxLength={ImaxLength}
-                    className={`border border-gray-300 p-2 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900'}`}
+                    className={`border p-2 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ${isDark ? 'bg-gray-700 text-white border-gray-300' : 'bg-gray-300 text-gray-900 border-gray-500'}`}
                     placeholder={Iplaceholder}
                     title={Iplaceholder}
                     disabled={Idisabled}
                     required={Irequired}
                     accept={Iaccept}
                 />
-                <div className="absolute top-2 left-2 text-gray-400 group-hover:left-3 transition-all duration-300 text-center">
+                <div className={`absolute left-2 top-1/2 transform -translate-y-1/2 group-hover:left-3 transition-all duration-300 bg-transparent text-center ${isDark ? 'text-white border-gray-700' : 'text-gray-900 border-gray-300'}`}>
                     {
                         Itype === "text" ? <IoText className="text-2xl" /> :
                         Itype === "email" ? <FiMail className="text-2xl" /> :
@@ -73,7 +73,7 @@ const CustomInput = ({
                 </div>
                 {Itype === "password" && (
                     <motion.div
-                        className={`absolute right-2 top-2 cursor-pointer ${Ivalue ? 'block' : 'hidden'}`}
+                        className={`absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer transition-all duration-300 bg-transparent ${Ivalue ? 'block' : 'hidden'} ${isDark ? 'text-white border-gray-700' : 'text-gray-900 border-gray-300'}`}
                         onClick={handlePasswordVisibility}
                         title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                         initial={{ scale: 1, opacity: 1 }}

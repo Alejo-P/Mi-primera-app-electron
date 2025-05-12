@@ -29,7 +29,7 @@ const Dashboard = () => {
     const { notificacion, tema, setCurrentPath } = useApp();
     const { setFileList } = useFiles();
     const { setQRList } = useQR();
-    const { setUsersList } = useAdmin();
+    const { setUsersList, setRolesList } = useAdmin();
     const { pathname } = useLocation();
     const isDark = tema === THEMES.DARK;
 
@@ -74,14 +74,16 @@ const Dashboard = () => {
             await profile();
         }
         
-        if (Object.keys(user).length !== 0) loadProfile();
+        if (!Object.keys(user).length) loadProfile();
+
         // Limpiar los datos de los contextos al desmontar el componente
         return () => {
             setFileList([]);
             setQRList([]);
             setUsersList([]);
+            setRolesList([]);
         };
-    }, []);
+    }, []); // Se ejecuta cuando cambia el usuario del usuario
 
     return (
         <div className={`grid grid-cols-[20%_80%] grid-rows-[40px_50px_1fr] h-screen transition-all duration-300 min-w-[525px] scrollbar-track-transparent
