@@ -47,11 +47,9 @@ axiosInstance.interceptors.response.use(
         if ((error.response?.detail === "Token faltante" || error.response?.detail === "Token inválido o expirado") && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                const csrf_refresh_token = Cookies.get('csrf_refresh_token');
                 const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/refresh`, {}, {
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-Token': csrf_refresh_token,
+                        'Content-Type': 'application/json'
                     },
                     withCredentials: true, // Asegúrate de que esto esté habilitado para enviar cookies
                 });

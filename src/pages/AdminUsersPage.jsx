@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'; 
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { IoPersonAdd } from "react-icons/io5";
@@ -147,7 +147,7 @@ const AdminUsersPage = () => {
                         {
                             headerList.map((element, index) => (
                                 <div
-                                    key={element.index}
+                                    key={element.key}
                                     className={`flex flex-row items-center w-full h-full justify-around
                                         ${index < (headerList.length - 1) ? 'border-r-2' : ''}
                                         ${element.key === 'name' ? 'hidden sm:block' : ''}

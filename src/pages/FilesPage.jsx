@@ -181,7 +181,7 @@ const FilesPage = () => {
                 showModal && <ViewFilesModal fileInfo={selectedFile} handleModal={handleModal} />
             }
             {
-                (visibleToolbar && user?.roles.includes(ROLES.ADMIN)) && (
+                (visibleToolbar && user?.roles?.includes(ROLES.ADMIN)) && (
                     <>
                         {/* Sidebar de navegación */}
                         <div className={`fixed top-10 right-0 h-[calc(100%-40px)] shadow-lg transition-all duration-300 rounded-tl-xl rounded-bl-xl
