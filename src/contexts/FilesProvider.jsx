@@ -132,7 +132,7 @@ export const FilesProvider = ({ children }) => {
 
         if (response) {
             setFileList((prev) => prev.filter((file) => file.filename !== name));
-            setQRList((prev) => prev.filter((qr) => qr?.attached_file.filename !== name));
+            setQRList((prev) => prev.filter((qr) => qr?.attached_file?.filename !== name));
             handleNotificacion('success', response.msg, 5000);
         }
     };

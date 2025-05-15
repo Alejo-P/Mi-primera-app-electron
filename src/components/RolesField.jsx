@@ -27,7 +27,7 @@ const RolesField = ({
     // Función para manejar el clic en el botón de añadir rol
     // Se asegura de que el usuario tenga permisos para añadir el rol
     const handleAddRole = (role) => {
-        if (isAdmin && roles.length > 1 && onAddEachRole) {
+        if (isAdmin && roles.length && onAddEachRole) {
             // Llama a la función onAddRole si está definida y el usuario tiene permisos
             userId && onAddEachRole(role, userId);
         }
@@ -92,8 +92,8 @@ const RolesField = ({
                                     <motion.div
                                         className={`ml-2 rounded-full transform cursor-pointer transition-all duration-300 bg-transparent
                                             ${isDark ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-500'}`}
-                                        onClick={() => handleDeleteRole(role)} // Acciona el modal
-                                        title="Eliminar rol"
+                                        onClick={() => handleAddRole(role)} // Acciona el modal
+                                        title="Agregar rol"
                                         initial={{ scale: 1, opacity: 1 }}
                                         whileTap={{ scale: 0.8, opacity: 0.7 }}  // 🔥 Rebote al presionar
                                         transition={{ duration: 0.2, ease: "easeInOut" }}  // Suaviza el efecto

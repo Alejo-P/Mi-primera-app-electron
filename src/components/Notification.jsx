@@ -5,15 +5,17 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 const Notification = ({ type = "success", content, onClose, duration = 3000 }) => {
     const [visible, setVisible] = useState(true);
+    const [progressKey, setProgressKey] = useState(0);
 
     useEffect(() => {
+        setProgressKey(prev => prev + 1); // Trigger para reiniciar barra
+        setVisible(true);
         const timer = setTimeout(() => {
             setVisible(false);
-            onClose && setTimeout(onClose, 500); // Espera la animación antes de remover el componente
+            onClose && setTimeout(onClose, 500);
         }, duration);
-
         return () => clearTimeout(timer);
-    }, [duration, onClose]);
+    }, [content, duration, onClose]);
 
     const colorClasses = {
         error: { bg: "bg-red-500", border: "border-red-700", iconBg: "bg-red-900" },
@@ -31,13 +33,16 @@ const Notification = ({ type = "success", content, onClose, duration = 3000 }) =
                     animate={{ y: 20, opacity: 1 }}
                     exit={{ y: -50, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 100 }}
-                    className={`fixed top-4 z-100 left-1/2 transform -translate-x-1/2 flex w-auto max-w-xs md:max-w-lg lg:max-w-2xl text-white rounded-lg shadow-lg ${bg} ${border}`}
+                    className={`overflow-hidden fixed top-4 z-100 left-1/2 transform -translate-x-1/2 flex w-auto max-w-xs md:max-w-lg lg:max-w-2xl text-white rounded-lg shadow-lg ${bg} ${border}`}
                 >
+                    {/* Icono de la notificación */}
                     <div className={`flex items-center justify-center px-4 ${iconBg} rounded-l-lg`}>
                         <span className="text-3xl">
                             {type === "error" ? <FaRegTimesCircle /> : type === "success" ? <FaRegCheckCircle /> : <AiOutlineExclamationCircle />}
                         </span>
                     </div>
+
+                    {/* Contenido de la notificación */}
                     <div className="flex-1 p-4">
                         <p className="break-words">{content}</p>
                     </div>

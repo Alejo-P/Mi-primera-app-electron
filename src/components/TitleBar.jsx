@@ -32,7 +32,7 @@ const TitleBar = () => {
     useEffect(() => {
         // Verificamos si estamos en la página de perfil
         setIsProfilePage(pathname === `/dashboard/profile/${user?.id}`);
-    }, [pathname]); // Se ejecuta cuando cambia la ruta
+    }, [pathname, user]); // Se ejecuta cuando cambia la ruta
 
     useEffect(() => {
         const { electronAPI } = window;

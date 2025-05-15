@@ -88,8 +88,6 @@ export const AuthProvider = ({ children }) => {
 
         if (response) {
             setUser(response);
-        } else {
-            await refreshToken();
         }
 
         setLoading(false);
@@ -156,24 +154,6 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
-    const refreshToken = async () => {
-        const response = await request({
-            method: 'post',
-            url: '/refresh',
-            notify: {
-                success: false,
-                error: true
-            }
-        });
-
-        if (response) {
-            handleNotificacion('success', 'Token de acceso actualizado', 5000);
-        } else {
-            // Si el refresh falla, probablemente sea necesario cerrar sesión
-            logout();
-        }
-    };
-
     const contextValue = useMemo(() => {
         // Verifica si el usuario está autenticado
         const isAuthenticated = Object.keys(user).length !== 0 || localStorage.getItem('isAuth') === "true";
@@ -189,8 +169,7 @@ export const AuthProvider = ({ children }) => {
         profile,
         updateProfile,
         updatePassword,
-        uploadAvatar,
-        refreshToken
+        uploadAvatar
     }}, [user, loading]);
 
     return (
