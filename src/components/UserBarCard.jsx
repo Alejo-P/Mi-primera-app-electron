@@ -37,6 +37,7 @@ const UserBarCard = ({
                                         isDark={isDark}
                                         isLoading={loading}
                                         size={45}
+                                        placeTooltip="left"
                                     />
                                 </div>
                             );

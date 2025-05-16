@@ -10,7 +10,8 @@ const UserAvatar = ({
     isLoading = false,
     round = true,
     size = 50,
-    maxInitials = 2
+    maxInitials = 2,
+    placeTooltip = 'top',
 }) => {
     const handleAvatarModal = () => {
         if (isLoading) return;
@@ -68,7 +69,7 @@ const UserAvatar = ({
                     </div>
                 )
             }
-            <ReactTooltip id={`profile ${user?.id}`} place="top" effect="solid" />
+            <ReactTooltip id={`profile ${user?.id}`} place={placeTooltip} effect="solid" />
         </div>
     )
 }

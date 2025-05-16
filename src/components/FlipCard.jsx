@@ -261,7 +261,7 @@ const FlipCard = ({
                                     (user?.id === file?.uploaded_by?.id || user?.id === file?.created_by?.id) ? 'Tú' :
                                     file?.uploaded_by?.name || file?.created_by?.name
                                 } <span
-                                    className={`${!(user?.roles.includes(ROLES.ADMIN)) ? 'hidden' : ''}`}
+                                    className={`${!(user?.roles?.includes(ROLES.ADMIN)) ? 'hidden' : ''}`}
                                 >
                                     ({
                                         file?.uploaded_by?.roles && (

@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoClose } from "react-icons/io5";
 import { ImSpinner9 } from "react-icons/im";
-import { LuShieldPlus } from "react-icons/lu";
-
-import { THEMES } from '@constants/temas';
+import { LuShieldCheck } from "react-icons/lu";
 import { useApp } from '@contexts/AppProvider';
 import { useAdmin } from '@contexts/AdminProvider';
-
-import CustomInput from '@components/CustomInput';
 import RolesField from '@components/RolesField';
 
 const RoleActionModal = ({
@@ -21,56 +17,63 @@ const RoleActionModal = ({
     const { addRole, removeRole } = useAdmin();
     const initialRoles = userInfo.roles || [];
     const [roles, setRoles] = useState([...userInfo.roles]);
-    const [addRoleList, setAddRoleList] = useState([]);
-    const [removeRoleList, setRemoveRoleList] = useState([]);
-    const [selectedRoles, setSelectedRoles] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const availableRoles = roleList
         .map(role => role.name)
         .filter(role => !roles.includes(role));
 
-    const disabled = selectedRoles.length === 0;
+    // const toggleRoleSelection = (role) => {
+    //     setSelectedRoles(prev =>
+    //         prev.includes(role)
+    //             ? prev.filter(r => r !== role)
+    //             : [...prev, role]
+    //     );
 
-    const toggleRoleSelection = (role) => {
-        setSelectedRoles(prev =>
-            prev.includes(role)
-                ? prev.filter(r => r !== role)
-                : [...prev, role]
-        );
+    //     setRoles(prev =>
+    //         prev.includes(role)
+    //             ? prev.filter(r => r !== role)
+    //             : [...prev, role]
+    //     );
+    // };
 
-        setRoles(prev =>
-            prev.includes(role)
-                ? prev.filter(r => r !== role)
-                : [...prev, role]
-        );
+    const hasChanges = () => {
+        const added = roles.filter(role => !initialRoles.includes(role));
+        const removed = initialRoles.filter(role => !roles.includes(role));
+        return added.length > 0 || removed.length > 0;
     };
 
+    const disabled = !hasChanges();
+
     const handleAddRole = (role) => {
-        // Solo agregar si el usuario NO lo tiene ya
-        if (!userInfo.roles.includes(role)) {
-            setAddRoleList(prev => [...prev, role]);
+        if (!roles.includes(role)) {
             setRoles(prev => [...prev, role]);
         }
-        setRemoveRoleList(prev => prev.filter(r => r !== role));
     };
 
     const handleDeleteRole = (role) => {
-        // Solo considerar la eliminación si el usuario originalmente tenía el rol
-        if (userInfo.roles.includes(role)) {
-            setRemoveRoleList(prev => [...prev, role]);
-        }
-        setAddRoleList(prev => prev.filter(r => r !== role));
         setRoles(prev => prev.filter(r => r !== role));
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            console.log("Enviar cambios de rol:", selectedRoles);
-            // Aquí podrías llamar a addRole/removeRole dependiendo del caso.
+            const addedRoles = roles.filter(r => !initialRoles.includes(r));
+            const removedRoles = initialRoles.filter(r => !roles.includes(r));
+
+            console.log("Roles a agregar:", addedRoles);
+            console.log("Roles a eliminar:", removedRoles);
+
+            // Puedes hacer llamadas paralelas o secuenciales según prefieras
+            await Promise.all([
+                ...addedRoles.map(role => addRole(role, userInfo.id)),
+                ...removedRoles.map(role => removeRole(role, userInfo.id))
+            ]);
+
+            // Podrías cerrar el modal o mostrar un mensaje de éxito aquí
+            handleClose();
+
         } catch (err) {
             console.error("Error al enviar cambios de rol:", err);
         } finally {
@@ -78,9 +81,17 @@ const RoleActionModal = ({
         }
     };
 
+
     const handleClose = () => {
         setTimeout(() => handleModal(''), 200);
     };
+
+    useEffect(() => {
+        console.log("Roles actuales:", roles);
+        console.log("Originales:", initialRoles);
+        console.log("Cambios detectados:", hasChanges());
+    }, [roles]);
+
 
     useEffect(() => {
         setNavActionsItems([
@@ -102,7 +113,7 @@ const RoleActionModal = ({
                     >
                         {loading
                             ? <ImSpinner9 className="animate-spin text-2xl" />
-                            : <LuShieldPlus className="text-2xl" />
+                            : <LuShieldCheck className="text-2xl" />
                         }
                     </button>
                 )

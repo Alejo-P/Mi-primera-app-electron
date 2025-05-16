@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom';
+import { Outlet, useSearchParams } from 'react-router-dom';
 
 // Importamos los contextos
 import { useApp } from '@contexts/AppProvider'
@@ -15,6 +15,10 @@ import NavActions from '@components/NavActions';
 const Mainboard = () => {
     const { tema, notificacion } = useApp();
     const isDark = tema === THEMES.DARK // Verificamos si el tema es oscuro
+    const [searchParams] = useSearchParams();
+
+    console.log('Mainboard', searchParams.get('verify-email'), searchParams.get('token'));
+    // Verificamos si hay parámetros de búsqueda en la URL
 
     return (
         <div className={`flex flex-col h-screen transition-all duration-300 min-w-[525px] scrollbar-track-transparent

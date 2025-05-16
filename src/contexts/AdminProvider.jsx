@@ -111,12 +111,16 @@ export const AdminProvider = ({ children }) => {
 
         if (response) {
             handleNotificacion('success', 'Rol añadido correctamente', 5000);
-            const updatedUser = { ...user };
-            if (!updatedUser.roles) {
-                updatedUser.roles = [];
+
+            // Actualizar el estado del usuario en el contexto (solo si el usuario autenticado es el mismo) 
+            if (user.id === user_id) {
+                const updatedUser = { ...user };
+                if (!updatedUser.roles) {
+                    updatedUser.roles = [];
+                }
+                updatedUser.roles.push(role);
+                setUser(updatedUser);
             }
-            updatedUser.roles.push(role);
-            setUser(updatedUser);
         }
     }
 
@@ -134,7 +138,18 @@ export const AdminProvider = ({ children }) => {
             }
         });
 
-        return response;
+        if (response) {
+            handleNotificacion('success', 'Rol eliminado correctamente', 5000);
+
+            // Actualizar el estado del usuario en el contexto (solo si el usuario autenticado es el mismo) 
+            if (user.id === user_id) {
+                const updatedUser = { ...user };
+                if (updatedUser.roles) {
+                    updatedUser.roles = updatedUser.roles.filter(r => r !== role);
+                }
+                setUser(updatedUser);
+            }
+        }
     }
 
     const getRolesList = async () => {

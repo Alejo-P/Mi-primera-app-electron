@@ -25,7 +25,7 @@ import RoleActionModal from '@modals/RoleActionModal';
 const ProfilePage = () => {
     const { user, updateProfile, updatePassword } = useAuth();
     const { tema, setNavActionsItems } = useApp();
-    const { getUserById, rolesList, removeRole, addRole, getRolesList } = useAdmin();
+    const { getUserById, rolesList, removeRole, getRolesList } = useAdmin();
     const [loading, setLoading] = useState(false);
     const [showRolesModal, setShowRolesModal] = useState(false);
     const { userID } = useParams();
@@ -73,20 +73,6 @@ const ProfilePage = () => {
         await updatePassword(data);
         setIsLoading(false);
     };
-
-    const handleDeleteRole = async (role, user_id) => {
-        setLoading(true);
-        const response = await removeRole(role, user_id);
-        setLoading(false);
-        if (response) {
-            handleNotificacion('success', 'Rol eliminado correctamente', 5000);
-            const updatedUser = { };
-            updatedUser.roles = updatedUser.roles.filter(r => r !== role);
-            setUser(updatedUser);
-        }
-        // TODO: Modificar la funcion para eliminar un rol para eliminar el rol en el estado del perfil cargado
-    }
-
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -241,7 +227,6 @@ const ProfilePage = () => {
                                             values={profileInfo.roles}
                                             isAdmin={user?.roles?.includes(ROLES.ADMIN)}
                                             onClick={() => handleRolesModal()}
-                                            onDeleteRole={(role) => handleDeleteRole(role, profileInfo.id)}
                                         />
                                     );
                                 }
