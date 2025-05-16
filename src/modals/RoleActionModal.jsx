@@ -23,20 +23,6 @@ const RoleActionModal = ({
         .map(role => role.name)
         .filter(role => !roles.includes(role));
 
-    // const toggleRoleSelection = (role) => {
-    //     setSelectedRoles(prev =>
-    //         prev.includes(role)
-    //             ? prev.filter(r => r !== role)
-    //             : [...prev, role]
-    //     );
-
-    //     setRoles(prev =>
-    //         prev.includes(role)
-    //             ? prev.filter(r => r !== role)
-    //             : [...prev, role]
-    //     );
-    // };
-
     const hasChanges = () => {
         const added = roles.filter(role => !initialRoles.includes(role));
         const removed = initialRoles.filter(role => !roles.includes(role));
@@ -72,7 +58,10 @@ const RoleActionModal = ({
             ]);
 
             // Podrías cerrar el modal o mostrar un mensaje de éxito aquí
-            handleClose();
+            handleClose(
+                // Enviar los roles actualizados al cerrar el modal
+                roles
+            );
 
         } catch (err) {
             console.error("Error al enviar cambios de rol:", err);
@@ -81,9 +70,9 @@ const RoleActionModal = ({
         }
     };
 
-
-    const handleClose = () => {
-        setTimeout(() => handleModal(''), 200);
+    // Cierra el modal después de un pequeño retraso
+    const handleClose = (newRoles) => {
+        setTimeout(() => handleModal(newRoles), 200);
     };
 
     useEffect(() => {

@@ -51,8 +51,12 @@ const ProfilePage = () => {
         setShowUploadAvatarModal(!showUploadAvatarModal);
     };
 
-    const handleRolesModal = () => {
+    const handleRolesModal = (newRoles) => {
         setShowRolesModal(!showRolesModal);
+        // Actualiza la lista de roles en la vista (si el usuario es distinto al autenticado)
+        if (newRoles && parseInt(userID) !== user?.id) {
+            setProfileInfo({ ...profileInfo, roles: newRoles });
+        }
     }
 
     const handleSaveProfile = async (e) => {
@@ -143,7 +147,6 @@ const ProfilePage = () => {
                     };
                     initialProfileInfoRef.current = newProfile;
                     setProfileInfo(newProfile);
-                    console.log("Perfil cargado:", newProfile);
                 }
             } else {
                 // Si el ID de usuario en la URL es el mismo que el del usuario actual, cargamos la información del usuario actual
@@ -157,7 +160,6 @@ const ProfilePage = () => {
                 };
                 initialProfileInfoRef.current = currentProfile;
                 setProfileInfo(currentProfile);
-                console.log("Perfil actual:", currentProfile);
             }
             setLoading(false);
         };
