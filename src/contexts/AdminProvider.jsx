@@ -95,6 +95,50 @@ export const AdminProvider = ({ children }) => {
         setLoading(false);  
     }
 
+    const updateUser = async (userId, data) => {
+        setLoading(true);
+        const response = await request({
+            method: 'put',
+            url: `/user/${userId}`,
+            payload: data,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+        if (response) {
+            setUsersList((prev) => prev.map((user) => {
+                if (user.id === userId){
+                    return { ...user, ...data };
+                }
+                return user;
+            }));
+            handleNotificacion('success', response.msg, 5000);
+        }
+
+        setLoading(false);
+        return response;
+    }
+
+    const updateUserPassword = async (userId, data) => {
+        setLoading(true);
+        const response = await request({
+            method: 'put',
+            url: `/user/change-password/${userId}`,
+            payload: data,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+        if (response) {
+            handleNotificacion('success', response.msg, 5000);
+        }
+
+        setLoading(false);
+        return response;
+    }
+
     const addRole = async (role, user_id) => {
         const response = await request({
             method: 'post',
@@ -167,6 +211,23 @@ export const AdminProvider = ({ children }) => {
         }
     }
 
+    const sendVerfyEmail = (userId) => {
+        setLoading(true);
+        const response = request({
+            method: 'post',
+            url: `/send-verification-email/${userId}`,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', response.msg, 5000);
+        }
+        setLoading(false);
+    }
+
     const contextValue = useMemo(() => ({
         loading,
         usersList,
@@ -177,6 +238,9 @@ export const AdminProvider = ({ children }) => {
         getUserById,
         enableUser,
         disableUser,
+        sendVerfyEmail,
+        updateUser,
+        updateUserPassword,
         setLoading,
         addRole,
         removeRole,

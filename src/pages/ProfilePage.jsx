@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { IoIosSave } from "react-icons/io";
 import { IoWarning } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
@@ -25,7 +25,7 @@ import RoleActionModal from '@modals/RoleActionModal';
 const ProfilePage = () => {
     const { user, updateProfile, updatePassword } = useAuth();
     const { tema, setNavActionsItems } = useApp();
-    const { getUserById, rolesList, removeRole, getRolesList } = useAdmin();
+    const { getUserById, rolesList, sendVerfyEmail, getRolesList, updateUser, updateUserPassword } = useAdmin();
     const [loading, setLoading] = useState(false);
     const [showRolesModal, setShowRolesModal] = useState(false);
     const { userID } = useParams();
@@ -54,7 +54,7 @@ const ProfilePage = () => {
     const handleRolesModal = (newRoles) => {
         setShowRolesModal(!showRolesModal);
         // Actualiza la lista de roles en la vista (si el usuario es distinto al autenticado)
-        if (newRoles && parseInt(userID) !== user?.id) {
+        if (Array.isArray(newRoles) && parseInt(userID) !== user?.id) {
             setProfileInfo({ ...profileInfo, roles: newRoles });
         }
     }
@@ -62,7 +62,27 @@ const ProfilePage = () => {
     const handleSaveProfile = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        await updateProfile(profileInfo);
+        if (parseInt(userID) !== user?.id && user?.roles?.includes(ROLES.ADMIN)) {
+            // Si el usuario autenticado es un admin y el ID de usuario en la URL es distinto al del usuario autenticado
+            const response = await updateUser(profileInfo.id, profileInfo);
+            if (response?.user) {
+                setProfileInfo({
+                    ...profileInfo,
+                    name: response?.user.name,
+                    email: response?.user.email,
+                    roles: response?.user.roles
+                });
+                initialProfileInfoRef.current = {
+                    ...profileInfo,
+                    name: response?.user.name,
+                    email: response?.user.email,
+                    roles: response?.user.roles
+                };
+            }
+        } else {
+            // Si el usuario autenticado es el mismo que el de la URL
+            await updateProfile(profileInfo);
+        }
         setIsLoading(false);
     };
 
@@ -74,8 +94,24 @@ const ProfilePage = () => {
             new_password: passwordForm.newPassword,
             confirm_password: passwordForm.confirmPassword
         };
-        await updatePassword(data);
+        if (parseInt(userID) !== user?.id && user?.roles?.includes(ROLES.ADMIN)) {
+            // Si el usuario autenticado es un admin y el ID de usuario en la URL es distinto al del usuario autenticado
+            await updateUserPassword(profileInfo.id, data);
+        } else {
+            // Si el usuario autenticado es el mismo que el de la URL
+            await updatePassword(data);
+        }
+        setPasswordForm(initialPasswordForm);
         setIsLoading(false);
+    };
+
+    const handleSendVerificationEmail = async () => {
+        if (!user?.roles?.includes(ROLES.ADMIN)) return;
+        const confirm = window.confirm("¿Estás seguro de que deseas enviar un correo de verificación?");
+        if (!confirm) return;
+        setLoading(true);
+        await sendVerfyEmail(profileInfo.id);
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -164,7 +200,7 @@ const ProfilePage = () => {
             setLoading(false);
         };
         loadUserProfile();
-    }, [userID, user]); // Se ejecuta cuando cambia la ruta
+    }, [userID, user]); // Se ejecuta cuando cambia el usuario
 
     return (
         <div className={`w-full p-3 transition-all duration-300`}>
@@ -176,17 +212,37 @@ const ProfilePage = () => {
                     {
                         !profileInfo.is_verified && (
                             <div
-                                className={`flex flex-col items-center justify-center w-full p-2 rounded-lg shadow-lg transition-all duration-300
-                                ${isDark ? 'bg-orange-800 text-white'
-                                    : 'bg-orange-400 text-gray-900'
-                                }
-                                flex flex-row items-center max-h-screen overflow-auto border-2 border-orange-500
+                                className={`grid grid-cols-[10%_90%] lg:flex lg:flex-row lg:items-center lg:justify-evenly overflow-auto border-2 border-orange-500 w-full p-2 rounded-lg shadow-lg transition-all duration-300
+                                    ${isDark ? 'bg-orange-800 text-white' : 'bg-orange-400 text-gray-900'}
                                 `}
                             >
                                 <IoWarning className="text-3xl" />
                                 <p className="text-center italic font-semibold">
                                     Tu cuenta no está verificada. Por favor verifica tu correo electrónico para activar tu cuenta.
                                 </p>
+                                {user?.roles?.includes(ROLES.ADMIN) && (
+                                    <>
+                                        <p
+                                            className={`font-bold transition-all duration-300 col-span-2 lg:col-span-1 lg:flex lg:items-center lg:justify-center
+                                                ${isDark ? 'text-blue-400 hover:text-blue-600' : 'teext-blue-500 hover:text-blue-700'}
+                                                hover:scale-95 text-center cursor-pointer
+                                            `}
+                                            onClick={handleSendVerificationEmail}
+                                            data-tooltip-id="verificarLabel"
+                                            data-tooltip-content="Enviar correo de verificación"
+                                            title="Verificar cuenta"
+                                        >
+                                            Enviar correo de verificación
+                                        </p>
+                                        <ReactTooltip
+                                            id="verificarLabel"
+                                            place="bottom"
+                                            effect="solid"
+                                            className={`tooltip ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-900'}`}
+                                            style={{ fontSize: '0.8rem' }}
+                                        />
+                                    </>
+                                )}
                             </div>
                         )
                     }

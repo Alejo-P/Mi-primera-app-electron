@@ -72,7 +72,7 @@ const RoleActionModal = ({
 
     // Cierra el modal después de un pequeño retraso
     const handleClose = (newRoles) => {
-        setTimeout(() => handleModal(newRoles), 200);
+        setTimeout(() => handleModal(newRoles || false), 200);
     };
 
     useEffect(() => {
@@ -111,7 +111,7 @@ const RoleActionModal = ({
                 key: 'cerrar',
                 element: (
                     <button
-                        onClick={handleClose}
+                        onClick={() => handleClose()}
                         className={`p-2 rounded-lg transition-all duration-300
                             ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-gray-400'}
                             hover:scale-95 shadow-lg hover:shadow-xl`}
