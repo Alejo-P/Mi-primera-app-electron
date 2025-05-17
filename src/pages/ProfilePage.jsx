@@ -62,9 +62,16 @@ const ProfilePage = () => {
     const handleSaveProfile = async (e) => {
         e.preventDefault();
         setIsLoading(true);
+        
+        // Quitar los espacios en blanco al principio y al final de los campos
+        const data = { ...profileInfo };
+        data.name = data.name.trim();
+        data.email = data.email.trim();
+        data.roles = data.roles.map(role => role.trim());
+
         if (parseInt(userID) !== user?.id && user?.roles?.includes(ROLES.ADMIN)) {
             // Si el usuario autenticado es un admin y el ID de usuario en la URL es distinto al del usuario autenticado
-            const response = await updateUser(profileInfo.id, profileInfo);
+            const response = await updateUser(profileInfo.id, data);
             if (response?.user) {
                 setProfileInfo({
                     ...profileInfo,
@@ -81,7 +88,7 @@ const ProfilePage = () => {
             }
         } else {
             // Si el usuario autenticado es el mismo que el de la URL
-            await updateProfile(profileInfo);
+            await updateProfile(data);
         }
         setIsLoading(false);
     };
@@ -89,11 +96,13 @@ const ProfilePage = () => {
     const handleSavePassword = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const data = {
-            current_password: passwordForm.password,
-            new_password: passwordForm.newPassword,
-            confirm_password: passwordForm.confirmPassword
-        };
+
+        // Quitar los espacios en blanco al principio y al final de los campos
+        const data = { ...passwordForm };
+        data.password = data.password.trim();
+        data.newPassword = data.newPassword.trim();
+        data.confirmPassword = data.confirmPassword.trim();
+        
         if (parseInt(userID) !== user?.id && user?.roles?.includes(ROLES.ADMIN)) {
             // Si el usuario autenticado es un admin y el ID de usuario en la URL es distinto al del usuario autenticado
             await updateUserPassword(profileInfo.id, data);
@@ -270,7 +279,7 @@ const ProfilePage = () => {
                                             Itype={field.type}
                                             Iname={field.name}
                                             Ivalue={profileInfo[field.name]}
-                                            IonChange={(e) => setProfileInfo({ ...profileInfo, [field.name]: e.target.value })}
+                                            IonChange={(e) => setProfileInfo({ ...profileInfo, [field.name]: e.target.value})}
                                             Iplaceholder={field.placeholder}
                                             Idisabled={field.disabled}
                                         />

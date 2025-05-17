@@ -122,10 +122,15 @@ export const AdminProvider = ({ children }) => {
 
     const updateUserPassword = async (userId, data) => {
         setLoading(true);
+        const passData = {
+            current_password: data.password,
+            new_password: data.newPassword,
+            confirm_password: data.confirmPassword
+        };
         const response = await request({
             method: 'put',
             url: `/user/change-password/${userId}`,
-            payload: data,
+            payload: passData,
             notify: {
                 success: true,
                 error: true

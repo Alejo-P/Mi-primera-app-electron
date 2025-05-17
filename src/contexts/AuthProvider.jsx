@@ -114,10 +114,15 @@ export const AuthProvider = ({ children }) => {
 
     const updatePassword = async (data) => {
         setLoading(true);
+        const passData = {
+            current_password: data.password,
+            new_password: data.newPassword,
+            confirm_password: data.confirmPassword
+        };
         const response = await request({
             method: 'put',
             url: '/profile/update_password',
-            payload: data,
+            payload: passData,
             notify: {
                 success: false,
                 error: true
