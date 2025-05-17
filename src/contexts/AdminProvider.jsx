@@ -164,6 +164,15 @@ export const AdminProvider = ({ children }) => {
                 }
                 updatedUser.roles.push(role);
                 setUser(updatedUser);
+            } else {
+                // Actualizar la lista de usuarios en el contexto
+                // para reflejar el cambio en los roles del usuario
+                setUsersList((prev) => prev.map((user) => {
+                    if (user.id === user_id){
+                        return { ...user, roles: [...user.roles, role] };
+                    }
+                    return user;
+                }));
             }
         }
     }
@@ -192,6 +201,15 @@ export const AdminProvider = ({ children }) => {
                     updatedUser.roles = updatedUser.roles.filter(r => r !== role);
                 }
                 setUser(updatedUser);
+            } else {
+                // Actualizar la lista de usuarios en el contexto
+                // para reflejar el cambio en los roles del usuario
+                setUsersList((prev) => prev.map((user) => {
+                    if (user.id === user_id){
+                        return { ...user, roles: user.roles.filter(r => r !== role) };
+                    }
+                    return user;
+                }));
             }
         }
     }
