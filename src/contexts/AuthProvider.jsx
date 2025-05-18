@@ -159,6 +159,24 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
+    const verifyEmail = async (data) => {
+        setLoading(true);
+        const response = await request({
+            method: 'post',
+            url: '/verify-email',
+            payload: data,
+            notify: {
+                success: true,
+                error: true
+            }
+        });
+
+        if (response) {
+            handleNotificacion('success', response.msg, 5000);
+        }
+        setLoading(false);
+    };
+
     const contextValue = useMemo(() => {
         // Verifica si el usuario está autenticado
         const isAuthenticated = Object.keys(user).length !== 0 || localStorage.getItem('isAuth') === "true";
@@ -170,6 +188,7 @@ export const AuthProvider = ({ children }) => {
         setUser,
         login,
         register,
+        verifyEmail,
         logout,
         profile,
         updateProfile,

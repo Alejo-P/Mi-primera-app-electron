@@ -89,7 +89,7 @@ const OptionsCard = () => {
                         `}
                     /> */}
                     {
-                        user && (
+                        (Object.keys(user || {}).length > 0) && (
                             <>
                                 <button
                                     className={`p-2 rounded-lg transition-all duration-300 hover:bg-red-400

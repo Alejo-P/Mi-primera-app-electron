@@ -148,7 +148,7 @@ const AdminUsersPage = () => {
                             headerList.map((element, index) => (
                                 <div
                                     key={element.key}
-                                    className={`flex flex-row items-center w-full h-full justify-around
+                                    className={`flex flex-row items-center w-full h-full justify-around uppercase
                                         ${index < (headerList.length - 1) ? 'border-r-2' : ''}
                                         ${element.key === 'name' ? 'hidden sm:block' : ''}
                                         ${element.key === 'roles' ? 'hidden lg:block' : ''}

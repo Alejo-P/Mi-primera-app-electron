@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, useSearchParams } from 'react-router-dom';
+import { Outlet, useSearchParams, useNavigate } from 'react-router-dom';
 
 // Importamos los contextos
 import { useApp } from '@contexts/AppProvider'
@@ -10,15 +10,26 @@ import { THEMES } from '@constants/temas'
 // Importamos los componentes
 import TitleBar from '@components/TitleBar'
 import Notification from '@components/Notification'
-import NavActions from '@components/NavActions';
+import NavActions from '@components/NavActions'
+import VerifyEmailModal from '@modals/VerifyEmailmodal';
 
 const Mainboard = () => {
     const { tema, notificacion } = useApp();
     const isDark = tema === THEMES.DARK // Verificamos si el tema es oscuro
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
-    console.log('Mainboard', searchParams.get('verify-email'), searchParams.get('token'));
-    // Verificamos si hay parámetros de búsqueda en la URL
+    // Obtener los parámetros de búsqueda de la URL
+    const verifyEmail = searchParams.get('verify-email');
+    const token = searchParams.get('token');
+
+    // Si los parámetros de búsqueda están presentes, mostramos el modal
+    const showModal = verifyEmail && token;
+
+    const handleModal = () => {
+        // Ocultar el modal y redirigir a la página de inicio
+        navigate('/');
+    }
 
     return (
         <div className={`flex flex-col h-screen transition-all duration-300 min-w-[525px] scrollbar-track-transparent
@@ -32,8 +43,18 @@ const Mainboard = () => {
             </div>
             {/* Contenido principal */}
             {notificacion && <Notification {...notificacion} />}
-            <Outlet />
-            <NavActions />  
+            {/* Modal de verificación de correo electrónico */}
+            {showModal && (
+                <VerifyEmailModal
+                    data={{ token }}
+                    handleModal={handleModal}
+                    isDark={isDark}
+                />
+            )}
+            {/* Contenido de la aplicación */}
+            {!showModal && <Outlet />}
+            {/* Acciones de navegación */}
+            <NavActions />
         </div>
     )
 }
