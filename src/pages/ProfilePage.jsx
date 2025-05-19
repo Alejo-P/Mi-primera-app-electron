@@ -56,6 +56,7 @@ const ProfilePage = () => {
         // Actualiza la lista de roles en la vista (si el usuario es distinto al autenticado)
         if (Array.isArray(newRoles) && parseInt(userID) !== user?.id) {
             setProfileInfo({ ...profileInfo, roles: newRoles });
+            initialProfileInfoRef.current = { ...profileInfo, roles: newRoles };
         }
     }
 
