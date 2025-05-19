@@ -59,6 +59,7 @@ const LandingPage = () => {
             }
             <div className="mt-10 text-center">
                 <button
+                    id='btn-login'
                     onClick={handleLogin}
                     className={`ml-4 px-4 py-2 rounded font-bold transition-all duration-300
                         ${(user && isAuthenticated) ? 
