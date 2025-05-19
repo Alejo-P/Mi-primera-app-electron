@@ -84,10 +84,10 @@ const LandingPage = () => {
                 </button>
             </div>
             <div className="mt-10 text-center">
-                <p className="text-sm text-gray-500">© 2023 Tu Nombre. Todos los derechos reservados.</p>
-                <p className="text-sm text-gray-500">Desarrollado con ❤️ por Tu Nombre</p>
+                <p className="text-sm text-gray-500">© 2025 DocTools. Todos los derechos reservados.</p>
+                <p className="text-sm text-gray-500">Desarrollado con ❤️ por Alejo-P</p>
                 <p className="text-sm text-gray-500">Versión 1.0.0</p>
-                <p className="text-sm text-gray-500">Fecha de lanzamiento: 01/01/2023</p>
+                <p className="text-sm text-gray-500">Fecha de lanzamiento: ../../2025</p>
             </div>
             {showLoginModal && <LoginModal handleModal={handleModal} />}
             {/* Aquí puedes agregar más contenido o componentes según sea necesario */}

@@ -608,9 +608,6 @@
   .col-span-2 {
     grid-column: span 2 / span 2;
   }
-  .col-span-\[20\%_80\%\] {
-    grid-column: span 20% 80% / span 20% 80%;
-  }
   .col-span-full {
     grid-column: 1 / -1;
   }
@@ -858,21 +855,6 @@
   }
   .grid-cols-\[10\%_90\%\] {
     grid-template-columns: 10% 90%;
-  }
-  .grid-cols-\[15\%_80\%\] {
-    grid-template-columns: 15% 80%;
-  }
-  .grid-cols-\[15\%_85\%\] {
-    grid-template-columns: 15% 85%;
-  }
-  .grid-cols-\[15\%_90\%\] {
-    grid-template-columns: 15% 90%;
-  }
-  .grid-cols-\[20\%_80\%\] {
-    grid-template-columns: 20% 80%;
-  }
-  .grid-cols-\[20\%_\] {
-    grid-template-columns: 20% ;
   }
   .grid-rows-\[40px_50px_1fr\] {
     grid-template-rows: 40px 50px 1fr;
@@ -1317,6 +1299,9 @@
   }
   .text-gray-900 {
     color: var(--color-gray-900);
+  }
+  .text-green-500 {
+    color: var(--color-green-500);
   }
   .text-orange-700 {
     color: var(--color-orange-700);

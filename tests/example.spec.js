@@ -8,6 +8,8 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/Playwright/);
 });
 
+// key: Playwight@123.
+
 test('get started link', async ({ page }) => {
   await page.goto('https://playwright.dev/');
 

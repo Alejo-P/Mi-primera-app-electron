@@ -12,6 +12,7 @@ import { useAdmin } from '@contexts/AdminProvider'
 // Importamos los componentes
 import LoadingCard from '@components/LoadingCard'
 import UserBarCard from '@components/UserBarCard';
+import CreateUserModal from '@modals/CreateUserModal';
 
 // Importamos las constantes
 import { THEMES } from '@constants/temas'
@@ -19,7 +20,7 @@ import { ROLES } from '@constants/roles'
 
 const AdminUsersPage = () => {
     const { tema, setNavActionsItems, setVisibleNav } = useApp();
-    const { user, register } = useAuth();
+    const { user } = useAuth();
     const { getAllUsers, enableUser, disableUser, usersList, addRole, removeRole, loading } = useAdmin();
     const [ headerList ] = useState([
         { title: 'Avatar', key: 'avatar' },
@@ -28,6 +29,7 @@ const AdminUsersPage = () => {
         { title: 'Estado', key: 'statistics' },
         { title: 'Acciones', key: 'actions' }
     ]);
+    const [showCreateUserModal, setShowCreateUserModal] = useState(false);
     const navigate = useNavigate();
     const isDark = tema === THEMES.DARK
 
@@ -60,9 +62,9 @@ const AdminUsersPage = () => {
         }
     }
 
-    const handleAddUser = async (userData) => {
+    const handleCreateModal = async () => {
         if (user?.roles?.includes(ROLES.ADMIN)) {
-            await register(userData);
+            setShowCreateUserModal(!showCreateUserModal);
         }
     }
 
@@ -86,7 +88,7 @@ const AdminUsersPage = () => {
                 key: 'Crear usuario',
                 element: (
                     <button
-                        onClick={() => handleAddUser()}
+                        onClick={() => handleCreateModal()}
                         className={`p-2 rounded-lg transition-all duration-300
                             ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
                             hover:scale-95 shadow-lg hover:shadow-xl`}
@@ -119,11 +121,10 @@ const AdminUsersPage = () => {
                 )
             }
         ];
-        setNavActionsItems(acciones);
-        return () => {
-            setNavActionsItems([]);
-        };
-    }, [isDark]);
+        if (!showCreateUserModal) {
+            setNavActionsItems(acciones);
+        }
+    }, [isDark, showCreateUserModal]);
 
     useEffect(() => {
         if (!usersList.length) {
@@ -188,6 +189,14 @@ const AdminUsersPage = () => {
                     </p>
                 </div>
             )}
+            {
+                showCreateUserModal && (
+                    <CreateUserModal
+                        isDark={isDark}
+                        handleModal={handleCreateModal}
+                    />
+                )
+            }
         </>
     )
 }

@@ -52,6 +52,9 @@ export const AuthProvider = ({ children }) => {
             handleNotificacion('success', response.msg, 5000);
         }
         setLoading(false);
+
+        const success = response ? true : false;
+        return success;
     }
 
     const logout = async () => {
@@ -159,12 +162,11 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
-    const verifyEmail = async (data) => {
+    const verifyEmail = async (token) => {
         setLoading(true);
         const response = await request({
             method: 'post',
-            url: '/verify-email',
-            payload: data,
+            url: `/verify-email/${token}`,
             notify: {
                 success: true,
                 error: true
@@ -175,6 +177,9 @@ export const AuthProvider = ({ children }) => {
             handleNotificacion('success', response.msg, 5000);
         }
         setLoading(false);
+
+        const success = response ? true : false;
+        return success;
     };
 
     const contextValue = useMemo(() => {

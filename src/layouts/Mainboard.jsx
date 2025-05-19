@@ -11,7 +11,7 @@ import { THEMES } from '@constants/temas'
 import TitleBar from '@components/TitleBar'
 import Notification from '@components/Notification'
 import NavActions from '@components/NavActions'
-import VerifyEmailModal from '@modals/VerifyEmailmodal';
+import VerifyEmailModal from '@modals/VerifyEmailModal';
 
 const Mainboard = () => {
     const { tema, notificacion } = useApp();
@@ -46,13 +46,13 @@ const Mainboard = () => {
             {/* Modal de verificación de correo electrónico */}
             {showModal && (
                 <VerifyEmailModal
-                    data={{ token }}
+                    token={token}
                     handleModal={handleModal}
                     isDark={isDark}
                 />
             )}
             {/* Contenido de la aplicación */}
-            {!showModal && <Outlet />}
+            <Outlet />
             {/* Acciones de navegación */}
             <NavActions />
         </div>
