@@ -197,6 +197,9 @@ const AdminUsersPage = () => {
             // Solo muestra los botones antes del boton recargar
             const refreshIndex = acciones.findIndex((accion) => accion.key === 'refrescar');
             acciones.splice(refreshIndex, 0, ...userActions);
+
+            // Eliminar el primer elemento (crear usuario) de las acciones cuando se seleccione un usuario
+            acciones.shift()
         }
 
         if (!showCreateUserModal) {
