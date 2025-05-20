@@ -101,7 +101,7 @@ const VerifyEmailModal = ({
                         </div>
                     ) : success ? (
                         <div className="flex flex-col items-center justify-center w-full h-10 mt-4">
-                            <div className='flex items-center justify-center'>
+                            <div className='flex items-center justify-center gap-3'>
                                 <IoCheckmark className="text-2xl text-green-500" />
                                 <p className="ml-2">
                                     El correo electrónico ha sido verificado correctamente, puedes iniciar sesión ahora.

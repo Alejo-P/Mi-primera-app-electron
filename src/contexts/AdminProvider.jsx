@@ -49,7 +49,6 @@ export const AdminProvider = ({ children }) => {
     }
 
     const enableUser = async (userId) => {
-        setLoading(true);
         const response = await request({
             method: 'post',
             url: `/user/activate/${userId}`,
@@ -68,11 +67,12 @@ export const AdminProvider = ({ children }) => {
             }));
             handleNotificacion('success', response.msg, 5000);
         }
-        setLoading(false);  
+
+        const success = response ? true : false;
+        return success;
     }
 
     const disableUser = async (userId) => {
-        setLoading(true);
         const response = await request({
             method: 'post',
             url: `/user/deactivate/${userId}`,
@@ -91,7 +91,9 @@ export const AdminProvider = ({ children }) => {
             }));
             handleNotificacion('success', response.msg, 5000);
         }
-        setLoading(false);  
+
+        const success = response ? true : false;
+        return success;
     }
 
     const updateUser = async (userId, data) => {

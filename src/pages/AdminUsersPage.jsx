@@ -1,5 +1,6 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'; 
+import { FaUserEdit, FaUserCheck, FaUserMinus } from 'react-icons/fa';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { IoPersonAdd } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
@@ -21,15 +22,16 @@ import { ROLES } from '@constants/roles'
 const AdminUsersPage = () => {
     const { tema, setNavActionsItems, setVisibleNav } = useApp();
     const { user } = useAuth();
-    const { getAllUsers, enableUser, disableUser, usersList, addRole, removeRole, loading } = useAdmin();
+    const { getAllUsers, enableUser, disableUser, usersList, loading } = useAdmin();
     const [ headerList ] = useState([
         { title: 'Avatar', key: 'avatar' },
         { title: 'Nombre', key: 'name' },
         { title: 'Roles', key: 'roles' },
-        { title: 'Estado', key: 'statistics' },
-        { title: 'Acciones', key: 'actions' }
+        { title: 'Correo', key: 'email' },
+        { title: 'Estado', key: 'statistics' }
     ]);
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
     const navigate = useNavigate();
     const isDark = tema === THEMES.DARK
 
@@ -47,38 +49,44 @@ const AdminUsersPage = () => {
         navigate(`/dashboard/profile/${userInfo?.id}`);
     }
 
-    const handleDeleteRole = async (role, userId) => {
-        console.log(role, userId);
-        if (user?.roles?.includes(ROLES.ADMIN) && user?.roles?.length > 1) {
-            await removeRole(role, userId);
-        } else {
-            handleNotificacion('error', 'No puedes eliminar el rol', 5000);
-        }
-    };
-
-    const handleAddRole = async (role, userId) => {
-        if (user?.roles?.includes(ROLES.ADMIN)) {
-            await addRole(role, userId);
-        }
-    }
-
     const handleCreateModal = async () => {
         if (user?.roles?.includes(ROLES.ADMIN)) {
             setShowCreateUserModal(!showCreateUserModal);
         }
     }
 
-    const handleEnableUser = async (userId) => {
-        const confirm = window.confirm(`¿Activar usuario ${userId}?`);
+    const handleSelectedUser = (userInfo) => {
+        // Si el usuario seleccionado es el mismo que esta seleccionado, lo deselecciona
+        if (selectedUser?.id === userInfo.id) {
+            setSelectedUser(null);
+            return;
+        }
+        setSelectedUser(userInfo);
+    }
+
+    const handleEnableUser = async (userInfo) => {
+        const confirm = window.confirm(`¿Activar usuario ${userInfo.name}?`);
         if (user?.roles?.includes(ROLES.ADMIN) && confirm) {
-            await enableUser(userId);
+            const state = await enableUser(userInfo.id);
+            if (state) {
+                setSelectedUser({
+                    ...userInfo,
+                    is_active: true
+                });
+            }
         }
     }
 
-    const handleDisableUser = async (userId) => {
-        const confirm = window.confirm(`¿Eliminar usuario ${userId}?`);
+    const handleDisableUser = async (userInfo) => {
+        const confirm = window.confirm(`¿Eliminar usuario ${userInfo.name}?`);
         if (user?.roles?.includes(ROLES.ADMIN) && confirm) {
-            await disableUser(userId);
+            const state = await disableUser(userInfo.id);
+            if (state) {
+                setSelectedUser({
+                    ...userInfo,
+                    is_active: false
+                });
+            }
         }
     }
 
@@ -121,10 +129,80 @@ const AdminUsersPage = () => {
                 )
             }
         ];
+
+        if (selectedUser) {
+            const userActions = [
+                {
+                    key: 'Editar',
+                    element: (
+                        <button
+                            onClick={() => handleEditUser(selectedUser)}
+                            className={`p-2 rounded-lg transition-all duration-300
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                                hover:scale-95 shadow-lg hover:shadow-xl`}
+                            title={`Editar usuario ${selectedUser.name}`}
+                            data-tooltip-id="editUserLabel"
+                            data-tooltip-content={`Editar usuario ${selectedUser.name}`}
+                        >
+                            <span className="text-3xl">
+                                <FaUserEdit className='text-2xl'/>
+                            </span>
+                        </button>
+                    )
+                }
+            ];
+            // Solo muestra los botones de activar/desactivar si el usuario no es el mismo que el que está logueado
+            // y si el usuario tiene el rol de admin
+            if (user?.id !== selectedUser.id) {
+                if (selectedUser?.is_active) {
+                    userActions.push({
+                        key: 'Desactivar',
+                        element: (
+                            <button
+                                onClick={() => handleDisableUser(selectedUser)}
+                                className={`p-2 rounded-lg transition-all duration-300
+                                    ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-red-500'} 
+                                    hover:scale-95 shadow-lg hover:shadow-xl`}
+                                title={`Desactivar usuario ${selectedUser.name}`}
+                                data-tooltip-id="disableUserLabel"
+                                data-tooltip-content={`Desactivar usuario ${selectedUser.name}`}
+                            >
+                                <span className="text-3xl">
+                                    <FaUserMinus className='text-2xl'/>
+                                </span>
+                            </button>
+                        )
+                    });
+                } else {
+                    userActions.push({
+                        key: 'Activar',
+                        element: (
+                            <button
+                                onClick={() => handleEnableUser(selectedUser)}
+                                className={`p-2 rounded-lg transition-all duration-300
+                                    ${isDark ? 'bg-green-600 text-white' : 'bg-green-400 text-gray-900 hover:bg-green-500'} 
+                                    hover:scale-95 shadow-lg hover:shadow-xl`}
+                                title={`Activar usuario ${selectedUser.name}`}
+                                data-tooltip-id="enableUserLabel"
+                                data-tooltip-content={`Activar usuario ${selectedUser.name}`}
+                            >
+                                <span className="text-3xl">
+                                    <FaUserCheck className='text-2xl'/>
+                                </span>
+                            </button>
+                        )
+                    });
+                }
+            }
+            // Solo muestra los botones antes del boton recargar
+            const refreshIndex = acciones.findIndex((accion) => accion.key === 'refrescar');
+            acciones.splice(refreshIndex, 0, ...userActions);
+        }
+
         if (!showCreateUserModal) {
             setNavActionsItems(acciones);
         }
-    }, [isDark, showCreateUserModal]);
+    }, [isDark, showCreateUserModal, selectedUser]);
 
     useEffect(() => {
         if (!usersList.length) {
@@ -153,7 +231,7 @@ const AdminUsersPage = () => {
                                         ${index < (headerList.length - 1) ? 'border-r-2' : ''}
                                         ${element.key === 'name' ? 'hidden sm:block' : ''}
                                         ${element.key === 'roles' ? 'hidden lg:block' : ''}
-                                        ${element.key === 'statistics' ? 'hidden md:block' : ''}
+                                        ${element.key === 'email' ? 'hidden md:block' : ''}
                                         ${isDark ? 'text-gray-300' : 'text-gray-700'}
                                     `}
                                 >
@@ -170,14 +248,10 @@ const AdminUsersPage = () => {
                                 key={userInfo.id}
                                 userInfo={userInfo}
                                 isDark={isDark}
-                                isUserLogged={user?.id === userInfo.id}
                                 loading={loading}
+                                isSelected={selectedUser?.id === userInfo.id}
                                 headerList={headerList}
-                                handleEditUser={handleEditUser}
-                                handleAddRole={handleAddRole}
-                                handleDeleteRole={handleDeleteRole}
-                                handleEnableUser={handleEnableUser}
-                                handleDisableUser={handleDisableUser}
+                                handleClick={handleSelectedUser}
                             />  
                         ))
                     }

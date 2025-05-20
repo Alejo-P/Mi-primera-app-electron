@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaUserEdit, FaUserCheck } from "react-icons/fa";
 import { IoPersonRemove } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
@@ -7,24 +7,36 @@ import UserAvatar from './UserAvatar';
 
 const UserBarCard = ({
     userInfo,
-    isUserLogged = false,
     isDark,
     loading,
+    isSelected,
     headerList,
-    handleEditUser,
-    handleEnableUser,
-    handleDisableUser,
-    handleAddRole,
-    handleRemoveRole
+    handleClick
 }) => {
+    const handleUserClick = () => {
+        handleClick(userInfo);
+    };
+
     return (
-        <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-evenly items-center pt-3 pb-3 mt-3 rounded-lg z-10
-            shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300 border hover:scale-98 hover:shadow-xl
-            ${isDark ? 'bg-gray-800 text-white border-gray-600'
-                : 'bg-white text-gray-900 border-gray-300'
-            }
-            ${userInfo.is_active ? '' : 'opacity-50 cursor-not-allowed'}
-        `}>
+        <div
+            className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-evenly items-center pt-3 pb-3 mt-3 rounded-lg z-10
+                shadow-[0_6px_15px_rgba(0,0,0,0.7)] transition-all duration-300
+                ${isDark ? 'bg-gray-800 text-white'
+                    : 'bg-white text-gray-900 border-gray-300'
+                }
+                ${isSelected ? 'shadow-[0_0_15px_rgba(0,0,0,0.7)] ring-3 scale-101'
+                    : 'border-2 hover:scale-99 hover:shadow-[0_0_15px_rgba(0,0,0,0.3)] cursor-pointer hover:ring-2 hover:ring-offset-2 hover:animate-spin-slow'
+                }
+                ${
+                    !userInfo.is_active ? 'border-red-700 ring-red-500'
+                    : !userInfo.is_verified ? 'border-yellow-700 ring-yellow-500'
+                    : 'border-blue-700 ring-blue-500'
+                }
+            `}
+            onClick={handleUserClick}
+            data-tooltip-id="userLabel"
+            data-tooltip-content={userInfo.is_active ? 'Usuario activo' : 'Usuario inactivo'}
+        >
             {
                 headerList.map((element, index) => {
                     let content = null;
@@ -47,6 +59,9 @@ const UserBarCard = ({
                         break;
                         case 'roles':
                             content = <p className="text-sm font-semibold text-center">{userInfo.roles.join(', ')}</p>;
+                        break;
+                        case 'email':
+                            content = <p className="text-sm ml-2 mr-2 font-semibold text-center overflow-hidden whitespace-nowrap overflow-ellipsis">{userInfo.email}</p>;
                         break;
                         case 'statistics':
                             content = (
@@ -85,66 +100,6 @@ const UserBarCard = ({
                                 </>
                             );
                         break;
-                        case 'actions':
-                            content = (
-                                <>
-                                    <button
-                                        onClick={() => handleEditUser(userInfo)}
-                                        className={`text-2xl cursor-pointer ${isDark ? 'text-gray-300 hover:text-gray-400' : 'text-gray-700 hover:text-gray-800'}`}
-                                        data-tooltip-id="editUserLabel"
-                                        data-tooltip-content="Editar usuario"
-                                    >
-                                        <FaUserEdit className={`text-2xl`} />
-                                    </button>
-                                    <ReactTooltip
-                                        id="editUserLabel"
-                                        place="top"
-                                        effect="solid"
-                                        className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
-                                    />
-                                    {
-                                        (!isUserLogged && userInfo.is_active) && (
-                                            <>
-                                                <button
-                                                    onClick={() => handleDisableUser(userInfo.id)}
-                                                    className={`text-2xl cursor-pointer ${isDark ? 'text-gray-300 hover:text-gray-400' : 'text-gray-700 hover:text-gray-800'}`}
-                                                    data-tooltip-id="deleteUserLabel"
-                                                    data-tooltip-content="Eliminar usuario"
-                                                >
-                                                    <IoPersonRemove className={`text-2xl`} />
-                                                </button>
-                                                <ReactTooltip
-                                                    id="deleteUserLabel"
-                                                    place="top"
-                                                    effect="solid"
-                                                    className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
-                                                />
-                                            </>
-                                        )
-                                    }
-                                    {
-                                        (!isUserLogged && !userInfo.is_active) && (
-                                            <>
-                                                <button
-                                                    onClick={() => handleEnableUser(userInfo.id)}
-                                                    className={`text-2xl ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
-                                                    data-tooltip-id="enableLabel"
-                                                    data-tooltip-content="Activar usuario"
-                                                >
-                                                    <FaUserCheck className={`text-2xl`} />
-                                                </button>
-                                                <ReactTooltip
-                                                    id="enableLabel"
-                                                    place="top"
-                                                    effect="solid"
-                                                    className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
-                                                />
-                                            </>
-                                        )
-                                    }
-                                </>
-                            );
-                        break;
                         default:
                             content = null;
                         break;
@@ -157,8 +112,8 @@ const UserBarCard = ({
                                 ${element.key === 'avatar' ? 'flex' : ''}
                                 ${element.key === 'name' ? 'hidden sm:flex' : ''}
                                 ${element.key === 'roles' ? 'hidden lg:flex' : ''}
-                                ${element.key === 'statistics' ? 'hidden md:flex' : ''}
-                                ${element.key === 'actions' ? 'flex' : ''}
+                                ${element.key === 'email' ? 'hidden md:flex' : ''}
+                                ${element.key === 'statistics' ? 'flex' : ''}
                             `}
                         >
                             <div className={`flex flex-row items-center w-full h-full justify-around
