@@ -1,14 +1,24 @@
 import { defineConfig } from 'vite'
+import { visualizer } from 'rollup-plugin-visualizer';
 import react from '@vitejs/plugin-react-swc'
 import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), visualizer()],
   base: './', // 🔹 Usa rutas relativas en producción
   build: {
     outDir: 'dist/react',
-    emptyOutDir: true
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          swc: ['@vitejs/plugin-react-swc'],
+          reactRouter: ['react-router', 'react-router-dom'],
+        }
+      }
+    }
   },
   resolve: {
     alias: {

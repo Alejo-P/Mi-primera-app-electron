@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { IoIosSave } from "react-icons/io";
 import { IoWarning } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import { ImSpinner9 } from "react-icons/im";
 
 // Importamos los contextos
 import { useAuth } from '@contexts/AuthProvider';
@@ -13,6 +12,7 @@ import { useAdmin } from '@contexts/AdminProvider';
 // Importamos las constantes
 import { THEMES } from '@constants/temas';
 import { ROLES } from '@constants/roles';
+import { PROFILE_STATUS } from '@constants/profileStatus';
 
 // Importamos los componentes
 import CustomInput from '@components/CustomInput';
@@ -21,6 +21,7 @@ import UploadAvatarModal from '@modals/UploadAvatarModal';
 import UserAvatar from '@components/UserAvatar';
 import LoadingCard from '@components/LoadingCard';
 import RoleActionModal from '@modals/RoleActionModal';
+import ProfileActionCard from '@components/ProfileActionCard';
 
 const ProfilePage = () => {
     const { user, updateProfile, updatePassword } = useAuth();
@@ -189,7 +190,9 @@ const ProfilePage = () => {
                         roles: userProfile?.roles || "N/A",
                         id: userProfile?.id || "N/A",
                         is_verified: userProfile?.is_verified || false,
-                        avatar: userProfile?.avatar || null
+                        is_active: userProfile?.is_active || false,
+                        avatar: userProfile?.avatar || null,
+                        acciones: userProfile?.actions || []
                     };
                     initialProfileInfoRef.current = newProfile;
                     setProfileInfo(newProfile);
@@ -202,7 +205,9 @@ const ProfilePage = () => {
                     roles: user?.roles || "N/A",
                     id: user?.id || "N/A",
                     is_verified: user?.is_verified || false,
-                    avatar: user?.avatar || null
+                    is_active: user?.is_active || false,
+                    avatar: user?.avatar || null,
+                    acciones: user?.actions || []
                 };
                 initialProfileInfoRef.current = currentProfile;
                 setProfileInfo(currentProfile);
@@ -222,37 +227,53 @@ const ProfilePage = () => {
                     {
                         !profileInfo.is_verified && (
                             <div
-                                className={`grid grid-cols-[10%_90%] lg:flex lg:flex-row lg:items-center lg:justify-evenly overflow-auto border-2 border-orange-500 w-full p-2 rounded-lg shadow-lg transition-all duration-300
+                                className={`flex flex-col lg:flex-row items-center justify-start gap-3 overflow-auto border-2 border-orange-500 w-full p-4 rounded-lg shadow-lg transition-all duration-300
                                     ${isDark ? 'bg-orange-800 text-white' : 'bg-orange-400 text-gray-900'}
                                 `}
                             >
-                                <IoWarning className="text-3xl" />
-                                <p className="text-center italic font-semibold">
-                                    Tu cuenta no está verificada. Por favor verifica tu correo electrónico para activar tu cuenta.
+                                <IoWarning className="text-3xl flex-shrink-0" />
+                                <div className="flex flex-col gap-1 text-center lg:text-left">
+                                    <p className="italic font-semibold">
+                                        Tu cuenta no está verificada. Por favor verifica tu correo electrónico para activar tu cuenta.
+                                    </p>
+
+                                    {user?.roles?.includes(ROLES.ADMIN) && (
+                                        <>
+                                            <p
+                                                className={`font-bold transition-all duration-300 hover:scale-95 cursor-pointer
+                                                    ${isDark ? 'text-blue-400 hover:text-blue-600' : 'text-blue-500 hover:text-blue-700'}
+                                                `}
+                                                onClick={handleSendVerificationEmail}
+                                                data-tooltip-id="verificarLabel"
+                                                data-tooltip-content="Enviar correo de verificación"
+                                                title="Verificar cuenta"
+                                            >
+                                                Enviar correo de verificación
+                                            </p>
+                                            <ReactTooltip
+                                                id="verificarLabel"
+                                                place="bottom"
+                                                effect="solid"
+                                                className={`tooltip ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-900'}`}
+                                                style={{ fontSize: '0.8rem' }}
+                                            />
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    }
+                    {
+                        !profileInfo.is_active && (
+                            <div
+                                className={`flex flex-col lg:flex-row items-center justify-start gap-3 overflow-auto border-2 border-red-500 w-full p-4 rounded-lg shadow-lg transition-all duration-300
+                                    ${isDark ? 'bg-red-800 text-white' : 'bg-red-400 text-gray-900'}
+                                `}
+                            >
+                                <IoWarning className="text-3xl flex-shrink-0" />
+                                <p className="text-center italic font-semibold lg:text-left">
+                                    Tu cuenta ha sido desactivada. Por favor contacta al administrador para más información.
                                 </p>
-                                {user?.roles?.includes(ROLES.ADMIN) && (
-                                    <>
-                                        <p
-                                            className={`font-bold transition-all duration-300 col-span-2 lg:col-span-1 lg:flex lg:items-center lg:justify-center
-                                                ${isDark ? 'text-blue-400 hover:text-blue-600' : 'teext-blue-500 hover:text-blue-700'}
-                                                hover:scale-95 text-center cursor-pointer
-                                            `}
-                                            onClick={handleSendVerificationEmail}
-                                            data-tooltip-id="verificarLabel"
-                                            data-tooltip-content="Enviar correo de verificación"
-                                            title="Verificar cuenta"
-                                        >
-                                            Enviar correo de verificación
-                                        </p>
-                                        <ReactTooltip
-                                            id="verificarLabel"
-                                            place="bottom"
-                                            effect="solid"
-                                            className={`tooltip ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-900'}`}
-                                            style={{ fontSize: '0.8rem' }}
-                                        />
-                                    </>
-                                )}
                             </div>
                         )
                     }
@@ -350,6 +371,23 @@ const ProfilePage = () => {
                                 Cambiar contraseña
                             </button>
                         </form>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center mt-4">
+                        <h3 className="text-lg font-bold mb-2">Acciones del perfil</h3>
+                        <div className="flex flex-col gap-2 w-full">
+                            {profileInfo?.acciones?.length > 0 ? (
+                                profileInfo.acciones.map((item, index) => (
+                                    <ProfileActionCard
+                                        key={index}
+                                        item={item}
+                                        isDark={isDark}
+                                    />
+                                ))
+                            ) : (
+                                <p className="text-sm italic w-full text-center">No hay acciones disponibles.</p>
+                            )}
+                        </div>
                     </div>
                 </>
             ) : (

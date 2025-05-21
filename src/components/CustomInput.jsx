@@ -14,6 +14,7 @@ import { useApp } from '@contexts/AppProvider';
 const CustomInput = ({
     Iname,
     Itype = "text",
+    Ilabel = "",
     Ivalue,
     IonChange,
     Iplaceholder,
@@ -34,7 +35,7 @@ const CustomInput = ({
     return (
         <div className="flex flex-col">
             <label htmlFor={Iname} className="font-bold title flex justify-between items-center">
-                {Iplaceholder ? Iplaceholder : "Campo"}:
+                {Ilabel ? Ilabel : Iplaceholder}:
                 {Irequired && <span className="text-red-500 text-sm uppercase">(Requerido)</span>}
             </label>
             <div className="flex flex-col relative">

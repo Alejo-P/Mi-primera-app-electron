@@ -67,7 +67,7 @@ const UserBarCard = ({
                             content = (
                                 <>
                                     <div className="flex flex-col gap-3 items-start justify-center">
-                                        <p className={`text-sm font-semibold text-center`}>
+                                        <p className={`text-sm font-semibold text-center flex flex-row items-center`}>
                                             <span
                                                 className={`inline-block w-2 h-2 rounded-full mr-3 ${userInfo.is_active ? 'bg-green-600' : 'bg-red-600'}`}
                                                 data-tooltip-id="statusLabel"
@@ -76,7 +76,7 @@ const UserBarCard = ({
                                             {userInfo.is_active ? 'Activo' : 'Inactivo'}
                                         </p>
 
-                                        <p className={`text-sm font-semibold text-center`}>
+                                        <p className={`text-sm font-semibold text-center flex flex-row items-center`}>
                                             <span
                                                 className={`inline-block w-2 h-2 rounded-full mr-3 ${userInfo.is_verified ? 'bg-green-600' : 'bg-red-600'}`}
                                                 data-tooltip-id="verifiedLabel"

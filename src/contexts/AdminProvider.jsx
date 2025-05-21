@@ -1,6 +1,4 @@
 import { createContext, useContext, useState, useMemo, use } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import { useApp } from './AppProvider';
 import { useAuth } from './AuthProvider';
 import { useAxios } from '@hooks/useAxios';
@@ -14,7 +12,6 @@ export const AdminProvider = ({ children }) => {
     const [usersList, setUsersList] = useState([]);
     const [rolesList, setRolesList] = useState([]);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
 
     const getAllUsers = async () => {
         setLoading(true);
@@ -48,10 +45,14 @@ export const AdminProvider = ({ children }) => {
         return response;
     }
 
-    const enableUser = async (userId) => {
+    const enableUser = async (userId, reason) => {
         const response = await request({
             method: 'post',
-            url: `/user/activate/${userId}`,
+            url: `/user/activate`,
+            payload: {
+                user_id: userId,
+                reason: reason
+            },
             notify: {
                 success: true,
                 error: true
@@ -72,10 +73,14 @@ export const AdminProvider = ({ children }) => {
         return success;
     }
 
-    const disableUser = async (userId) => {
+    const disableUser = async (userId, reason) => {
         const response = await request({
             method: 'post',
-            url: `/user/deactivate/${userId}`,
+            url: `/user/deactivate`,
+            payload: {
+                user_id: userId,
+                reason: reason
+            },
             notify: {
                 success: true,
                 error: true

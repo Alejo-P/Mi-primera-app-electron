@@ -12,8 +12,9 @@ import { useAdmin } from '@contexts/AdminProvider'
 
 // Importamos los componentes
 import LoadingCard from '@components/LoadingCard'
-import UserBarCard from '@components/UserBarCard';
-import CreateUserModal from '@modals/CreateUserModal';
+import UserBarCard from '@components/UserBarCard'
+import CreateUserModal from '@modals/CreateUserModal'
+import ActionProfileModal from '@modals/ActionProfileModal'
 
 // Importamos las constantes
 import { THEMES } from '@constants/temas'
@@ -31,6 +32,7 @@ const AdminUsersPage = () => {
         { title: 'Estado', key: 'statistics' }
     ]);
     const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+    const [showActionModal, setShowActionModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const navigate = useNavigate();
     const isDark = tema === THEMES.DARK
@@ -54,6 +56,12 @@ const AdminUsersPage = () => {
             setShowCreateUserModal(!showCreateUserModal);
         }
     }
+
+    const handleActionModal = async () => {
+        if (!selectedUser) return;
+        setShowActionModal(!showActionModal);
+    }
+
 
     const handleSelectedUser = (userInfo) => {
         // Si el usuario seleccionado es el mismo que esta seleccionado, lo deselecciona
@@ -159,7 +167,7 @@ const AdminUsersPage = () => {
                         key: 'Desactivar',
                         element: (
                             <button
-                                onClick={() => handleDisableUser(selectedUser)}
+                                onClick={handleActionModal}
                                 className={`p-2 rounded-lg transition-all duration-300
                                     ${isDark ? 'bg-red-600 text-white' : 'bg-red-400 text-gray-900 hover:bg-red-500'} 
                                     hover:scale-95 shadow-lg hover:shadow-xl`}
@@ -178,7 +186,7 @@ const AdminUsersPage = () => {
                         key: 'Activar',
                         element: (
                             <button
-                                onClick={() => handleEnableUser(selectedUser)}
+                                onClick={handleActionModal}
                                 className={`p-2 rounded-lg transition-all duration-300
                                     ${isDark ? 'bg-green-600 text-white' : 'bg-green-400 text-gray-900 hover:bg-green-500'} 
                                     hover:scale-95 shadow-lg hover:shadow-xl`}
@@ -202,10 +210,10 @@ const AdminUsersPage = () => {
             acciones.shift()
         }
 
-        if (!showCreateUserModal) {
+        if (!showCreateUserModal && !showActionModal) {
             setNavActionsItems(acciones);
         }
-    }, [isDark, showCreateUserModal, selectedUser]);
+    }, [isDark, showCreateUserModal, showActionModal, selectedUser]);
 
     useEffect(() => {
         if (!usersList.length) {
@@ -273,6 +281,57 @@ const AdminUsersPage = () => {
                         handleModal={handleCreateModal}
                     />
                 )
+            }
+            {
+                showActionModal && (
+                    <ActionProfileModal
+                        isDark={isDark}
+                        handleModal={handleActionModal}
+                        setUserInfo={setSelectedUser}
+                        userInfo={selectedUser}
+                        actionType={selectedUser?.is_active ? 'disable' : 'enable'}
+                    />
+                )
+            }
+            {
+                <ReactTooltip
+                    id="addUserLabel"
+                    place="top"
+                    effect="solid"
+                    className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                />
+            }
+            {
+                <ReactTooltip
+                    id="refreshLabel"
+                    place="top"
+                    effect="solid"
+                    className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                />
+            }
+            {
+                <ReactTooltip
+                    id="editUserLabel"
+                    place="top"
+                    effect="solid"
+                    className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                />
+            }
+            {
+                <ReactTooltip
+                    id="enableUserLabel"
+                    place="top"
+                    effect="solid"
+                    className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                />
+            }
+            {
+                <ReactTooltip
+                    id="disableUserLabel"
+                    place="top"
+                    effect="solid"
+                    className={`tooltip ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
+                />
             }
         </>
     )
