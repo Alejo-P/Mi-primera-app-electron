@@ -3,4 +3,6 @@ export const ROLES = {
     DEV: "Desarrollador",
     USER: "Usuario",
     GUEST: "Invitado",
+    ALL: "Todos",
+    NONE: "Ninguno"
 }

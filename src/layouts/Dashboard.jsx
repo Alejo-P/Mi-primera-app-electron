@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
 import { FaQrcode } from 'react-icons/fa6';
@@ -44,9 +44,17 @@ const Dashboard = () => {
         setDrawerOpen(!drawerOpen);
     };
 
+    async function loadProfile() {
+        await profile();
+    }
+
     const filterButtons = (userRoles, buttonRoles) => {
         return buttonRoles.some(rol => userRoles.includes(rol));
     };
+
+    const handleRefresh = () => {
+        loadProfile();
+    }
 
     const buttons = [
         { path: "/dashboard/", icon: <HiHome className="text-3xl" />, tooltip: "Inicio", accessBy: [ROLES.USER, ROLES.ADMIN], active: pathname === '/dashboard/' },
@@ -68,12 +76,15 @@ const Dashboard = () => {
 
     filteredItems.forEach(item => {
         // Si el botón es accesible por admin, lo mandamos ahí. Si no, va a user
-        if (item.accessBy.includes(ROLES.USER)) {
+        if (item.accessBy.includes(ROLES.USER) || item.accessBy.includes(ROLES.ALL)) {
+            // Si el botón es accesible por admin, lo mandamos ahí. Si no, va a user
             groupedItems[ROLES.USER].push(item);
         } else {
             groupedItems[ROLES.ADMIN].push(item);
         }
     });
+
+    const hasItems = Object.values(groupedItems).some(items => items.length > 0);
 
     // Si el drawer está abierto y la pantalla es mayor a 768px, cerramos el drawer
     useEffect(() => {
@@ -97,10 +108,6 @@ const Dashboard = () => {
 
     //Cargar el perfil del usuario
     useEffect(() => {
-        async function loadProfile() {
-            await profile();
-        }
-        
         if (!Object.keys(user).length) loadProfile();
 
         // Limpiar los datos de los contextos al desmontar el componente
@@ -160,9 +167,11 @@ const Dashboard = () => {
             {(drawerOpen && width < 768) && (
                 <SideBar
                     isDark={isDark}
+                    isLoading={loading}
                     groupedItems={groupedItems}
                     user={user}
                     handleDrawer={handleDrawer}
+                    handleRefresh={handleRefresh}
                     drawerOpen={drawerOpen}
                 />
             )}
@@ -179,7 +188,7 @@ const Dashboard = () => {
                                 <NavButtonSqueleton key={i} isDark={isDark} />
                             ))}
                         </>
-                    ) : (
+                    ) : hasItems ? (
                         // Agrupamos los botones por rol (USER y ADMIN), manteniendo el orden
                         Object.entries(groupedItems).map(([role, items]) => {
                             if (items.length === 0) return null;
@@ -207,7 +216,25 @@ const Dashboard = () => {
                                 </React.Fragment>
                             );
                         })
-                    )  
+                    ) : (
+                        // Si no hay botones, mostramos un mensaje
+                        <div className={`flex flex-col items-center justify-center h-full`}>
+                            <div className={`text-sm font-semibold uppercase text-center mb-2 mt-2 px-3 py-1 rounded
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'} shadow`}>
+                                No tienes acceso a ninguna sección
+                            </div>
+                            <div className={`text-sm font-semibold uppercase text-center mb-2 mt-2 px-3 py-1 rounded
+                                ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'} shadow`}>
+                                Comunicate con un administrador o intenta
+                                <button
+                                    onClick={handleRefresh}
+                                    className={`text-blue-500 hover:text-blue-700 uppercase ml-1`}
+                                >
+                                    Recargar
+                                </button>
+                            </div>
+                        </div>
+                    )
                 }
             </div>
 

@@ -69,11 +69,11 @@ const TitleBar = () => {
                                 transition-all duration-300
                             `}
                             data-tooltip-id='profile'
-                            data-tooltip-content={`${loading ? 'Cargando...' : isProfilePage ? 'Tu perfil' : 'Ir a tu perfil'}`}
+                            data-tooltip-content={`${loading ? 'Cargando...' : isProfilePage ? 'Tu perfil' : Object.keys(user).length > 0 ? 'Ir a tu perfil' : 'Ningun perfil disponible'}`}
                             style={{ WebkitAppRegion: 'no-drag' }}
                             onClick={() => {
-                                if (!loading && !isProfilePage) {
-                                    // Si no estamos en la página de perfil, navegamos a ella
+                                if (!loading && !isProfilePage && Object.keys(user).length > 0) {
+                                    // Si no estamos en la página de perfil y hay informacion del usuario, navegamos a su perfil
                                     navigate(`/dashboard/profile/${user?.id}`);
                                 }
                             }}

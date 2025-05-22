@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaRegTimesCircle, FaRegCheckCircle } from "react-icons/fa";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { IoMdNotifications } from "react-icons/io";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 const Notification = ({ type = "success", content, onClose, duration = 3000 }) => {
     const [visible, setVisible] = useState(true);
     const [progressKey, setProgressKey] = useState(0);
+
+    const handleHover = () => {
+        // Detener la barra de progreso al pasar el mouse
+        setVisible(false);
+
+    }
 
     useEffect(() => {
         setProgressKey(prev => prev + 1); // Trigger para reiniciar barra
@@ -18,12 +26,15 @@ const Notification = ({ type = "success", content, onClose, duration = 3000 }) =
     }, [content, duration, onClose]);
 
     const colorClasses = {
-        error: { bg: "bg-red-500", border: "border-red-700", iconBg: "bg-red-900" },
-        success: { bg: "bg-blue-500", border: "border-blue-700", iconBg: "bg-blue-900" },
-        warning: { bg: "bg-orange-500", border: "border-orange-700", iconBg: "bg-orange-900" },
+        error: { bg: "bg-red-500", border: "border-red-700", iconBg: "bg-red-900", icon: <FaRegTimesCircle /> },
+        success: { bg: "bg-blue-500", border: "border-blue-700", iconBg: "bg-blue-900", icon: <FaRegCheckCircle /> },
+        warning: { bg: "bg-orange-500", border: "border-orange-700", iconBg: "bg-orange-900", icon: <AiOutlineExclamationCircle /> },
+        info: { bg: "bg-gray-500", border: "border-gray-700", iconBg: "bg-gray-900", icon: <AiOutlineExclamationCircle /> },
+        timeout: { bg: "bg-yellow-600", border: "border-yellow-800", iconBg: "bg-yellow-900", icon: <MdOutlineWatchLater /> },
+        default: { bg: "bg-gray-500", border: "border-gray-700", iconBg: "bg-gray-900", icon: <IoMdNotifications /> }
     };
 
-    let { bg, border, iconBg } = colorClasses[type] || colorClasses.warning;
+    let { bg, border, iconBg, icon } = colorClasses[type.toLowerCase()] || colorClasses.warning;
 
     return (
         <AnimatePresence>
@@ -38,7 +49,7 @@ const Notification = ({ type = "success", content, onClose, duration = 3000 }) =
                     {/* Icono de la notificación */}
                     <div className={`flex items-center justify-center px-4 ${iconBg} rounded-l-lg`}>
                         <span className="text-3xl">
-                            {type === "error" ? <FaRegTimesCircle /> : type === "success" ? <FaRegCheckCircle /> : <AiOutlineExclamationCircle />}
+                            {icon}
                         </span>
                     </div>
 

@@ -82,6 +82,9 @@ export const FilesProvider = ({ children }) => {
             setFileList((prev) => [...prev, response.file]);
         }
         setLoadingFiles(false);
+
+        const status = response ? true : false;
+        return status;
     }
 
     // Descargar un archivo por su nombre

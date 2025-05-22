@@ -31,10 +31,14 @@ export const useAxios = () => {
             return response.data; // Devuelve la respuesta de la API
         } catch (err) {
             console.error(err);
-            const message = err?.response?.data?.detail || 'Error inesperado';
+            const type = err?.code === 'ECONNABORTED' ? 'timeout' : 'error';
+            const message =
+                err.code === 'ECONNABORTED'
+                    ? 'Tiempo de espera agotado, intentelo nuevamente'
+                    : err?.response?.data?.detail || 'Error inesperado';
 
             if (notify.error) {
-                handleNotificacion('error', message, 5000);
+                handleNotificacion(type, message, 5000);
             }
             return null; // Devuelve null si hay un error
         }

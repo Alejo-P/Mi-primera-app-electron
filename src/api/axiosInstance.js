@@ -5,7 +5,8 @@ const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: true, // 👈 ESTA LÍNEA es CLAVE
+    withCredentials: true,
+    timeout: 5000, // Tiempo de espera de 5 segundos
 });
 
 // Interceptor de respuesta
@@ -47,6 +48,11 @@ axiosInstance.interceptors.response.use(
                 window.location.href = '/'; // o usar navigate si estás dentro de React
                 return Promise.reject(refreshError);
             }
+        }
+
+        if (error.code === 'ECONNABORTED') {
+            console.warn('⏱️ La solicitud se canceló por timeout.');
+            // Acá también podés notificar visualmente
         }
         return Promise.reject(error);
     }

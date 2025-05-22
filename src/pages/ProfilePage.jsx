@@ -393,10 +393,10 @@ const ProfilePage = () => {
             ) : (
                 <div
                     className={`flex flex-col items-center justify-center w-full p-2 rounded-lg shadow-lg transition-all duration-300
-                    ${isDark ? 'bg-red-800 text-white'
-                        : 'bg-red-400 text-gray-900'
-                    }
-                    flex flex-row items-center max-h-screen overflow-auto border-2 border-red-500
+                        ${isDark ? 'bg-red-800 text-white'
+                            : 'bg-red-400 text-gray-900'
+                        }
+                        flex flex-row items-center max-h-screen overflow-auto border-2 border-red-500
                     `}
                 >
                     <IoWarning className="text-3xl" />

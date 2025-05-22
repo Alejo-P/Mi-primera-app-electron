@@ -57,9 +57,11 @@ const UploadPage = () => {
         }
 
         // Subir el archivo al servidor
-        await uploadFile(data);
-        setFile(null);
-        fileInput.current.value = null; // Limpiar el input de archivo
+        const success = await uploadFile(data);
+        if (success) {
+            setFile(null);
+            fileInput.current.value = null; // Limpiar el input de archivo
+        }
     };
 
     useEffect(() => {

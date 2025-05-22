@@ -1,17 +1,20 @@
 import React from 'react'
 import { motion, AnimatePresence } from "framer-motion";
-import { FaTimes } from 'react-icons/fa';
 
 import { ROLES } from '@constants/roles';
 import NavButton from '@components/NavButton';
+import NavButtonSqueleton from './NavButtonSqueleton';
 
 const SideBar = ({
     isDark,
+    isLoading,
     groupedItems,
     user,
     handleDrawer,
+    handleRefresh,
     drawerOpen
 }) => {
+    const hasItems = Object.values(groupedItems).some(items => items.length > 0);
     return (
         <AnimatePresence>
             {drawerOpen && (
@@ -41,27 +44,56 @@ const SideBar = ({
                     >
                         {/* Contenido del Drawer */}
                         <div className="flex flex-col gap-2 items-center justify-between p-2 w-full mt-13 mb-2">
-                            {Object.entries(groupedItems).map(([role, items]) => (
-                                <div key={role} className="flex flex-col gap-2 w-full items-center">
-                                    {user?.roles.includes(ROLES.ADMIN) && (
-                                        <div className={`text-sm font-semibold uppercase text-center mb-1 px-3 py-1 rounded shadow
-                                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}>
-                                            Acceso para {role === ROLES.ADMIN ? 'administradores' : 'usuarios'}
+                            {
+                                isLoading ? (
+                                    // Mostramos varios esqueletos mientras carga
+                                    <>
+                                        {[...Array(6)].map((_, i) => (
+                                            <NavButtonSqueleton key={i} isDark={isDark} />
+                                        ))}
+                                    </>
+                                ) : hasItems ? (
+                                    Object.entries(groupedItems).map(([role, items]) => (
+                                        <div key={role} className="flex flex-col gap-2 w-full items-center">
+                                            {user?.roles?.includes(ROLES.ADMIN) && (
+                                                <div className={`text-sm font-semibold uppercase text-center mb-1 px-3 py-1 rounded shadow
+                                                    ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'}`}>
+                                                    Acceso para {role === ROLES.ADMIN ? 'administradores' : 'usuarios'}
+                                                </div>
+                                            )}
+                                            {items.map(item => (
+                                                <NavButton
+                                                    key={item.path}
+                                                    to={item.path}
+                                                    active={item.active}
+                                                    icon={item.icon}
+                                                    tooltip={item.tooltip}
+                                                    isDark={isDark}
+                                                    onNavigate={handleDrawer}
+                                                />
+                                            ))}
                                         </div>
-                                    )}
-                                    {items.map(item => (
-                                        <NavButton
-                                            key={item.path}
-                                            to={item.path}
-                                            active={item.active}
-                                            icon={item.icon}
-                                            tooltip={item.tooltip}
-                                            isDark={isDark}
-                                            onNavigate={handleDrawer}
-                                        />
-                                    ))}
-                                </div>
-                            ))}
+                                    ))
+                                ) : (
+                                    // Si no hay botones, mostramos un mensaje
+                                    <div className={`flex flex-col items-center justify-center h-full`}>
+                                        <div className={`text-sm font-semibold uppercase text-center mb-2 mt-2 px-3 py-1 rounded
+                                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'} shadow`}>
+                                            No tienes acceso a ninguna sección
+                                        </div>
+                                        <div className={`text-sm font-semibold uppercase text-center mb-2 mt-2 px-3 py-1 rounded
+                                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-800'} shadow`}>
+                                            Comunicate con un administrador o intenta
+                                            <button
+                                                onClick={handleRefresh}
+                                                className={`text-blue-500 hover:text-blue-700 uppercase ml-1`}
+                                            >
+                                                Recargar
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            }
                         </div>
                     </motion.div>
                 </motion.div>
