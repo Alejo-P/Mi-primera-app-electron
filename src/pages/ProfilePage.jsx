@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom'
 import { IoIosSave } from "react-icons/io";
 import { IoWarning } from "react-icons/io5";
+import { CgMoreVerticalO } from "react-icons/cg";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
 // Importamos los contextos
@@ -12,7 +13,6 @@ import { useAdmin } from '@contexts/AdminProvider';
 // Importamos las constantes
 import { THEMES } from '@constants/temas';
 import { ROLES } from '@constants/roles';
-import { PROFILE_STATUS } from '@constants/profileStatus';
 
 // Importamos los componentes
 import CustomInput from '@components/CustomInput';

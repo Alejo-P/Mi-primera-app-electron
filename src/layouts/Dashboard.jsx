@@ -15,6 +15,7 @@ import { useApp } from '@contexts/AppProvider';
 import { useFiles } from '@contexts/FilesProvider';
 import { useQR } from '@contexts/QRProvider';
 import { useAdmin } from '@contexts/AdminProvider';
+import { useWebSocket } from '@contexts/WebSocketProvider';
 
 // Importamos los componentes
 import HeaderNav from '@components/HeaderNav'
@@ -34,6 +35,7 @@ const Dashboard = () => {
     const { setFileList } = useFiles();
     const { setQRList } = useQR();
     const { setUsersList, setRolesList } = useAdmin();
+    const { send_message } = useWebSocket();
     const { pathname } = useLocation();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const { width } = useWindowSize();
@@ -106,6 +108,20 @@ const Dashboard = () => {
         }
     }, [pathname]); // Se ejecuta cuando cambia la ruta
 
+    useEffect(() => {
+        // Enviar un mensaje al WebSocket al cargar el perfil (indiador de que el usuario está conectado)
+        if (Object.keys(user).length) {
+            send_message({
+                event: "user_connected",
+                data: {
+                    user_id: user?.id,
+                    user_name: user?.name,
+                    user_email: user?.email,
+                }
+            });
+        }
+    }, [user]); // Se ejecuta cuando cambia el usuario
+
     //Cargar el perfil del usuario
     useEffect(() => {
         if (!Object.keys(user).length) loadProfile();
@@ -117,7 +133,7 @@ const Dashboard = () => {
             setUsersList([]);
             setRolesList([]);
         };
-    }, []); // Se ejecuta cuando cambia el usuario del usuario
+    }, []); // Se ejecuta cuando se monta el componente
 
     return (
         <div className={`grid grid-cols-1 md:grid-cols-[23%_77%] grid-rows-[40px_50px_1fr] h-screen transition-all duration-300 min-w-[525px] scrollbar-track-transparent

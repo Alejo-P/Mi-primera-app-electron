@@ -23,7 +23,7 @@ import { ROLES } from '@constants/roles'
 const AdminUsersPage = () => {
     const { tema, setNavActionsItems, setVisibleNav } = useApp();
     const { user } = useAuth();
-    const { getAllUsers, enableUser, disableUser, usersList, loading } = useAdmin();
+    const { getAllUsers, usersList, loading } = useAdmin();
     const [ headerList ] = useState([
         { title: 'Avatar', key: 'avatar' },
         { title: 'Nombre', key: 'name' },
@@ -44,6 +44,8 @@ const AdminUsersPage = () => {
     }
 
     const handleFetchUsers = async () => {
+        setSelectedUser(null);
+        setShowCreateUserModal(false);
         await getAllUsers();
     }
 
@@ -62,7 +64,6 @@ const AdminUsersPage = () => {
         setShowActionModal(!showActionModal);
     }
 
-
     const handleSelectedUser = (userInfo) => {
         // Si el usuario seleccionado es el mismo que esta seleccionado, lo deselecciona
         if (selectedUser?.id === userInfo.id) {
@@ -70,32 +71,6 @@ const AdminUsersPage = () => {
             return;
         }
         setSelectedUser(userInfo);
-    }
-
-    const handleEnableUser = async (userInfo) => {
-        const confirm = window.confirm(`¿Activar usuario ${userInfo.name}?`);
-        if (user?.roles?.includes(ROLES.ADMIN) && confirm) {
-            const state = await enableUser(userInfo.id);
-            if (state) {
-                setSelectedUser({
-                    ...userInfo,
-                    is_active: true
-                });
-            }
-        }
-    }
-
-    const handleDisableUser = async (userInfo) => {
-        const confirm = window.confirm(`¿Eliminar usuario ${userInfo.name}?`);
-        if (user?.roles?.includes(ROLES.ADMIN) && confirm) {
-            const state = await disableUser(userInfo.id);
-            if (state) {
-                setSelectedUser({
-                    ...userInfo,
-                    is_active: false
-                });
-            }
-        }
     }
 
     useEffect(() => {
