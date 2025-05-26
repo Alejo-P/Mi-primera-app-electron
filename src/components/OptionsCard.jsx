@@ -12,9 +12,11 @@ import { THEMES } from '@constants/temas';
 // Importamos el contexto
 import { useAuth } from '@contexts/AuthProvider';
 import { useApp } from '@contexts/AppProvider'
+import { useWebSocket } from '@contexts/WebSocketProvider';
 
 const OptionsCard = () => {
     const { user, logout } = useAuth();
+    const { close_websocket } = useWebSocket();
     const {
         tema,
         handleTheme,
@@ -31,6 +33,8 @@ const OptionsCard = () => {
 
     const handleLogout = async () => {
         await logout();
+        // Cerrar el WebSocket al cerrar sesión
+        close_websocket();
     }
 
 

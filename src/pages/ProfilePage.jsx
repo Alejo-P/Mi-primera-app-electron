@@ -283,7 +283,7 @@ const ProfilePage = () => {
                         <UserAvatar
                             user={profileInfo}
                             isDark={isDark}
-                            onClick={handleAvatarModal}
+                            {...(profileInfo.id === user.id ? { onClick: handleAvatarModal } : {})}
                             isLoading={isLoading}
                         />
                     </div>

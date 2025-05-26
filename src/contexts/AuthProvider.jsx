@@ -1,5 +1,4 @@
-import { createContext, useContext, useState, useMemo } from 'react';
-import Cookies from 'js-cookie';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useApp } from './AppProvider';
@@ -10,7 +9,10 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const { handleNotificacion } = useApp();
     const { request } = useAxios(); // ¡aquí la magia!
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(() => {
+        const savedUser = localStorage.getItem("user");
+        return savedUser ? JSON.parse(savedUser) : {};
+    });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -30,6 +32,7 @@ export const AuthProvider = ({ children }) => {
         if (response) {
             setUser(response.user);
             localStorage.setItem('isAuth', "true");
+            localStorage.setItem('user', JSON.stringify(response.user));
             navigate('/dashboard/');
         }
         setLoading(false);
@@ -70,10 +73,8 @@ export const AuthProvider = ({ children }) => {
         if (response) {
             handleNotificacion('success', response.msg, 5000);
         }
-        // Eliminar los tokens de las cookies
-        Cookies.remove('csrf_access_token');
-        Cookies.remove('csrf_refresh_token');
         localStorage.removeItem('isAuth');
+        localStorage.removeItem('user');
         setUser({});
         navigate('/');
     };
@@ -181,6 +182,11 @@ export const AuthProvider = ({ children }) => {
         const success = response ? true : false;
         return success;
     };
+
+    useEffect(() => {
+        // Actualiza el localStorage con el usuario actual
+        localStorage.setItem('user', JSON.stringify(user));
+    }, [user]);
 
     const contextValue = useMemo(() => {
         // Verifica si el usuario está autenticado

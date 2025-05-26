@@ -6,6 +6,8 @@ import { useQR } from "@contexts/QRProvider";
 import { useAuth } from "@contexts/AuthProvider";
 import { useAdmin } from "@contexts/AdminProvider";
 
+import { ROLES } from "@constants/roles";
+
 export const WebSocketContext = createContext(null);
 
 export const WebSocketProvider = ({ children }) => {
@@ -13,12 +15,16 @@ export const WebSocketProvider = ({ children }) => {
     const { setUsersList } = useAdmin();
     const { setFileList } = useFiles();
     const { setQRList } = useQR();
-    const { user } = useAuth();
+    const { user, logout, setUser } = useAuth();
     const ws = useRef(null);
     const [connectionStatus, setConnectionStatus] = useState("disconnected"); 
     const reconnectAttempts = useRef(0);
     const reconnecting = useRef(false);
     const pendingMessages = useRef([]);
+
+    const isUserAdmin = () => {
+        return (Object.keys(user).length > 0 && user.roles?.includes(ROLES.ADMIN))
+    }
 
     const send_message = (message) => {
         const str = JSON.stringify(message);
@@ -65,24 +71,104 @@ export const WebSocketProvider = ({ children }) => {
             const wsmsg = JSON.parse(event.data);
             console.log("📩 Mensaje recibido:", wsmsg);
 
-            if (wsmsg.event === "user_connected") {
+            if (wsmsg.event === "user_connected" && isUserAdmin()) {
+                // Solo los administradores reciben eventos de conexión/desconexión de usuarios
                 console.log("👤 Usuario conectado:", wsmsg.user_id);
                 setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, is_connected: true } : user));
             }
 
-            if (wsmsg.event === "user_disconnected") {
+            if (wsmsg.event === "user_disconnected" && isUserAdmin()) {
+                // Solo los administradores reciben eventos de conexión/desconexión de usuarios
                 console.log("👤 Usuario desconectado:", wsmsg.user_id);
                 setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, is_connected: false } : user));
             }
 
-            if (wsmsg.event === "user_activated") {
+            if (wsmsg.event === "user_activated" && isUserAdmin()) {
+                // Solo los administradores reciben eventos de activación/desactivación de usuarios
                 console.log("👤 Usuario activado:", wsmsg.user_id);
                 setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, is_active: true } : user));
             }
 
             if (wsmsg.event === "user_deactivated") {
-                console.log("👤 Usuario desactivado:", wsmsg.user_id);
-                setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, is_active: false } : user));
+                // Este evento lo reciben todos los usuarios, ya que puede afectar al usuario actual
+                if (isUserAdmin()) {
+                    // Actualizar la lista de usuarios
+                    console.log("👤 Usuario desactivado:", wsmsg.user_id);
+                    setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, is_active: false } : user));
+                }
+                
+                // Si el usuario desactivado es el actual, cerrar sesión
+                if (wsmsg.user_id === user.id) {
+                    console.warn("⚠️ Tu cuenta ha sido desactivada. Cerrando sesión...");
+                    handleNotificacion("error", "Tu cuenta ha sido desactivada. Por favor, contacta al administrador.", 5000);
+                    setTimeout(() => {
+                        logout();
+                    }, 2000);
+                }
+            }
+
+            if (wsmsg.event === "user_updated") {
+                // Este evento lo reciben todos los usuarios, ya que puede afectar al usuario actual
+                if (isUserAdmin()) {
+                    // Actualizar la lista de usuarios
+                    console.log("👤 Usuario actualizado:", wsmsg.user_id);
+                    setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? wsmsg.user : user));
+                }
+                console.log(user, typeof user.id, wsmsg.user, typeof wsmsg.user);
+                // Si el usuario actualizado es el actual, actualizar el contexto
+                if (wsmsg.user_id === user.id) {
+                    handleNotificacion("info", "Tu información ha sido actualizada", 5000);
+                    // Actualizar el contexto del usuario actual
+                    setUser(wsmsg.user);
+                }
+            }
+
+            if (wsmsg.event === "avatar_updated") {
+                // Este evento lo reciben todos los usuarios, ya que puede afectar al usuario actual
+                if (isUserAdmin()) {
+                    // Actualizar la lista de usuarios
+                    console.log("🖼️ Avatar actualizado:", wsmsg.user_id);
+                    setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, avatar: wsmsg.avatar } : user));
+                }
+
+                // Si el usuario actualizado es el actual, actualizar el contexto
+                if (wsmsg.user_id === user.id) {
+                    handleNotificacion("info", "Tu avatar ha sido actualizado", 5000);
+                    // Actualizar el contexto del usuario actual
+                    setUser((prev) => ({ ...prev, avatar: wsmsg.avatar }));
+                }
+            }
+
+            if (wsmsg.event === "role_added") {
+                // Este evento lo reciben todos los usuarios, ya que puede afectar al usuario actual
+                if (isUserAdmin()) {
+                    // Actualizar la lista de usuarios
+                    console.log("👥 Rol agregado:", wsmsg.role_name);
+                    setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, roles: [...user.roles, wsmsg.role_name] } : user));
+                }
+
+                // Si el usuario actualizado es el actual, actualizar el contexto
+                if (wsmsg.user_id === user.id) {
+                    handleNotificacion("info", `Se te otorgó el rol "${wsmsg.role_name}"`, 5000);
+                    // Actualizar el contexto del usuario actual
+                    setUser((prev) => ({ ...prev, roles: [...prev.roles, wsmsg.role_name] }));
+                }
+            }
+
+            if (wsmsg.event === "role_removed") {
+                // Este evento lo reciben todos los usuarios, ya que puede afectar al usuario actual
+                if (isUserAdmin()) {
+                    // Actualizar la lista de usuarios
+                    console.log("👥 Rol eliminado:", wsmsg.role_name);
+                    setUsersList((prev) => prev.map((user) => user.id === wsmsg.user_id ? { ...user, roles: user.roles.filter(role => role !== wsmsg.role_name) } : user));
+                }
+
+                // Si el usuario actualizado es el actual, actualizar el contexto
+                if (wsmsg.user_id === user.id) {
+                    handleNotificacion("info", `Se te revocó el rol "${wsmsg.role_name}"`, 5000);
+                    // Actualizar el contexto del usuario actual
+                    setUser((prev) => ({ ...prev, roles: prev.roles.filter(role => role !== wsmsg.role_name) }));
+                }
             }
 
             if (wsmsg.event === "file_uploaded") {
@@ -122,9 +208,15 @@ export const WebSocketProvider = ({ children }) => {
             }
         };
 
-        ws.current.onclose = () => {
-            console.warn("❌ WebSocket cerrado");
+        ws.current.onclose = (event) => {
+            console.warn("❌ WebSocket cerrado", event);
             setConnectionStatus("disconnected");
+
+            // Si el código indica error de autorización, no reintentes
+            if (event.code === 1008 || event.code === 4003) {
+                console.error("⛔ WebSocket cerrado por error de autenticación. No se reintentará.");
+                return;
+            }
 
             if (!reconnecting.current) {
                 reconnecting.current = true;
@@ -132,24 +224,42 @@ export const WebSocketProvider = ({ children }) => {
             }
         };
 
-        ws.current.onerror = (e) => {
-            console.error("💥 Error en WebSocket:", e);
+        ws.current.onerror = (event) => {
+            console.error("💥 Error en WebSocket:", event);
             ws.current.close(); // Cierra forzadamente si hubo error
         };
     };
 
+    const close_websocket = () => {
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+            console.log("🔌 Cerrando WebSocket manualmente");
+            ws.current.close();
+            ws.current = null;
+        } else {
+            console.warn("⏳ WebSocket no está abierto o ya cerrado");
+        }
+    }
+
     useEffect(() => {
-        if (!user) return;
+        if (Object.keys(user).length === 0) return;
         start_websocket();
 
-        return () => ws.current?.close();
+        return () => {
+            // Cerrar la conexion cuando el estado del usuario sea un objeto vacío
+            if (ws.current && ws.current.readyState === WebSocket.OPEN && Object.keys(user).length === 0) {
+                console.log("🔌 Cerrando WebSocket al desmontar el componente");
+                ws.current.close();
+                ws.current = null;
+            }
+        };
     }, [user]);
 
     const contextValue = {
         ws: ws.current,
         connectionStatus,
         send_message,
-        start_websocket
+        start_websocket,
+        close_websocket
     }
 
     return (

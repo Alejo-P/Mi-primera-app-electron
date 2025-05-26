@@ -22,7 +22,16 @@ axiosInstance.interceptors.response.use(
         });
 
         if (error.response?.data?.detail === "Usuario inactivo"){
+            // Peticion POST para cerrar sesión
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/logout`, {}, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true,
+            });
             // Redirigir a la página de inicio o a la página de login
+            localStorage.removeItem('isAuth'); // Limpiar el estado de autenticación
+            console.warn('Usuario inactivo, redirigiendo a la página de inicio');
             window.location.href = '/'; // o usar navigate si estás dentro de React
             return Promise.reject(error);
         }
@@ -35,7 +44,7 @@ axiosInstance.interceptors.response.use(
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    withCredentials: true, // Asegúrate de que esto esté habilitado para enviar cookies
+                    withCredentials: true,
                 });
 
                 // Volver a intentar la petición

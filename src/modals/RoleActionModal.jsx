@@ -51,13 +51,14 @@ const RoleActionModal = ({
             console.log("Roles a agregar:", addedRoles);
             console.log("Roles a eliminar:", removedRoles);
 
-            // Puedes hacer llamadas paralelas o secuenciales según prefieras
-            await Promise.all([
-                ...addedRoles.map(role => addRole(role, userInfo.id)),
-                ...removedRoles.map(role => removeRole(role, userInfo.id))
-            ]);
+            for (const role of removedRoles) {
+                await removeRole(role, userInfo.id);
+            }
 
-            // Podrías cerrar el modal o mostrar un mensaje de éxito aquí
+            for (const role of addedRoles) {
+                await addRole(role, userInfo.id);
+            }
+
             handleClose(
                 // Enviar los roles actualizados al cerrar el modal
                 roles

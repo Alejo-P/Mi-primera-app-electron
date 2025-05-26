@@ -35,7 +35,6 @@ const Dashboard = () => {
     const { setFileList } = useFiles();
     const { setQRList } = useQR();
     const { setUsersList, setRolesList } = useAdmin();
-    const { send_message } = useWebSocket();
     const { pathname } = useLocation();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const { width } = useWindowSize();
@@ -107,20 +106,6 @@ const Dashboard = () => {
             setDrawerOpen(false);
         }
     }, [pathname]); // Se ejecuta cuando cambia la ruta
-
-    useEffect(() => {
-        // Enviar un mensaje al WebSocket al cargar el perfil (indiador de que el usuario está conectado)
-        if (Object.keys(user).length) {
-            send_message({
-                event: "user_connected",
-                data: {
-                    user_id: user?.id,
-                    user_name: user?.name,
-                    user_email: user?.email,
-                }
-            });
-        }
-    }, [user]); // Se ejecuta cuando cambia el usuario
 
     //Cargar el perfil del usuario
     useEffect(() => {
