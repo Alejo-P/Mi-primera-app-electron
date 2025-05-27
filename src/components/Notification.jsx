@@ -34,7 +34,7 @@ const Notification = ({ type = "success", content, onClose, duration = 3000 }) =
         default: { bg: "bg-gray-500", border: "border-gray-700", iconBg: "bg-gray-900", icon: <IoMdNotifications /> }
     };
 
-    let { bg, border, iconBg, icon } = colorClasses[type.toLowerCase()] || colorClasses.warning;
+    let { bg, border, iconBg, icon } = colorClasses[type.toLowerCase()] || colorClasses.default;
 
     return (
         <AnimatePresence>
