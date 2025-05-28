@@ -102,6 +102,7 @@ export const WebSocketProvider = ({ children }) => {
                     console.warn("⚠️ Tu cuenta ha sido desactivada. Cerrando sesión...");
                     handleNotificacion("error", "Tu cuenta ha sido desactivada. Por favor, contacta al administrador.", 5000);
                     setTimeout(() => {
+                        close_websocket();
                         logout();
                     }, 2000);
                 }
