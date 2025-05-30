@@ -20,6 +20,7 @@ import { useWebSocket } from '@contexts/WebSocketProvider';
 // Importamos los componentes
 import HeaderNav from '@components/HeaderNav'
 import Notification from '@components/Notification'
+import NotificationsContainer from '@components/NotificationsContainer';
 import NavButton from '@components/NavButton';
 import NavActions from '@components/NavActions';
 import TitleBar from '@components/TitleBar';
@@ -243,7 +244,7 @@ const Dashboard = () => {
             <div className={`flex flex-col m-4 p-3 border rounded-lg flex-1 shadow-lg overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar
                 ${isDark ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} transition-all duration-300`}
             >
-                {notificacion && <Notification {...notificacion} />}
+                <NotificationsContainer />
                 {<Outlet />}
                 {<NavActions />}
             </div>

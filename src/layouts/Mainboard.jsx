@@ -9,8 +9,8 @@ import { THEMES } from '@constants/temas'
 
 // Importamos los componentes
 import TitleBar from '@components/TitleBar'
-import Notification from '@components/Notification'
 import NavActions from '@components/NavActions'
+import NotificationsContainer from '@components/NotificationsContainer';
 
 const Mainboard = () => {
     const { tema, notificacion } = useApp();
@@ -27,7 +27,8 @@ const Mainboard = () => {
                 <TitleBar />
             </div>
             {/* Contenido principal */}
-            {notificacion && <Notification {...notificacion} />}
+            <NotificationsContainer />
+
             {/* Contenido de la aplicación */}
             <Outlet />
             {/* Acciones de navegación */}

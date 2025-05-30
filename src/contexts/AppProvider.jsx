@@ -4,7 +4,7 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const [tema, setTema] = useState(localStorage.getItem("tema") || "oscuro");
-    const [notificacion, setNotificacion] = useState(null);
+    const [notificacionList, setNotificacionList] = useState([]);
     const [extensiones] = useState(["txt", "pdf", "png", "jpg", "jpeg", "gif"]);
     const [maxSize] = useState(16777216); // 16MB
     const [fileTypes] = useState({
@@ -35,7 +35,7 @@ export const AppProvider = ({ children }) => {
     }
 
     // Muestra una notificación temporalmente
-    const handleNotificacion = (type, content, timeout = 3000) => {
+    const handleNotificacion = (type, content, duration = 3000, actionButtons = []) => {
         if (!content) return;
         let message = content?.response?.data?.msg 
            ?? content?.response?.data?.error 
@@ -51,13 +51,21 @@ export const AppProvider = ({ children }) => {
             }
         }
 
-        setNotificacion({ 
-            type,
-            content: message,
-            onClose: () => setNotificacion(null),
-            duration: timeout
-        });
+        // Si el mensaje es muy largo, lo acorta
+        if (message.length > 100) {
+            message = message.slice(0, 100) + "...";
+        }
+
+        // Si el mensaje es un string vacío, no muestra la notificación
+        if (!message || message.trim() === "") return;
+
+        const id = Date.now();
+        setNotificacionList(prev => [...prev, { id, type, content, duration, actionButtons }]);
     };
+
+    const handleCloseNotificacion = (id) => {
+        setNotificacionList(prev => prev.filter(n => n.id !== id));
+    }
 
     // Convertir unidad de medida de bytes a cualquier otra
     const convertUnit = (bytes, unit = "MB") => {
@@ -81,7 +89,7 @@ export const AppProvider = ({ children }) => {
     // Memoriza el valor del contexto para evitar renders innecesarios
     const contextValue = useMemo(() => ({
         tema,
-        notificacion,
+        notificacionList,
         selectedFile,
         extensiones,
         fileTypes,
@@ -103,9 +111,11 @@ export const AppProvider = ({ children }) => {
         setCurrentPath,
         setSelectedFile,
         handleNotificacion,
+        handleCloseNotificacion,
+        setNotificacionList,
         convertUnit,
         handleTheme,
-    }), [tema, notificacion, selectedFile, currentPath, visibleNav, showOptions, isMaximized, showLogsModal, visibleToolbar, isElectron, navActionsItems]);
+    }), [tema, notificacionList, selectedFile, currentPath, visibleNav, showOptions, isMaximized, showLogsModal, visibleToolbar, isElectron, navActionsItems]);
 
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

@@ -43,7 +43,7 @@ export const QRProvider = ({ children }) => {
         if (response) {
             let data = [];
             if (response.files.length === 0) {
-                handleNotificacion('info', response.msg, 5000);
+                handleNotificacion('warning', response.msg, 5000);
             } else {
                 data = await Promise.all(
                     response.files.map(async (qr) => {

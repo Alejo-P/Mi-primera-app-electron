@@ -605,6 +605,9 @@
   .z-110 {
     z-index: 110;
   }
+  .z-500 {
+    z-index: 500;
+  }
   .col-span-full {
     grid-column: 1 / -1;
   }
@@ -700,6 +703,9 @@
   }
   .inline-block {
     display: inline-block;
+  }
+  .h-1 {
+    height: calc(var(--spacing) * 1);
   }
   .h-2 {
     height: calc(var(--spacing) * 2);
@@ -1174,6 +1180,15 @@
   .bg-white {
     background-color: var(--color-white);
   }
+  .bg-white\/20 {
+    background-color: color-mix(in oklab, var(--color-white) 20%, transparent);
+  }
+  .bg-white\/30 {
+    background-color: color-mix(in oklab, var(--color-white) 30%, transparent);
+  }
+  .bg-white\/70 {
+    background-color: color-mix(in oklab, var(--color-white) 70%, transparent);
+  }
   .bg-yellow-600 {
     background-color: var(--color-yellow-600);
   }
@@ -1459,6 +1474,10 @@
     --tw-ease: var(--ease-in-out);
     transition-timing-function: var(--ease-in-out);
   }
+  .ease-linear {
+    --tw-ease: linear;
+    transition-timing-function: linear;
+  }
   .scrollbar-thumb-gray-300 {
     --scrollbar-thumb: oklch(0.872 0.01 258.338);
   }
@@ -1656,6 +1675,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-red-700);
+      }
+    }
+  }
+  .hover\:bg-white\/30 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in oklab, var(--color-white) 30%, transparent);
       }
     }
   }
