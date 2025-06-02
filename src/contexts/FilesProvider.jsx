@@ -46,7 +46,7 @@ export const FilesProvider = ({ children }) => {
         if (response) {
             let data = [];
             if (response.files.length === 0) {
-                handleNotificacion('info', response.msg, 5000);
+                handleNotificacion('warning', response.msg, 5000);
             } else {
                 // Si hay archivos, obtenemos su contenido
                 data = await Promise.all(
@@ -181,4 +181,10 @@ export const FilesProvider = ({ children }) => {
     return <FilesContext.Provider value={contextValue}>{children}</FilesContext.Provider>;
 }
 
-export const useFiles = () => useContext(FilesContext);
+export const useFiles = () => {
+    const context = useContext(FilesContext);
+    if (!context) {
+        throw new Error('useFiles must be used within a FilesProvider');
+    }
+    return context;
+};

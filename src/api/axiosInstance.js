@@ -54,6 +54,7 @@ axiosInstance.interceptors.response.use(
                 console.error('Error al refrescar el token', refreshError);
                 // Aquí puedes limpiar las cookies si es necesario
                 localStorage.removeItem('isAuth');
+                localStorage.removeItem('user');
                 window.location.href = '/'; // o usar navigate si estás dentro de React
                 return Promise.reject(refreshError);
             }

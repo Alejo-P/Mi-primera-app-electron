@@ -2,7 +2,6 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@assets/*": ["src/assets/*"],
       "@hooks/*": ["src/hooks/*"],
@@ -13,7 +12,8 @@
       "@constants/*": ["src/constants/*"],
       "@modals/*": ["src/modals/*"],
       "@layouts/*": ["src/layouts/*"],
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@ui/*": ["src/ui/*"]
     },
     "jsx": "react-jsx" // 🔹 Agregado para soportar JSX
   },

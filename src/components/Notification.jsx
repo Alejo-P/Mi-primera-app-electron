@@ -40,7 +40,7 @@ const Notification = ({
             clearTimeout(timer);
             cancelAnimationFrame(frame);
         };
-    }, [onClose]);
+    }, []);
 
     const colorClasses = {
         error: { bg: "bg-red-500", border: "border-red-700", iconBg: "bg-red-900", icon: <FaRegTimesCircle /> },

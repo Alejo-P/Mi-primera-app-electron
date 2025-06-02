@@ -231,4 +231,10 @@ export const QRProvider = ({ children }) => {
     return <QRContext.Provider value={contextValue}>{children}</QRContext.Provider>;
 };
 
-export const useQR = () => useContext(QRContext);
+export const useQR = () => {
+    const context = useContext(QRContext);
+    if (!context) {
+        throw new Error('useQR must be used within a QRProvider');
+    }
+    return context;
+};

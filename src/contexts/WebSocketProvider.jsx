@@ -53,7 +53,7 @@ export const WebSocketProvider = ({ children }) => {
         }
 
         setConnectionStatus("connecting");
-        ws.current = new WebSocket(`ws://localhost:5000/api/v1/ws/notifications`);
+        ws.current = new WebSocket(`ws://localhost:5000/api/v1/ws`);
 
         ws.current.onopen = () => {
             console.log("📡 WebSocket conectado");

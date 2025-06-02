@@ -15,6 +15,7 @@ import { useQR } from '@contexts/QRProvider';
 
 // Importamos los componentes
 import ViewFilesModal from '@modals/ViewFilesModal';
+import UploadFileModal from '@modals/UploadFileModal';
 import LoadingCard from '@components/LoadingCard';
 import FlipCard from '@components/FlipCard';
 
@@ -24,6 +25,7 @@ const FilesPage = () => {
     const { fileList, getFiles, deleteAllFiles, loadingFiles } = useFiles();
     const { setQRList } = useQR();
     const [showModal, setShowModal] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
     const [inputSearch, setFileInput] = useState({
         fileSearch: '',
         userSearch: ''
@@ -37,6 +39,10 @@ const FilesPage = () => {
 
     const handleModal = () => {
         setShowModal(!showModal);
+    }
+
+    const handleUploadModal = () => {
+        setShowUploadModal(!showUploadModal);
     }
 
     const handleFetchFiles = async () => {
@@ -66,24 +72,24 @@ const FilesPage = () => {
 
     useEffect(() => {
         const acciones = [
-            // {
-            //     key: 'crear',
-            //     element: (
-            //         <button
-            //             onClick={handleModal}
-            //             className={`p-2 rounded-lg transition-all duration-300
-            //                 ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
-            //                 hover:scale-95 shadow-lg hover:shadow-xl`}
-            //             title="Crear un QR a partir de texto"
-            //             data-tooltip-id="createQRLabel"
-            //             data-tooltip-content="Crear un QR a partir de texto"
-            //         >
-            //             <span className="text-3xl">
-            //                 <MdAdd className='text-2xl'/>
-            //             </span>
-            //         </button>
-            //     )
-            // },
+            {
+                key: 'cargar',
+                element: (
+                    <button
+                        onClick={handleUploadModal}
+                        className={`p-2 rounded-lg transition-all duration-300
+                            ${isDark ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-900 hover:bg-gray-400'} 
+                            hover:scale-95 shadow-lg hover:shadow-xl`}
+                        title="Cargar un archivo"
+                        data-tooltip-id="uploadFileLabel"
+                        data-tooltip-content="Cargar un archivo al servidor"
+                    >
+                        <span className="text-3xl">
+                            <MdAdd className='text-2xl'/>
+                        </span>
+                    </button>
+                )
+            },
             {
                 key: 'refrescar',
                 element: (
@@ -127,7 +133,7 @@ const FilesPage = () => {
             )
         }
     
-        if (!showModal) {
+        if (!showModal && !showUploadModal) {
             // Solo muestra el boton de eliminar si hay archivos (antes del boton recargar)
             const refreshIndex = acciones.findIndex(a => a.key === 'refrescar');
             if (fileList.length > 0 && refreshIndex !== -1) {
@@ -137,7 +143,7 @@ const FilesPage = () => {
             // Solo muestra las acciones si no hay modales abiertos
             setNavActionsItems(acciones);
         }
-    }, [showModal, isDark, fileList]); // Se actualiza cuando cambia el tema o el modal    
+    }, [showModal, showUploadModal, isDark, fileList]); // Se actualiza cuando cambia el tema o el modal    
 
     useEffect(() => {
         if (fileList.length === 0) {
@@ -176,6 +182,9 @@ const FilesPage = () => {
             }
             {
                 showModal && <ViewFilesModal fileInfo={selectedFile} handleModal={handleModal} />
+            }
+            {
+                showUploadModal && <UploadFileModal isDark={isDark} handleModal={handleUploadModal} />
             }
         </>
     )

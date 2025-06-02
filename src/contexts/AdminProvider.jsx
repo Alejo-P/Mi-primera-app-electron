@@ -281,4 +281,10 @@ export const AdminProvider = ({ children }) => {
     );
 };
 
-export const useAdmin = () => useContext(AdminContext);
+export const useAdmin = () => {
+    const context = useContext(AdminContext);
+    if (!context) {
+        throw new Error('useAdmin must be used within an AdminProvider');
+    }
+    return context;
+};
