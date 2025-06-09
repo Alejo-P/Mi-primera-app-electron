@@ -593,9 +593,6 @@
   .z-40 {
     z-index: 40;
   }
-  .z-45 {
-    z-index: 45;
-  }
   .z-50 {
     z-index: 50;
   }
@@ -761,6 +758,21 @@
   .h-screen {
     height: 100vh;
   }
+  .max-h-4 {
+    max-height: calc(var(--spacing) * 4);
+  }
+  .max-h-20 {
+    max-height: calc(var(--spacing) * 20);
+  }
+  .max-h-36 {
+    max-height: calc(var(--spacing) * 36);
+  }
+  .max-h-38 {
+    max-height: calc(var(--spacing) * 38);
+  }
+  .max-h-40 {
+    max-height: calc(var(--spacing) * 40);
+  }
   .max-h-\[300px\] {
     max-height: 300px;
   }
@@ -808,9 +820,6 @@
   }
   .w-screen {
     width: 100vw;
-  }
-  .max-w-md {
-    max-width: var(--container-md);
   }
   .max-w-screen-sm {
     max-width: var(--breakpoint-sm);
@@ -1258,6 +1267,9 @@
   .text-center {
     text-align: center;
   }
+  .text-start {
+    text-align: start;
+  }
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
@@ -1315,6 +1327,9 @@
   .overflow-ellipsis {
     text-overflow: ellipsis;
   }
+  .text-ellipsis {
+    text-overflow: ellipsis;
+  }
   .whitespace-nowrap {
     white-space: nowrap;
   }
@@ -1351,14 +1366,26 @@
   .text-green-500 {
     color: var(--color-green-500);
   }
+  .text-orange-400 {
+    color: var(--color-orange-400);
+  }
+  .text-orange-600 {
+    color: var(--color-orange-600);
+  }
   .text-orange-700 {
     color: var(--color-orange-700);
+  }
+  .text-red-400 {
+    color: var(--color-red-400);
   }
   .text-red-500 {
     color: var(--color-red-500);
   }
   .text-white {
     color: var(--color-white);
+  }
+  .text-yellow-500 {
+    color: var(--color-yellow-500);
   }
   .uppercase {
     text-transform: uppercase;
@@ -1536,6 +1563,16 @@
         --tw-scale-x: 95%;
         --tw-scale-y: 95%;
         --tw-scale-z: 95%;
+        scale: var(--tw-scale-x) var(--tw-scale-y);
+      }
+    }
+  }
+  .hover\:scale-98 {
+    &:hover {
+      @media (hover: hover) {
+        --tw-scale-x: 98%;
+        --tw-scale-y: 98%;
+        --tw-scale-z: 98%;
         scale: var(--tw-scale-x) var(--tw-scale-y);
       }
     }
@@ -1753,6 +1790,13 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-red-500);
+      }
+    }
+  }
+  .hover\:text-red-700 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-red-700);
       }
     }
   }

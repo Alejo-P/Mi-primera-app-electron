@@ -20,6 +20,7 @@ const CustomInput = ({
     Iplaceholder,
     Idisabled = false,
     Irequired = false,
+    Imultiple = false,
     Iaccept = null,
     Iref = null,
     ImaxLength = null,
@@ -51,6 +52,7 @@ const CustomInput = ({
                     id={Iname}
                     name={Iname}
                     {...(Itype !== "file" ? { value: Ivalue } : {})}
+                    {...(Itype !== "file" ? { multiple: Imultiple } : {})}
                     onChange={IonChange}
                     ref={Iref}
                     maxLength={ImaxLength}

@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [react(), visualizer()],
   base: './', // 🔹 Usa rutas relativas en producción
   build: {
+    sourcemap: true, // 🔹 Genera mapas de origen para depuración
     outDir: 'dist/react',
     emptyOutDir: true,
     rollupOptions: {

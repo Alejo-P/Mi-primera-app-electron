@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { HiHome } from "react-icons/hi";
 import { FaQrcode } from 'react-icons/fa6';
 import { FaRegFileAlt, FaUser, FaBars, FaUsersCog, FaTimes } from "react-icons/fa";
