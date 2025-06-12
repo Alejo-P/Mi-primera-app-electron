@@ -126,7 +126,7 @@ const FlipCard = ({
                 >
                     <div
                         className={`w-full h-40 border rounded-lg flex items-center justify-center overflow-hidden transition-all duration-300
-                            ${handleOnClick ? 'cursor-pointer hover:scale-95' : ''}
+                            ${handleOnClick ? 'cursor-pointer hover:scale-99' : ''}
                             ${fileTypes.images.includes(file.filename.split('.').pop()) ? 'border-gray-300' : 'border-gray-200'}
                         `}
                         data-tooltip-id="viewLabel"

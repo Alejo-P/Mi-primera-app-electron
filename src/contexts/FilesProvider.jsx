@@ -67,13 +67,12 @@ export const FilesProvider = ({ children }) => {
             handleNotificacion('error', 'No se ha seleccionado ningún archivo', 5000);
             return;
         }
-        setLoadingFiles(true);
         const response = await request({
             method: 'post',
             url: '/upload',
             payload: data,
             notify: {
-                success: true,
+                success: false,
                 error: true
             }
         });
@@ -81,7 +80,6 @@ export const FilesProvider = ({ children }) => {
         if (response) {
             setFileList((prev) => [...prev, response.file]);
         }
-        setLoadingFiles(false);
 
         const status = response ? true : false;
         return status;

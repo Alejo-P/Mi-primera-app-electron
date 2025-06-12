@@ -33,7 +33,7 @@ const UploadFileModal = ({ isDark, handleModal }) => {
     }
 
     const sumFileSizes = (files) => {
-        return files.reduce((total, file) => total + file.size, 0);
+        return files.reduce((total, data) => total + data.file.size, 0);
     }
 
     const resetFileInput = () => {
@@ -68,15 +68,23 @@ const UploadFileModal = ({ isDark, handleModal }) => {
                 return;
             }
 
+            // Verificar si el archivo ya está en la lista, si ya existe, lo reemplazamos
+            const exists = filesList.some(data => data.file.name === file.name);
+            if (exists) {
+                const confirmReplace = window.confirm(`El archivo ${file.name} ya está en la lista. ¿Deseas reemplazarlo?`);
+                if (!confirmReplace) return; // Si el usuario no confirma, no lo agregamos
+                // Si confirma, lo eliminamos de la lista antes de agregarlo
+                setFilesList(prevFiles => prevFiles.filter(data => data.file.name !== file.name));
+            }
+
             newFiles.push({
-                ...file,
+                file,
                 uploaded: false,
                 error: false,
                 pending: false,
                 uploading: false,
             });
         });
-        // Continuar con la carga de multiples archivos...
 
         if (newFiles.length > 0) {
             setFilesList(prevFiles => [...prevFiles, ...newFiles]);
@@ -89,29 +97,29 @@ const UploadFileModal = ({ isDark, handleModal }) => {
         e.preventDefault();
         if (filesList.length === 0) return;
 
-        const invalidFile = filesList.find(file =>
-            !extensiones.includes(file.name.split('.').pop().toLowerCase()) || file.size > maxSize
+        const invalidFile = filesList.find(data =>
+            !extensiones.includes(data.file.name.split('.').pop().toLowerCase()) || data.file.size > maxSize
         );
         if (invalidFile) {
-            handleNotificacion('error', `Archivo inválido: ${invalidFile.name}`, 4000);
+            handleNotificacion('error', `Archivo inválido: ${invalidFile.file.name}`, 4000);
             return;
         }
 
         try {
-            const filesData = await Promise.all(filesList.map(file => {
+            const filesData = await Promise.all(filesList.map(data => {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onload = () => {
                         const base64 = reader.result.split(',')[1];
                         resolve({
-                            filename: file.name,
-                            filetype: file.type,
+                            filename: data.file.name,
+                            filetype: data.file.type,
                             filebase64: base64,
-                            size: file.size
+                            size: data.file.size
                         });
                     };
                     reader.onerror = (error) => reject(error);
-                    reader.readAsDataURL(file);
+                    reader.readAsDataURL(data.file);
                 });
             }));
 
@@ -145,8 +153,10 @@ const UploadFileModal = ({ isDark, handleModal }) => {
                     return newFiles;
                 });
             }
-
+            
             setUploadProgress(prev => ({ ...prev, done: true }));
+            // Notificar al usuario
+            handleNotificacion('success', `Archivos subidos correctamente`, 3000);
 
             // Si todo fue exitoso:
             setFilesList([]); // Limpiar la lista de archivos
@@ -227,7 +237,6 @@ const UploadFileModal = ({ isDark, handleModal }) => {
                             Iplaceholder="Selecciona un archivo"
                             Idisabled={false}
                             Iaccept={acceptedExtensions}
-                            Irequired={true}
                             Iref={fileInput}
                             Imultiple={true}
                         />
@@ -254,10 +263,10 @@ const UploadFileModal = ({ isDark, handleModal }) => {
                         ) : (
                             <>
                                 <div className="mb-2 max-h-40 overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar">
-                                    {filesList.map((file, index) => (
+                                    {filesList.map((data, index) => (
                                         <FileBarCard
                                             key={index}
-                                            file={file}
+                                            data={data}
                                             handleDeleteFile={() => handleDeleteFile(index)}
                                             isDark={isDark}
                                         />

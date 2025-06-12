@@ -7,7 +7,7 @@ import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { useApp } from '@contexts/AppProvider';
 
-const FileBarCard = ({ file, handleDeleteFile, loadingFiles = false, isDark}) => {
+const FileBarCard = ({ data, handleDeleteFile, loadingFiles = false, isDark}) => {
     const { convertUnit, fileTypes } = useApp();
 
     const handleFileDelete = (filename) => {
@@ -30,37 +30,37 @@ const FileBarCard = ({ file, handleDeleteFile, loadingFiles = false, isDark}) =>
         >
             <div className="flex items-center gap-2 mr-2">
                 {
-                    fileTypes.images.includes(file.name.split('.').pop()) ? 
+                    fileTypes.images.includes(data.file.name.split('.').pop()) ? 
                     <FaFileImage className="text-2xl" />
                     : <FaFileLines className="text-2xl" />
                 }
             </div>
             <div className='flex-1 overflow-hidden text-start text-ellipsis whitespace-nowrap'>
-                <p>{file.name}</p>
+                <p>{data.file.name}</p>
             </div>
             <div className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                <p>({convertUnit(file.size)})</p>
+                <p>({convertUnit(data.file.size)})</p>
             </div>
-            {!(file.pending || file.uploading || file.uploaded || file.error) && (<button
+            {!(data.pending || data.uploading || data.uploaded || data.error) && (<button
                 type="button"
-                onClick={() => handleFileDelete(file.name)}
+                onClick={() => handleFileDelete(data.file.name)}
                 className={`text-red-500 hover:text-red-700 transition-colors duration-300 cursor-pointer`}
                 title="Eliminar archivo"
                 data-tooltip-id="deleteFileLabel"
-                data-tooltip-content={`Eliminar archivo ${file.name}`}
+                data-tooltip-content={`Eliminar archivo ${data.file.name}`}
             >
                 <MdDeleteForever className='text-2xl' />
             </button>)}
-            {file.pending && (
+            {data.pending && (
                 <CgSpinnerTwoAlt className={`text-2xl animate-spin ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
             )}
-            {file.uploading && (
+            {data.uploading && (
                 <CgSpinnerTwoAlt className={`text-2xl animate-spin ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
             )}
-            {file.uploaded && (
+            {data.uploaded && (
                 <IoMdCheckmark className={`text-2xl text-green-500`} />
             )}
-            {file.error && (
+            {data.error && (
                 <IoWarning className={`text-2xl text-red-500`} />
             )}
             <ReactTooltip
