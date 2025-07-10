@@ -8,6 +8,7 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite --open",
+	"dev-docker": "vite --host",
     "dev:electron": "electronmon electron/main.js",
     "build": "vite build && electron-builder",
     "lint": "eslint .",

@@ -11,6 +11,9 @@ COPY package*.json ./
 # Instalar las dependencias
 RUN npm install --legacy-peer-deps
 
+# Instalar Vite de forma global
+RUN npm install -g vite
+
 # Copiar el resto de los archivos de la aplicación
 COPY . .
 
@@ -18,4 +21,4 @@ COPY . .
 EXPOSE 5173
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev-docker"]
