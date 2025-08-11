@@ -19,7 +19,8 @@ const LoginModal = ({ handleModal }) => {
     const { login, loading } = useAuth();
     const [formData, setFormData] = useState({
         email: '',
-        password: ''
+        password: '',
+        is_panel_admin: false
     });
     const [disabled, setDisabled] = useState(false);
 
