@@ -14,12 +14,6 @@ axiosInstance.interceptors.response.use(
     response => response,
     async error => {
         const originalRequest = error.config;
-        // Copiar los errores en el portapapeles
-        navigator.clipboard.writeText(JSON.stringify(error.response?.data, null, 2)).then(() => {
-            console.log('Error copiado al portapapeles');
-        }).catch(err => {
-            console.error('Error al copiar el error al portapapeles', err);
-        });
 
         if (error.response?.data?.detail === "Usuario inactivo"){
             // Peticion POST para cerrar sesión
@@ -37,7 +31,7 @@ axiosInstance.interceptors.response.use(
         }
 
         // Si ya intentamos refrescar, no lo volvemos a hacer
-        if ((error.response?.data?.detail === "Token faltante" || error.response?.data?.detail === "Token inválido o expirado") && !originalRequest._retry) {
+        if ((error.response?.data?.detail === "Token faltante" || error.response?.data?.detail === "Token inválido" || error.response?.data?.detail === "Token expirado") && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/refresh`, {}, {
